@@ -7,6 +7,11 @@
 
                     <div class="card-body">
                         I'm an example component.
+
+                        <el-row>
+                            <el-button icon="el-icon-search" circle></el-button>
+                            <el-button type="primary" icon="el-icon-search">Search</el-button>
+                        </el-row>
                     </div>
                 </div>
             </div>
