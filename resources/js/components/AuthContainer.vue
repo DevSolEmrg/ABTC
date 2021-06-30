@@ -49,14 +49,14 @@
             </el-submenu>
             </el-menu>
         </el-aside>-->
-        <el-aside v-if="side_nav" style="background-color: #545C64;border-right: 1px solid #eee;">
+        <el-aside v-if="side_nav" style="background-color: #202124;border-right: 1px solid #eee;">
             <el-menu
                 style="border:none"
                 default-active="2"
                 class="el-menu-vertical-demo"
                 @open="handleOpen"
                 @close="handleClose"
-                background-color="#545c64"
+                background-color="#202124"
                 text-color="#fff"
                 active-text-color="#ffd04b"
             >
