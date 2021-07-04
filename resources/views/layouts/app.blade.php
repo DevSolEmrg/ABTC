@@ -8,9 +8,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <!--<script>
+        console.log('hh', location.origin, location.href)
+        location.assign('http://127.0.0.1:8000/home')
+    </script>-->
+    
+    <script>
+        if (location.origin.concat('/js/popper.js.map') == location.href) {
+            location.assign(location.origin.concat('/home'))
+        }
+    </script>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+
+    
 
     <!-- Fonts
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -21,8 +32,8 @@
 </head>
 <body>
     <div id="app">
-        <!--<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">-->
-            <!--<div class="container">
+        <!--<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -71,9 +82,9 @@
                             </li>
                         @endguest
                     </ul>
-                </div>-->
-            <!--</div>-->
-        <!--</nav>-->
+                </div>
+            </div>
+        </nav>-->
 
         <!--<main class="py-4">-->
         <main>

@@ -26,7 +26,10 @@
 <!--</div>-->
 
 <div id="app">
-    <auth-container />
+    {{-- <auth-container /> --}}
+    <router-view>
+
+    {{-- {{ $auth }} --}}
 </div>
 
 @endsection
