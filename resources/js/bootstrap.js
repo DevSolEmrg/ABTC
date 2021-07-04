@@ -7,6 +7,7 @@ window._ = require('lodash');
  */
 
 try {
+    //console.log('safertwwetewtewtew', location.href);
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
 
@@ -21,7 +22,11 @@ try {
 
 window.axios = require('axios');
 
+window.axios.defaults.baseURL = location.origin.concat('/');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+//custom
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
