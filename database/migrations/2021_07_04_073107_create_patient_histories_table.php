@@ -15,6 +15,7 @@ class CreatePatientHistoriesTable extends Migration
     {
         Schema::create('patient_histories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id');
             $table->date('date');
             $table->text('place');
             $table->enum('type_of_animal', ['PD', 'PC']);
