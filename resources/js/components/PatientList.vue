@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <el-table  v-loading="loading" :data="ListData">
+            <el-table  v-loading="loading" :data="ListData" border>
                 <el-table-column prop="date" label="Date" width="140">
                 </el-table-column>
                 <el-table-column prop="name" label="Name" width="120">
