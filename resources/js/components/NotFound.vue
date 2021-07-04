@@ -5,7 +5,7 @@
                 <h1><strong style="color:red">404</strong></h1>
             </div>
             <div class="col-12 mb-2" style="text-align:center">
-                <h4>Page Not Found</h4>
+                <h4>Page Not Found {{ currentURL }}</h4>
             </div>
             <div class="col-12" style="text-align:center">
                 <el-button type="danger" icon="el-icon-back" @click="back">BACK</el-button>
@@ -16,6 +16,11 @@
 
 <script>
 export default {
+    data() {
+        return {
+            currentURL: `"URL(${location.href})"`
+        }
+    },
     methods: {
         back() {
             history.back();
