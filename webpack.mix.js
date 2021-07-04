@@ -12,5 +12,8 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    //.sourceMaps(true, 'hidden-source-map')
+    //.sourceMaps(true, 'inline-nosources-cheap-source-map')
+    //.sourceMaps()
     .vue()
     .sass('resources/sass/app.scss', 'public/css');
