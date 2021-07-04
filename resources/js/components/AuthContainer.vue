@@ -49,7 +49,21 @@
             </el-submenu>
             </el-menu>
         </el-aside>-->
-        <el-aside v-if="side_nav" style="background-color: #202124;border-right: 1px solid #eee;">
+        <el-aside v-if="side_nav" style="background-color: #202124;border-right: 1px solid #eee; overflow-x:hidden">
+            <div class="row" style="background-color:#1A1A1D; text-align:center">
+                <div class="col-12">
+                    <el-avatar class="mt-4 mb-3" :size="200" :src="baseUrl + 'image/user.png'" @error="errorHandler" style="background-color:#FFC230">
+                        <img :src="baseUrl + 'image/user.png'"/>
+                    </el-avatar>
+                </div>
+                <div class="col-12" style="background-color:#FFC230">
+                    <div class="row">
+                        <div class="col-12"><strong>ABTC SORSOGON</strong></div>
+                        <div class="col-12" style="background-color:#FFCD3E">Mark Dy</div>
+                        <div class="col-12" style="background-color:#FFCD3E">Admin</div>
+                    </div>
+                </div>
+            </div>
             <el-menu
                 style="border:none"
                 default-active="2"
@@ -59,36 +73,43 @@
                 background-color="#202124"
                 text-color="#fff"
                 active-text-color="#ffd04b"
+                router
             >
+                
+                <el-menu-item index="2" :route="{ name: 'Dashboard' }">
+                    <i class="el-icon-s-home"></i>
+                    <span>Dashboard</span>
+                </el-menu-item>
+                <el-menu-item index="5" :route="{ name: 'Patient List' }">
+                    <i class="el-icon-user-solid"></i>
+                    <span>Patient</span>
+                </el-menu-item>
+                <el-menu-item index="6" :route="{ name: 'Sample' }">
+                    <i class="el-icon-s-custom"></i>
+                    <span>Personnel</span>
+                </el-menu-item>
+                <el-menu-item index="7">
+                    <i class="el-icon-s-order"></i>
+                    <span>Medicine</span>
+                </el-menu-item>
+
+                <el-menu-item index="9">
+                    <i class="el-icon-s-data"></i>
+                    <span>Reports</span>
+                </el-menu-item>
+
                 <el-submenu index="1">
                     <template slot="title">
-                    <i class="el-icon-location"></i>
-                    <span>Navigator One</span>
-                    </template>
-                    <el-menu-item-group title="Group One">
-                    <el-menu-item index="1-1">item one</el-menu-item>
-                    <el-menu-item index="1-2">item one</el-menu-item>
-                    </el-menu-item-group>
-                    <el-menu-item-group title="Group Two">
-                    <el-menu-item index="1-3">item three</el-menu-item>
-                    </el-menu-item-group>
-                    <el-submenu index="1-4">
-                    <template slot="title">item four</template>
-                    <el-menu-item index="1-4-1">item one</el-menu-item>
-                    </el-submenu>
-                </el-submenu>
-                <el-menu-item index="2">
-                    <i class="el-icon-menu"></i>
-                    <span>Navigator Two</span>
-                </el-menu-item>
-                <el-menu-item index="3" disabled>
-                    <i class="el-icon-document"></i>
-                    <span>Navigator Three</span>
-                </el-menu-item>
-                <el-menu-item index="4">
                     <i class="el-icon-setting"></i>
-                    <span>Navigator Four</span>
-                </el-menu-item>
+                    <span>User Setting</span>
+                    </template>
+    
+                    <el-menu-item index="1-1" style="padding-left:53px">My Profile</el-menu-item>
+                    <el-menu-item index="1-2" style="padding-left:53px">User Management</el-menu-item>
+                    <el-menu-item index="1-3" style="padding-left:53px">Role & Permission</el-menu-item>
+                </el-submenu>
+
+               
             </el-menu>
         </el-aside>
         
@@ -106,29 +127,57 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                         <span>Tom</span>-->
-                        <el-dropdown trigger="click">
+<!-- <el-badge :value="200" :max="99" style=" 
+  margin-right: 10px; background-color:green; height:1px; padding:0px;">
+ 
+
+                        <i class="mdi mdi-bell" style="margin-right: 10px; margin-top:0px;font-size:18px; background-color:red"></i>
+</el-badge> -->
+
+                        <el-dropdown trigger="click" @command="logout">
                             <span class="el-dropdown-link">
                                 Username<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="a"><span class="mdi mdi-account" /> Profile</el-dropdown-item>
-                                <el-dropdown-item command="a"><span class="mdi mdi-power" /> Logout</el-dropdown-item>
+                                <el-dropdown-item command="logout"><span class="mdi mdi-power" /> Logout</el-dropdown-item>
+
+                                <!--<a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ 'Logout' }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>-->
+                                    
                             </el-dropdown-menu>
                         </el-dropdown>
+
+                        
+<i class="el-icon-bell" style="margin-left: 5px; margin-top:0px;font-size:16px;"> <span v-if="side_nav" style="position:relative; top:-12px; right:3px; background-color:#E40D0D; color:white; border-radius:50%; font-size:10px;padding:3px; font-weight:normal; font-style:normal">12</span> </i>
+
+
                     </div>
                 </div>
             
             </el-header>
             
             <el-main>
-            <el-table :data="tableData">
+                <!-- <router-link to="/home">Home | </router-link>
+                <router-link to="/user/gg">Page Not Exist | </router-link>
+                <router-link to="/home/sample">Sample | </router-link>
+                <router-link to="/home/patient">Patient List</router-link> -->
+            <!--<el-table :data="tableData">
                 <el-table-column prop="date" label="Date" width="140">
                 </el-table-column>
                 <el-table-column prop="name" label="Name" width="120">
                 </el-table-column>
                 <el-table-column prop="address" label="Address">
                 </el-table-column>
-            </el-table>
+            </el-table>-->
+                <router-view />
             </el-main>
         </el-container>
     </el-container>
@@ -144,7 +193,8 @@ export default {
         };
         return {
             side_nav: true,
-            tableData: Array(23).fill(item)
+            tableData: Array(23).fill(item),
+            baseUrl: location.origin.concat('/')
         }
     },
     methods: {
@@ -155,11 +205,37 @@ export default {
             this.side_nav = !this.side_nav
             console.log(this.side_nav)
         },handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
+            console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        logout(command) {
+            if (command == 'logout') {
+                //console.log('logout: ', command)
+                axios.post('logout').then(response => {
+                    if (response.status === 302 || 401) {
+                        console.log('logouted')
+                        location.reload()
+                    }
+                    else {
+                        console.log('failed')
+                        // throw error and go to catch block
+                    }
+                    }).catch(error => {
+                        console.log("ee", error)
+                });
+            } else {
+                console.log('profile: ', command)
+            }
+            
+        },
+        errorHandler() {
+            return true
+        }
+    },
+    mounted() {
+        //alert('aDA')
     }
 }
 </script>
