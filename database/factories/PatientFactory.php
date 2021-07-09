@@ -23,6 +23,8 @@ class PatientFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'gender' => $this->faker->randomElement(['M', 'F']),
+            'birth_date' => $this->faker->date(),
             'address' => $this->faker->address(),
         ];
     }
