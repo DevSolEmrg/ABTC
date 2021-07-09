@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
     data() {
         const item = {
@@ -127,6 +128,7 @@ export default {
 		},
     },
     computed: {
+        ...mapGetters(['patients']),
         ListData() {
             if(this.search == null) return this.data;
             this.filtered = this.data.filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
