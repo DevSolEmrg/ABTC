@@ -15,16 +15,15 @@ class CreateTreatmentsTable extends Migration
     {
         Schema::create('treatments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_history_id');
+            $table->foreignId('patient_history_id')->constrained('patient_histories');
             $table->enum('category', ['1', '2', '3']);
             $table->boolean('is_washed')->default(true);
-            $table->date('rig_date');
+            //$table->date('rig_date');
             $table->string('route');
             $table->date('date');
             $table->text('brand_name');
-            $table->text('physician_order');//todo
-            $table->text('nurce_notes');//todo
-            $table->text('remarks');
+            //$table->text('physician_order');//todo
+            //$table->text('nurce_notes');//todo
             $table->timestamps();
         });
     }
