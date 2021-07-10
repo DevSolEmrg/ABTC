@@ -236,6 +236,11 @@ export default {
     },
     mounted() {
         //alert('aDA')
+        console.log('auth container mounted:', this.$attrs.auth)
+
+        if (this.$attrs.auth) {
+            this.$store.commit('SET_AUTH', this.$attrs.auth)
+        }
     }
 }
 </script>

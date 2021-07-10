@@ -27,7 +27,7 @@
 
 <div id="app">
     {{-- <auth-container /> --}}
-    <router-view>
+    <router-view :auth="{{ $auth }}"/>
 
     {{-- {{ $auth }} --}}
 </div>
