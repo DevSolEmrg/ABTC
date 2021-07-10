@@ -17,7 +17,7 @@
                         <el-button-group style="float: right;">
                             <!-- <el-button type="primary" size="mini"   plain>EXCEL</el-button> -->
                             <!-- <el-button type="primary" size="mini" circle><i class="el-icon-refresh"/></el-button> -->
-                            <el-button type="primary" size="mini" >ADD</el-button>
+                            <el-button type="primary" size="mini" @click="addPatient">ADD</el-button>
                             <el-dropdown>
                                 <el-button type="primary"  size="mini"   >
                                     EXCEL<i class="el-icon-arrow-down el-icon--right"></i>
@@ -33,13 +33,15 @@
             </div>
 
             <el-table  v-loading="loading" :data="ListData" border>
-                <el-table-column prop="date" label="Date" width="140">
-                </el-table-column>
-                <el-table-column prop="name" label="Name" width="120">
+                <el-table-column prop="name" label="Name" width="220">
                 </el-table-column>
                 <el-table-column prop="address" label="Address">
                 </el-table-column>
-                <el-table-column width="105" align="center" fixed="right" label="Action">
+                <el-table-column prop="id" label="#Exposure" width="100">
+                </el-table-column>
+                <el-table-column prop="date" label="Last Exposure" width="120">
+                </el-table-column>
+                <el-table-column width="135" align="center" fixed="right" label="Action">
                     <!-- <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="Type to search"/>
                     </template> -->
@@ -54,6 +56,9 @@
                             <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.$index, scope.row)"></el-button>
                         </el-tooltip>-->
                         <el-button-group>
+                            <el-tooltip class="item" effect="light" content="Add New Exposure" placement="top" :enterable="false">
+                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain></el-button>
+                            </el-tooltip>
                             <el-tooltip class="item" effect="light" content="View" placement="top" :enterable="false">
                                 <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain></el-button>
                             </el-tooltip>
@@ -109,7 +114,8 @@ export default {
             address: 'No. 189, Grove St, Los Angeles'
         };
         return {
-            data: Array(523).fill(item),
+            //data: Array(523).fill(item),
+            data: JSON.parse(JSON.stringify(this.$store.state.patients.patients)),
             page: 1,
 	    	pageSize: 10,
             loading: true,
@@ -117,6 +123,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['getPatients', 'managePatients']),
         handleView(index, row) {
         },
         handleEdit(index, row) {
@@ -126,9 +133,12 @@ export default {
         handleCurrentChange(val) {
 			this.page = val;
 		},
+        addPatient() {
+            this.managePatients({id: 2, data: ['data1']});
+        }
     },
     computed: {
-        ...mapGetters(['patients']),
+        ...mapGetters(['patients', 'auth']),
         ListData() {
             if(this.search == null) return this.data;
             this.filtered = this.data.filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
@@ -138,7 +148,13 @@ export default {
     },
     mounted() {
         this.loading = false
-    }
+        this.getPatients();
+        //this.data = this.patients
+        //console.log(this.$store.state.patients.patients)
+    },
+    // beforeCreate() {
+    //     this.data = this.$store.state.patients.patients
+    // }
 }
 </script>
 
