@@ -9,6 +9,13 @@ class Patient extends Model
 {
     use HasFactory;
 
+    protected $appends = ['date'];
+
+    public function getDateAttribute()
+    {
+        return $this->birth_date;
+    }
+
     public function history()
     {
         return $this->hasMany(PatientHistory::class);
