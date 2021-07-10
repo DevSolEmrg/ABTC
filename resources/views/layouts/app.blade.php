@@ -14,7 +14,10 @@
     </script>-->
     
     <script>
-        if (location.origin.concat('/js/popper.js.map') == location.href) {
+        if (
+            (location.origin.concat('/js/popper.js.map') == location.href) ||
+            (location.origin.concat('/js/vuex-persistedstate.es.js.map') == location.href)
+        ) {
             location.assign(location.origin.concat('/home'))
         }
     </script>
