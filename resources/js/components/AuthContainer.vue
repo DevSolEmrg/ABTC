@@ -66,7 +66,7 @@
             </div>
             <el-menu
                 style="border:none"
-                default-active="2"
+                :default-active="$route.name"
                 class="el-menu-vertical-demo"
                 @open="handleOpen"
                 @close="handleClose"
@@ -76,15 +76,15 @@
                 router
             >
                 
-                <el-menu-item index="2" :route="{ name: 'Dashboard' }">
+                <el-menu-item index="Dashboard" :route="{ name: 'Dashboard' }">
                     <i class="el-icon-s-home"></i>
                     <span>Dashboard</span>
                 </el-menu-item>
-                <el-menu-item index="5" :route="{ name: 'Patient List' }">
+                <el-menu-item index="Patient List" :route="{ name: 'Patient List' }">
                     <i class="el-icon-user-solid"></i>
                     <span>Patient</span>
                 </el-menu-item>
-                <el-menu-item index="6" :route="{ name: 'Sample' }">
+                <el-menu-item index="Sample" :route="{ name: 'Sample' }">
                     <i class="el-icon-s-custom"></i>
                     <span>Personnel</span>
                 </el-menu-item>
@@ -116,7 +116,8 @@
         <el-container>
             <el-header style="background-color:white;border-bottom: 1px solid #eee; ">
                 <div class="row">
-                    <div class="col-6 px-1"> <span class="mdi mdi-menu btn" @click="toggleSideNav()"/> Title / sgsd / sdg</div>
+                    <!-- <div class="col-6 px-1"> <span class="mdi mdi-menu btn" @click="toggleSideNav()"/> Title / sgsd / sdg</div> -->
+                    <div class="col-6 px-1"> <span class="mdi mdi-menu btn" @click="toggleSideNav()"/> {{ $route.name }} </div>
                     <div class="col-6 pl-1" style="text-align: right; font-size: 12px">
                         <!--<el-dropdown>
                             <i class="el-icon-setting" style="margin-right: 15px"></i>
