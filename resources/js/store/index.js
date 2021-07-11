@@ -16,6 +16,12 @@ const store =  new Vuex.Store({
     plugins: [
         createPersistedState({
             key: "state",
+            reducer (val) {
+                if(!val.users.auth){
+                    return {}
+                }
+                return val
+            },
             storage: window.localStorage
         })
     ]

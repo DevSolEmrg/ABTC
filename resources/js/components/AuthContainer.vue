@@ -59,7 +59,7 @@
                 <div class="col-12" style="background-color:#FFC230">
                     <div class="row">
                         <div class="col-12"><strong>ABTC SORSOGON</strong></div>
-                        <div class="col-12" style="background-color:#FFCD3E">Mark Dy</div>
+                        <div class="col-12" style="background-color:#FFCD3E">{{ auth.name }}</div>
                         <div class="col-12" style="background-color:#FFCD3E">Admin</div>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
 
                         <el-dropdown trigger="click" @command="logout">
                             <span class="el-dropdown-link">
-                                Username<i class="el-icon-arrow-down el-icon--right"></i>
+                                {{ auth.email.split('@')[0] }}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="a"><span class="mdi mdi-account" /> Profile</el-dropdown-item>
@@ -185,6 +185,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
     data() {
         const item = {
@@ -197,6 +198,9 @@ export default {
             tableData: Array(23).fill(item),
             baseUrl: location.origin.concat('/')
         }
+    },
+    computed: {
+        ...mapGetters(['auth'])
     },
     methods: {
         samplefunct() {
@@ -217,6 +221,7 @@ export default {
                 axios.post('logout').then(response => {
                     if (response.status === 302 || 401) {
                         console.log('logouted')
+                        this.$store.commit("UNSET_AUTH")
                         location.reload()
                     }
                     else {

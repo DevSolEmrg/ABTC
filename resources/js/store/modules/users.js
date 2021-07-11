@@ -12,6 +12,9 @@ const actions = {
 const mutations = {
     SET_AUTH: (state, user) => {
         state.auth = user
+    },
+    UNSET_AUTH: (state) => {
+        state.auth = null
     }
 };
 
