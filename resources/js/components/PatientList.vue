@@ -176,7 +176,7 @@ export default {
         };
         return {
             //data: Array(523).fill(item),
-            data: JSON.parse(JSON.stringify(this.$store.state.patients.patients)),
+            //data: JSON.parse(JSON.stringify(this.$store.state.patients.patients)),
             page: 1,
 	    	pageSize: 10,
             loading: true,
@@ -280,6 +280,9 @@ export default {
     },
     computed: {
         ...mapGetters(['patients', 'auth']),
+        data() {
+            return this.patients
+        },
         ListData() {
             if(this.search == null) return this.data;
             this.filtered = this.data.filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
@@ -289,14 +292,15 @@ export default {
     },
     mounted() {
         this.loading = false
-        this.getPatients();
+        //this.getPatients();
         //this.data = this.patients
         //console.log(this.$store.state.patients.patients)
         console.log(this.$route)
     },
-    // beforeCreate() {
-    //     this.data = this.$store.state.patients.patients
-    // }
+    beforeCreate() {
+        //this.data = this.$store.state.patients.patients
+        this.$store.dispatch("getPatients");
+    }
 }
 </script>
 
