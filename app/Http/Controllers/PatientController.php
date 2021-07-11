@@ -9,7 +9,7 @@ class PatientController extends Controller
 {
     public function getPatients()
     {
-        return Patient::get();
+        return Patient::orderBy('id', 'DESC')->get();
     }
 
     public function managePatients(Patient $patient, Request $request)
