@@ -35,7 +35,7 @@
             <el-table  v-loading="loading" :data="ListData" border>
                 <el-table-column prop="name" label="Name" width="220">
                 </el-table-column>
-                <el-table-column prop="address" label="Address">
+                <el-table-column prop="address" label="Address" min-width="300">
                 </el-table-column>
                 <el-table-column prop="id" label="#Exposure" width="100">
                 </el-table-column>
@@ -57,7 +57,7 @@
                         </el-tooltip>-->
                         <el-button-group>
                             <el-tooltip class="item" effect="light" content="Add New Exposure" placement="top" :enterable="false">
-                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain></el-button>
+                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="table = true"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="View" placement="top" :enterable="false">
                                 <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain></el-button>
@@ -66,7 +66,7 @@
                                 <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="Delete" placement="top" :enterable="false">
-                                <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain></el-button>
+                                <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete"></el-button>
                             </el-tooltip>
                         </el-button-group>
                     </template>
@@ -100,6 +100,67 @@
             </span>
         </div>
     </el-col>
+    <el-col :span="24">
+        <el-drawer
+            title="I have a nested table inside!"
+            :visible.sync="table"
+            direction="rtl"
+            size="60%"
+        >
+            <el-table :data="gridData">
+                <el-table-column property="date" label="Date" width="150"></el-table-column>
+                <el-table-column property="name" label="Name" width="200"></el-table-column>
+                <el-table-column property="address" label="Address"></el-table-column>
+                <el-table-column label="Action" align="center">
+                    <el-button @click="innerDrawer = true">Click me!</el-button>
+                </el-table-column>
+            </el-table>
+            <el-drawer
+                title="I'm inner Drawer"
+                :append-to-body="true"
+                :visible.sync="innerDrawer"
+                size="59%"
+            >
+                <p>_(:зゝ∠)_</p>
+            </el-drawer>
+        </el-drawer>
+    </el-col>
+    <el-col :span="24">
+        <el-dialog
+            title="Add Patient"
+            :visible.sync="dialogVisible"
+            width="30%"
+        >
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+                <el-form-item label="Name" prop="name">
+                    <el-input v-model="ruleForm.name"></el-input>
+                </el-form-item>
+                <el-form-item label="Gender" prop="region">
+                    <el-select v-model="ruleForm.region" placeholder="Activity zone">
+                    <el-option label="Zone one" value="shanghai"></el-option>
+                    <el-option label="Zone two" value="beijing"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Birth Date" required>
+                    <el-form-item prop="date1">
+                        <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item label="Address" prop="desc">
+                    <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+                </el-form-item>
+                <el-form-item align="right">
+                    <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
+                </el-form-item>
+            </el-form>
+
+            <!-- <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+            </span> -->
+        </el-dialog>
+    </el-col>
 </el-row>
     
 </template>
@@ -120,6 +181,57 @@ export default {
 	    	pageSize: 10,
             loading: true,
             search: "",
+            table: false,
+            gridData: [{
+                date: '2016-05-02',
+                name: 'Peter Parker',
+                address: 'Queens, New York City'
+            }, {
+                date: '2016-05-04',
+                name: 'Peter Parker',
+                address: 'Queens, New York City'
+            }, {
+                date: '2016-05-01',
+                name: 'Peter Parker',
+                address: 'Queens, New York City'
+            }, {
+                date: '2016-05-03',
+                name: 'Peter Parker',
+                address: 'Queens, New York City'
+            }],
+            innerDrawer: false,
+            dialogVisible: false,
+            ruleForm: {
+                name: '',
+                region: '',
+                date1: '',
+                resource: '',
+                desc: ''
+            },
+            rules: {
+            name: [
+                { required: true, message: 'Please input Activity name', trigger: 'blur' },
+                { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
+            ],
+            region: [
+                { required: true, message: 'Please select Activity zone', trigger: 'change' }
+            ],
+            date1: [
+                { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
+            ],
+            date2: [
+                { type: 'date', required: true, message: 'Please pick a time', trigger: 'change' }
+            ],
+            type: [
+                { type: 'array', required: true, message: 'Please select at least one activity type', trigger: 'change' }
+            ],
+            resource: [
+                { required: true, message: 'Please select activity resource', trigger: 'change' }
+            ],
+            desc: [
+                { required: true, message: 'Please input activity form', trigger: 'blur' }
+            ]
+            }
         }
     },
     methods: {
@@ -129,12 +241,41 @@ export default {
         handleEdit(index, row) {
         },
         handleDelete(index, row) {
+            this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: 'Delete completed'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'Delete canceled'
+                });          
+            });
 		},
         handleCurrentChange(val) {
 			this.page = val;
 		},
         addPatient() {
-            this.managePatients({id: 2, data: ['data1']});
+            //this.managePatients({id: 2, data: ['data1']});
+            this.dialogVisible = true
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+            if (valid) {
+                alert('submit!');
+            } else {
+                console.log('error submit!!');
+                return false;
+            }
+            });
+        },
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
         }
     },
     computed: {
@@ -151,6 +292,7 @@ export default {
         this.getPatients();
         //this.data = this.patients
         //console.log(this.$store.state.patients.patients)
+        console.log(this.$route)
     },
     // beforeCreate() {
     //     this.data = this.$store.state.patients.patients
