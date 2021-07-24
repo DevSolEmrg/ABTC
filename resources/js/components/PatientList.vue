@@ -82,7 +82,7 @@
                     layout="prev, pager, next"
                     @current-change="handleCurrentChange"
                     :page-size="pageSize"
-                    :total="data.length"
+                    :total="total"
                     hide-on-single-page>
                 </el-pagination>
             </div>
@@ -126,7 +126,8 @@
         </el-drawer>
     </el-col>
     <el-col :span="24">
-        <el-dialog
+        <patient-add-update v-if="managePatientDialog" :dialog-visible="managePatientDialog" @close-dialog="managePatientDialog=$event"/>
+        <!-- <el-dialog
             title="Add Patient"
             :visible.sync="dialogVisible"
             width="30%"
@@ -155,11 +156,11 @@
                 </el-form-item>
             </el-form>
 
-            <!-- <span slot="footer" class="dialog-footer">
+            <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">Cancel</el-button>
                 <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
-            </span> -->
-        </el-dialog>
+            </span>
+        </el-dialog> -->
     </el-col>
 </el-row>
     
@@ -167,7 +168,9 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import PatientAddUpdate from './patient/PatientAddUpdate'
 export default {
+    components: { PatientAddUpdate },
     data() {
         const item = {
             date: '2016-05-02',
@@ -200,38 +203,8 @@ export default {
                 address: 'Queens, New York City'
             }],
             innerDrawer: false,
-            dialogVisible: false,
-            ruleForm: {
-                name: '',
-                region: '',
-                date1: '',
-                resource: '',
-                desc: ''
-            },
-            rules: {
-            name: [
-                { required: true, message: 'Please input Activity name', trigger: 'blur' },
-                { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
-            ],
-            region: [
-                { required: true, message: 'Please select Activity zone', trigger: 'change' }
-            ],
-            date1: [
-                { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
-            ],
-            date2: [
-                { type: 'date', required: true, message: 'Please pick a time', trigger: 'change' }
-            ],
-            type: [
-                { type: 'array', required: true, message: 'Please select at least one activity type', trigger: 'change' }
-            ],
-            resource: [
-                { required: true, message: 'Please select activity resource', trigger: 'change' }
-            ],
-            desc: [
-                { required: true, message: 'Please input activity form', trigger: 'blur' }
-            ]
-            }
+            managePatientDialog: false
+            
         }
     },
     methods: {
@@ -262,32 +235,36 @@ export default {
 		},
         addPatient() {
             //this.managePatients({id: 2, data: ['data1']});
-            this.dialogVisible = true
+            this.managePatientDialog = true
         },
-        submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-            if (valid) {
-                alert('submit!');
-            } else {
-                console.log('error submit!!');
-                return false;
-            }
-            });
-        },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
-        }
+        
     },
     computed: {
         ...mapGetters(['patients', 'auth']),
         data() {
             return this.patients
         },
+        // ListData() {
+        //     if(this.search == null) return this.data;
+        //     this.filtered = this.data.filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
+        //     this.total = this.filtered.length;
+        //     return this.filtered.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page);
+        // }
+        searching() {
+            if (!this.search) {
+                this.total = this.data.length;
+                return this.data;
+            }
+            this.page = 1;
+            return this.data.filter(
+                data => data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
+        },
         ListData() {
-            if(this.search == null) return this.data;
-            this.filtered = this.data.filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
-            this.total = this.filtered.length;
-            return this.filtered.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page);
+            this.total = this.searching.length;
+            return this.searching.slice(
+                this.pageSize * this.page - this.pageSize,
+                this.pageSize * this.page
+            );
         }
     },
     mounted() {
@@ -304,6 +281,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
