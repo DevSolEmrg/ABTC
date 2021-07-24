@@ -10,7 +10,7 @@
     >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
             <el-form-item label="Name" prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+                <el-input v-model="ruleForm.name" ref="name"></el-input>
             </el-form-item>
             <el-form-item label="Gender" prop="gender">
                 <el-select v-model="ruleForm.gender" placeholder="Select">
@@ -56,7 +56,6 @@ export default {
             rules: {
                 name: [
                     { required: true, message: 'Please input Activity name', trigger: 'blur' },
-                    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
                 ],
                 gender: [
                     { required: true, message: 'Please select Activity zone', trigger: 'change' }
@@ -75,6 +74,9 @@ export default {
             },
         }
     },
+    computed: {
+        ...mapGetters(['request'])
+    },
     methods: {
         ...mapActions(['managePatients']),
         closeDialog() {
@@ -86,7 +88,39 @@ export default {
                 //alert('submit!');
                 let form = JSON.parse(JSON.stringify(this.ruleForm))
                 form.birth_date = buildDate(form.birth_date)
-                this.managePatients(form)
+                this.managePatients(form).then(()=>{
+                    if (this.request.status == 'success') {
+                      
+                        this.$notify({
+                            title: 'Success',
+                            message: this.request.message,
+                            type: 'success',
+                            duration: 6000,
+                           position: 'bottom-right'
+                        });
+                        
+                        this.$nextTick(()=>{
+                            
+                            this.resetForm('ruleForm')
+
+                            this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+                        })
+                        
+                        // setTimeout(() => {
+                        //     this.closeDialog()
+                        // }, 600);
+                        
+                    } else {
+                        this.$notify({
+                            title: 'Error',
+                            message: this.request.message,
+                            type: 'error',
+                            duration: 0,
+                           
+                        });
+                    }
+                    console.log('ok na')
+                })
             } else {
                 console.log('error submit!!');
                 return false;

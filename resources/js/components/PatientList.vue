@@ -33,7 +33,7 @@
             </div>
 
             <el-table  v-loading="loading" :data="ListData" border>
-                <el-table-column prop="name" label="Name" width="220">
+                <el-table-column prop="name" label="Fullname" width="220">
                 </el-table-column>
                 <el-table-column prop="address" label="Address" min-width="300">
                 </el-table-column>
