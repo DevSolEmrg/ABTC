@@ -247,6 +247,7 @@ export default {
         if (this.$attrs.auth) {
             this.$store.commit('SET_AUTH', this.$attrs.auth)
         }
+        this.side_nav = window.innerWidth > 767 ? true : false;
     }
 }
 </script>
