@@ -57,7 +57,7 @@
                         </el-tooltip>-->
                         <el-button-group>
                             <el-tooltip class="item" effect="light" content="Add New Exposure" placement="top" :enterable="false">
-                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="table = true"></el-button>
+                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="managePatientHistory = true"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="View" placement="top" :enterable="false">
                                 <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain></el-button>
@@ -101,7 +101,8 @@
         </div>
     </el-col>
     <el-col :span="24">
-        <el-drawer
+        <patient-history-list v-if="managePatientHistory" :visible="managePatientHistory" @close="managePatientHistory=$event" />
+        <!-- <el-drawer
             title="I have a nested table inside!"
             :visible.sync="table"
             direction="rtl"
@@ -123,10 +124,10 @@
             >
                 <p>_(:зゝ∠)_</p>
             </el-drawer>
-        </el-drawer>
+        </el-drawer> -->
     </el-col>
     <el-col :span="24">
-        <patient-add-update v-if="managePatientDialog" :dialog-visible="managePatientDialog" @close-dialog="managePatientDialog=$event"/>
+        <patient-add-update v-if="managePatientDialog" :dialog-visible="managePatientDialog" @close-dialog="managePatientDialog=$event" />
         <!-- <el-dialog
             title="Add Patient"
             :visible.sync="dialogVisible"
@@ -169,8 +170,9 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import PatientAddUpdate from './patient/PatientAddUpdate'
+import PatientHistoryList from './patient/PatientHistoryList'
 export default {
-    components: { PatientAddUpdate },
+    components: { PatientAddUpdate, PatientHistoryList },
     data() {
         const item = {
             date: '2016-05-02',
@@ -184,26 +186,9 @@ export default {
 	    	pageSize: 10,
             loading: true,
             search: "",
-            table: false,
-            gridData: [{
-                date: '2016-05-02',
-                name: 'Peter Parker',
-                address: 'Queens, New York City'
-            }, {
-                date: '2016-05-04',
-                name: 'Peter Parker',
-                address: 'Queens, New York City'
-            }, {
-                date: '2016-05-01',
-                name: 'Peter Parker',
-                address: 'Queens, New York City'
-            }, {
-                date: '2016-05-03',
-                name: 'Peter Parker',
-                address: 'Queens, New York City'
-            }],
-            innerDrawer: false,
-            managePatientDialog: false
+            
+            managePatientDialog: false,
+            managePatientHistory: false
             
         }
     },
