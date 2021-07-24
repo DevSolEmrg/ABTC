@@ -14,10 +14,14 @@ const actions = {
         });
     },
     async managePatients({ commit, dispatch }, form) {
-        await axios.post(`manage_patients/${form.id ?? ""}`, form).then(response => {
-            console.log('manage patients response:', response)
-            dispatch("getPatients");
-        });
+        await axios.post(`manage_patients/${form.id ?? ""}`, form)
+            .then(response => {
+                commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Patient record has been successfully saved!' })
+                //console.log('manage patients response:', response)
+                dispatch("getPatients");
+            }).catch(error=>{
+                commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the patient record!' })
+            });
     }
 };
 
