@@ -9,6 +9,13 @@ class Patient extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'gender',
+        'birth_date',
+        'address'
+    ];
+
     protected $appends = ['date'];
 
     public function getDateAttribute()
