@@ -8,13 +8,14 @@ require('./bootstrap');
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import locale from 'element-ui/lib/locale/lang/en'
 import routes from './routes';
 import 'es6-promise/auto';
 import store from './store';
 
 window.Vue = require('vue').default;
 
-Vue.use(ElementUI);
+Vue.use(ElementUI, { locale });
 
 /**
  * The following block of code may be used to automatically register your
