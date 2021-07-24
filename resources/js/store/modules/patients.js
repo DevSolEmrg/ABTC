@@ -14,7 +14,7 @@ const actions = {
         });
     },
     async managePatients({ commit, dispatch }, form) {
-        await axios.post(`/api/manage_patients/${form.id ?? ""}`, form).then(response => {
+        await axios.post(`manage_patients/${form.id ?? ""}`, form).then(response => {
             console.log('manage patients response:', response)
             dispatch("getPatients");
         });
