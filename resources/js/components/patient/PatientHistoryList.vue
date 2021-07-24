@@ -3,7 +3,7 @@
         title="I have a nested table inside!"
         :visible.sync="visible"
         direction="rtl"
-        size="60%"
+        :size="`${size}%`"
         :wrapperClosable="false"
         :close-on-press-escape="false"
         :destroy-on-close="true"
@@ -22,7 +22,7 @@
             title="I'm inner Drawer"
             :append-to-body="true"
             :visible.sync="innerDrawer"
-            size="59%"
+            :size="`${size-1}%`"
         >
             <p>_(:зゝ∠)_</p>
         </el-drawer>
@@ -30,10 +30,12 @@
 </template>
 
 <script>
+import { drawerSize } from '../../constants'
 export default {
     props: ['visible'],
     data() {
         return {
+            size: 60,
             gridData: [
                 {
                     date: '2016-05-02',
@@ -59,7 +61,16 @@ export default {
     methods: {
         closeDrawer() {
             this.$emit('close', false)
+        },
+        rezize() {
+            this.size = drawerSize(window.innerWidth)
         }
+    },
+    created() {
+        window.onresize = function() { this.rezize() }.bind(this)
+    },
+    mounted() {
+        this.rezize()
     }
 }
 </script>
