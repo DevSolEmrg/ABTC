@@ -33,14 +33,15 @@
             </div>
 
             <el-table  v-loading="loading" :data="ListData" border>
-                <el-table-column prop="name" label="Fullname" width="220">
+                <el-table-column prop="name" label="Fullname" width="200" />
+                <el-table-column prop="gender" label="Gender" width="75" />
+                <el-table-column prop="birth_date" label="Birth Date" width="100" />
+                <el-table-column label="Age" width="48">
+                    <template slot-scope="scope"> {{ calculateAge(scope.row.birth_date) }} </template>
                 </el-table-column>
-                <el-table-column prop="address" label="Address" min-width="300">
-                </el-table-column>
-                <el-table-column prop="id" label="#Exposure" width="100">
-                </el-table-column>
-                <el-table-column prop="date" label="Last Exposure" width="120">
-                </el-table-column>
+                <el-table-column prop="address" label="Address" min-width="300" />
+                <el-table-column prop="id" label="#Exposure" width="100" />
+                <el-table-column prop="date" label="Last Exposure" width="120" />
                 <el-table-column width="135" align="center" fixed="right" label="Action">
                     <!-- <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="Type to search"/>
@@ -63,7 +64,7 @@
                                 <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="Edit" placement="top" :enterable="false">
-                                <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain></el-button>
+                                <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="handleEdit(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="Delete" placement="top" :enterable="false">
                                 <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete"></el-button>
@@ -127,7 +128,7 @@
         </el-drawer> -->
     </el-col>
     <el-col :span="24">
-        <patient-add-update v-if="managePatientDialog" :dialog-visible="managePatientDialog" @close-dialog="managePatientDialog=$event" />
+        <patient-add-update v-if="managePatientDialog" :dialog-visible="managePatientDialog" @close-dialog="managePatientDialog=$event" :selected-data="selectedData" />
         <!-- <el-dialog
             title="Add Patient"
             :visible.sync="dialogVisible"
@@ -171,6 +172,7 @@
 import { mapGetters, mapActions } from "vuex";
 import PatientAddUpdate from './patient/PatientAddUpdate'
 import PatientHistoryList from './patient/PatientHistoryList'
+import { calAge } from '../constants'
 export default {
     components: { PatientAddUpdate, PatientHistoryList },
     data() {
@@ -188,7 +190,8 @@ export default {
             search: "",
             
             managePatientDialog: false,
-            managePatientHistory: false
+            managePatientHistory: false,
+            selectedData: null
             
         }
     },
@@ -197,6 +200,10 @@ export default {
         handleView(index, row) {
         },
         handleEdit(index, row) {
+            console.log(index, row)
+            this.selectedData = row
+            this.selectedData.form_type = 'edit'
+            this.managePatientDialog = true
         },
         handleDelete(index, row) {
             this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
@@ -220,8 +227,10 @@ export default {
 		},
         addPatient() {
             //this.managePatients({id: 2, data: ['data1']});
+            this.selectedData = null
             this.managePatientDialog = true
         },
+        calculateAge(date) { return calAge(date); }
         
     },
     computed: {

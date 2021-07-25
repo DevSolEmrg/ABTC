@@ -43,11 +43,12 @@
 import { mapGetters, mapActions } from "vuex";
 import { dialogSize, buildDate } from '../../constants'
 export default {
-    props: ['dialogVisible'],
+    props: ['dialogVisible', 'selectedData'],
     data() {
         return {
             size: 30,
             ruleForm: {
+                form_type: 'add',
                 name: '',
                 gender: '',
                 birth_date: '',
@@ -96,7 +97,6 @@ export default {
                             message: this.request.message,
                             type: 'success',
                             duration: 6000,
-                           position: 'bottom-right'
                         });
                         
                         this.$nextTick(()=>{
@@ -135,6 +135,9 @@ export default {
         }
     },
     created() {
+        if (this.selectedData) {
+            Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
+        }
         window.onresize = function() { this.rezize() }.bind(this)
     },
     mounted() {
