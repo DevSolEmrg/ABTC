@@ -248,6 +248,10 @@ export default {
             this.$store.commit('SET_AUTH', this.$attrs.auth)
         }
         this.side_nav = window.innerWidth > 767 ? true : false;
+
+        window.onresize = function() {
+            this.side_nav = window.innerWidth > 767 ? true : false;
+        }.bind(this)
     }
 }
 </script>
