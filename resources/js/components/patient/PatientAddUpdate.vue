@@ -10,10 +10,10 @@
     >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
             <el-form-item label="Name" prop="name">
-                <el-input v-model="ruleForm.name" ref="name"></el-input>
+                <el-input v-model="ruleForm.name" ref="name" clearable></el-input>
             </el-form-item>
             <el-form-item label="Gender" prop="gender">
-                <el-select v-model="ruleForm.gender" placeholder="Select">
+                <el-select v-model="ruleForm.gender" placeholder="Select" clearable>
                     <el-option label="Male" value="Male"></el-option>
                     <el-option label="Female" value="Female"></el-option>
                 </el-select>
@@ -24,7 +24,7 @@
                 </el-form-item>
             </el-form-item>
             <el-form-item label="Address" prop="address">
-                <el-input type="textarea" v-model="ruleForm.address"></el-input>
+                <el-input type="textarea" v-model="ruleForm.address" :clearable="true"></el-input>
             </el-form-item>
             <el-form-item align="right">
                 <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
