@@ -266,7 +266,7 @@ export default {
         //this.getPatients();
         //this.data = this.patients
         //console.log(this.$store.state.patients.patients)
-        console.log(this.$route)
+        this.$store.commit('SET_LOADING_COMPONENT', false)
     },
     beforeCreate() {
         //this.data = this.$store.state.patients.patients

@@ -21,6 +21,9 @@ export default {
             tableData: Array(23).fill(item)
         }
     },
+    mounted() {
+        this.$store.commit('SET_LOADING_COMPONENT', false)
+    }
 }
 </script>
 

@@ -49,7 +49,7 @@
             </el-submenu>
             </el-menu>
         </el-aside>-->
-        <el-aside v-if="side_nav" style="background-color: #202124;border-right: 1px solid #eee; overflow-x:hidden">
+        <el-aside v-if="side_nav" style="background-color: #202124; overflow-x:hidden">
             <div class="row" style="background-color:#1A1A1D; text-align:center">
                 <div class="col-12">
                     <el-avatar class="mt-4 mb-3" :size="200" :src="baseUrl + 'image/user.png'" @error="errorHandler" style="background-color:#FFC230">
@@ -76,15 +76,15 @@
                 router
             >
                 
-                <el-menu-item index="Dashboard" :route="{ name: 'Dashboard' }">
+                <el-menu-item index="Dashboard" :route="{ name: 'Dashboard' }" @click="handlePageLoading('Dashboard')">
                     <i class="el-icon-s-home"></i>
                     <span>Dashboard</span>
                 </el-menu-item>
-                <el-menu-item index="Patient List" :route="{ name: 'Patient List' }">
+                <el-menu-item index="Patient List" :route="{ name: 'Patient List' }" @click="handlePageLoading('Patient List')">
                     <i class="el-icon-user-solid"></i>
                     <span>Patient</span>
                 </el-menu-item>
-                <el-menu-item index="Sample" :route="{ name: 'Sample' }">
+                <el-menu-item index="Sample" :route="{ name: 'Sample' }" @click="handlePageLoading('Sample')">
                     <i class="el-icon-s-custom"></i>
                     <span>Personnel</span>
                 </el-menu-item>
@@ -162,6 +162,10 @@
 
                     </div>
                 </div>
+
+                <div class="loader" v-if="loading_component">
+                    <div class="loaderBar" />
+                </div>
             
             </el-header>
             
@@ -200,11 +204,23 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['auth'])
+        ...mapGetters(['auth', 'loading_component', 'recent_route'])
+    },
+    watch: {
+        loading_component(status) {
+            this.$nextTick(function () {
+                if (!status) this.$store.commit('SET_LOADING_COMPONENT', false);
+            })
+        },
+        $route(to, from) { 
+          this.$store.commit('SET_RECENT_ROUTE', to.name)
+        }
     },
     methods: {
-        samplefunct() {
-            alert("clicke")
+        handlePageLoading(clicked_route) {
+            if (clicked_route != JSON.parse(JSON.stringify(this.recent_route)) && !this.loading_component) {
+                this.$store.commit('SET_LOADING_COMPONENT', true)
+            }
         },
         toggleSideNav() {
             this.side_nav = !this.side_nav
@@ -241,6 +257,7 @@ export default {
         }
     },
     mounted() {
+        this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
         //alert('aDA')
         console.log('auth container mounted:', this.$attrs.auth)
 
