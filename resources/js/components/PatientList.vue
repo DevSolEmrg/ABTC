@@ -79,7 +79,7 @@
                     </template>
                 </el-table-column>
                 <template slot="empty" slot-scope="scope">
-                    No Data
+                    {{ search ? `Your search for "${ search }" found no results.` : 'No Data'}}
                 </template>
             </el-table>
             
