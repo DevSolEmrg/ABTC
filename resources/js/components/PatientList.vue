@@ -40,8 +40,14 @@
                     <template slot-scope="scope"> {{ calculateAge(scope.row.birth_date) }} </template>
                 </el-table-column>
                 <el-table-column prop="address" label="Address" min-width="300" />
-                <el-table-column prop="history_count" label="#Exposure" width="100" />
-                <el-table-column prop="last_history.date" label="Last Exposure" width="120" />
+                <el-table-column label="#Exposure" width="100">
+                    <template slot-scope="scope"> {{ reduceFalseValue(scope.row.history_count) }} </template>
+                </el-table-column>
+                <el-table-column label="Last Exposure" width="120">
+                    <template slot-scope="scope"> {{ reduceFalseValue(scope.row.last_history) }} </template>
+                </el-table-column>
+                <!-- <el-table-column prop="history_count" label="#Exposure" width="100" />
+                <el-table-column prop="last_history.date" label="Last Exposure" width="120" /> -->
                 <el-table-column width="135" align="center" fixed="right" label="Action">
                     <!-- <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="Type to search"/>
@@ -230,8 +236,8 @@ export default {
             this.selectedData = null
             this.managePatientDialog = true
         },
-        calculateAge(date) { return calAge(date); }
-        
+        calculateAge(date) { return calAge(date) || 'N/A'; },
+        reduceFalseValue(prop) { return prop?.date? prop?.date : prop || 'N/A'; },
     },
     computed: {
         ...mapGetters(['patients', 'auth']),
