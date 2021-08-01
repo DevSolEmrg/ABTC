@@ -40,8 +40,8 @@
                     <template slot-scope="scope"> {{ calculateAge(scope.row.birth_date) }} </template>
                 </el-table-column>
                 <el-table-column prop="address" label="Address" min-width="300" />
-                <el-table-column prop="id" label="#Exposure" width="100" />
-                <el-table-column prop="date" label="Last Exposure" width="120" />
+                <el-table-column prop="history_count" label="#Exposure" width="100" />
+                <el-table-column prop="last_history.date" label="Last Exposure" width="120" />
                 <el-table-column width="135" align="center" fixed="right" label="Action">
                     <!-- <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="Type to search"/>
