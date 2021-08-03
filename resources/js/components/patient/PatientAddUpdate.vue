@@ -73,6 +73,7 @@ export default {
                     return time.getTime() > Date.now();
                 }
             },
+            isEdit: false
         }
     },
     computed: {
@@ -101,7 +102,7 @@ export default {
                         
                         this.$nextTick(()=>{
                             
-                            this.resetForm('ruleForm')
+                            if (!this.isEdit) this.resetForm('ruleForm')
 
                             this.$refs.name.$el.getElementsByTagName('input')[0].focus();
                         })
@@ -137,6 +138,10 @@ export default {
     created() {
         if (this.selectedData) {
             Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
+            if (this.selectedData.form_type == 'edit') {
+                this.ruleForm.birth_date = new Date(this.selectedData.birth_date)
+                this.isEdit = true
+            }
         }
         window.onresize = function() { this.rezize() }.bind(this)
     },

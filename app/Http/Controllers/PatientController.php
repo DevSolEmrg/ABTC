@@ -21,8 +21,18 @@ class PatientController extends Controller
         // $request->merge([
         //     'birth_date' => Carbon::parse($request->birth_date)->timezone('Asia/Manila')->format('Y-m-d')
         // ]);
+        $data = null;
+        switch ($request->form_type) {
+            case 'add':
+                $data = Patient::create($request->validated());
+                break;
+            
+            default:
+                $data = $patient->update($request->validated());
+                break;
+        }
 
-        return Patient::create($request->validated());
+            return $data;
         //dd("patient", $request->validated(), $request->all(), $request->birth_date);
     }
 

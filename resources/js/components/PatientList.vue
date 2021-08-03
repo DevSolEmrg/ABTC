@@ -206,7 +206,7 @@ export default {
         handleView(index, row) {
         },
         handleEdit(index, row) {
-            console.log(index, row)
+            //console.log(index, row)
             this.selectedData = row
             this.selectedData.form_type = 'edit'
             this.managePatientDialog = true
