@@ -73,7 +73,7 @@
                                 <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="handleEdit(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="Delete" placement="top" :enterable="false">
-                                <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete"></el-button>
+                                <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                         </el-button-group>
                     </template>
@@ -211,16 +211,31 @@ export default {
             this.selectedData.form_type = 'edit'
             this.managePatientDialog = true
         },
-        handleDelete(index, row) {
-            this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
+        async handleDelete(index, row) {
+            console.log(row)
+            await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
                 type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: 'Delete completed'
-                });
+                var form = JSON.parse(JSON.stringify(row))
+                form.form_type = "delete"      
+                this.managePatients(form).then(()=>{
+                    if (this.request.status == 'success') {
+                        this.$message({
+                            type: 'success',
+                            message: 'Delete completed'
+                        });
+                    } else {
+                        this.$notify({
+                            title: 'Error',
+                            message: this.request.message,
+                            type: 'error',
+                            duration: 0,
+                        });
+                    }
+                })
+                
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -240,7 +255,7 @@ export default {
         reduceFalseValue(prop) { return prop?.date? prop?.date : prop || 'N/A'; },
     },
     computed: {
-        ...mapGetters(['patients', 'auth']),
+        ...mapGetters(['patients', 'auth', 'request']),
         data() {
             return this.patients
         },

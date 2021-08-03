@@ -27,8 +27,11 @@ class PatientController extends Controller
                 $data = Patient::create($request->validated());
                 break;
             
-            default:
+            case 'edit':
                 $data = $patient->update($request->validated());
+                break;
+            case 'delete':
+                $data = $patient->delete();
                 break;
         }
 
