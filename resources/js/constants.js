@@ -4,7 +4,7 @@ export function drawerSize(size) {
     } else if (size > 960 && size < 1264) {
         return 80
     } else {
-        return 60
+        return 75
     }
 }
 
