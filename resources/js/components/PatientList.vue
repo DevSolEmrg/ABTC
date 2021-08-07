@@ -98,9 +98,9 @@
         </el-card>
         <div style="text-align: left; overflow-x:auto">  
             <span style="font-size:12px; color:grey">
-                Last Reload: 07/04/2021 1:28pm
+                Last Reload: {{ lastReload }}
                 <el-tooltip effect="light" content="Reload Data" placement="top" :enterable="false">
-                    <el-button  size="mini" circle style="border:none; background-color:rgba(0,0,0,0)">
+                    <el-button  size="mini" circle style="border:none; background-color:rgba(0,0,0,0)" @click="reloadData">
                         <i class="el-icon-refresh"/>
                     </el-button>
                 </el-tooltip>
@@ -197,8 +197,8 @@ export default {
             
             managePatientDialog: false,
             managePatientHistory: false,
-            selectedData: null
-            
+            selectedData: null,
+            lastReload: new Date().toLocaleString() 
         }
     },
     methods: {
@@ -253,6 +253,16 @@ export default {
         },
         calculateAge(date) { return calAge(date) || 'N/A'; },
         reduceFalseValue(prop) { return prop?.date? prop?.date : prop || 'N/A'; },
+        reloadData() {
+            this.$store.commit('SET_LOADING_COMPONENT', true)
+            this.$store.dispatch("getPatients").then(()=>{
+                this.$nextTick(()=>{
+                    this.$store.commit('SET_LOADING_COMPONENT', false)
+                    this.lastReload = new Date().toLocaleString()
+
+                })
+            });
+        }
     },
     computed: {
         ...mapGetters(['patients', 'auth', 'request']),
