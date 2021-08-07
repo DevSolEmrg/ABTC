@@ -64,7 +64,7 @@
                         </el-tooltip>-->
                         <el-button-group>
                             <el-tooltip class="item" effect="light" content="Add New Exposure" placement="top" :enterable="false">
-                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="managePatientHistory = true"></el-button>
+                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="handleAddNewExposure(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="View" placement="top" :enterable="false">
                                 <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain></el-button>
@@ -108,7 +108,7 @@
         </div>
     </el-col>
     <el-col :span="24">
-        <patient-history-list v-if="managePatientHistory" :visible="managePatientHistory" @close="managePatientHistory=$event" />
+        <patient-history-list v-if="managePatientHistory" :visible="managePatientHistory" @close="managePatientHistory=$event" :selected-patient="selectedPatient" />
         <!-- <el-drawer
             title="I have a nested table inside!"
             :visible.sync="table"
@@ -197,12 +197,17 @@ export default {
             
             managePatientDialog: false,
             managePatientHistory: false,
+            selectedPatient: [],
             selectedData: null,
             lastReload: new Date().toLocaleString() 
         }
     },
     methods: {
         ...mapActions(['getPatients', 'managePatients']),
+        handleAddNewExposure(index, row) {
+            this.selectedPatient = row
+            this.managePatientHistory = true
+        },
         handleView(index, row) {
         },
         handleEdit(index, row) {
