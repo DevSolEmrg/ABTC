@@ -31,12 +31,26 @@
                 <el-table :data="ListData" border>
                     <el-table-column property="date" label="Date" width="100"></el-table-column>
                     <el-table-column property="place" label="Place" min-width="300"></el-table-column>
-                    <el-table-column property="type_of_animal" label="Type of Animal" width="120"></el-table-column>
+                    
+                    <el-table-column property="remarks" label="Remarks" min-width="300"></el-table-column>
+
+                    <el-table-column type="expand" label="View More" width="100">
+                        <template slot-scope="props">
+                            <p><strong>Type of Animal:</strong> {{ props.row.type_of_animal }}</p>
+                            <p><strong>Type:</strong> {{ props.row.type }}</p>
+                            <p><strong>Body Parts:</strong> {{ props.row.body_parts }}</p>
+                            <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
+                            <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p>
+                        </template>
+                    </el-table-column>
+
+                    <!-- <el-table-column property="type_of_animal" label="Type of Animal" width="120"></el-table-column>
                     <el-table-column property="type" label="Type" width="60"></el-table-column>
                     <el-table-column property="body_parts" label="Body Parts" width="100"></el-table-column>
                     <el-table-column property="outcome" label="Outcome" width="90"></el-table-column>
-                    <el-table-column property="biting_animal_status" label="Biting Animal Status" width="160"></el-table-column>
-                    <el-table-column property="remarks" label="Remarks" min-width="300"></el-table-column>
+                    <el-table-column property="biting_animal_status" label="Biting Animal Status" width="160"></el-table-column> -->
+
+                    
                     <el-table-column label="Action" align="center" fixed="right" width="135">
                         <el-button @click="innerDrawer = true">Click me!</el-button>
                     </el-table-column>
