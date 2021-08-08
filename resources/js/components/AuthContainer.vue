@@ -225,6 +225,7 @@ export default {
             address: 'No. 189, Grove St, Los Angeles'
         };
         return {
+            //sideBarColor: '083421',
             side_nav: true,
             tableData: Array(23).fill(item),
             baseUrl: location.origin.concat('/')
