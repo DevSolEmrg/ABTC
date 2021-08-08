@@ -16,7 +16,7 @@
                     <div class="row">
                         <div class="col-8 px-1">
                             <el-input v-model="search" size="mini" prefix-icon="el-icon-search" placeholder="Type to search" clearable>
-                                <template slot="append"> {{ data.length }} Record</template>
+                                <template slot="append"> {{ search?`${ListData.length}/${data.length}`:data.length }} Record</template>
                             </el-input>
                         </div>
                         <div class="col-4 px-1">

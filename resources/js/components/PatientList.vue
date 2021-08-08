@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-5 px-1">
                         <el-input v-model="search" size="mini" prefix-icon="el-icon-search" placeholder="Type to search" clearable>
-                            <template slot="append"> {{ data.length }} Record</template>
+                            <template slot="append"> {{ search?`${ListData.length}/${data.length}`:data.length }} Record</template>
                         </el-input>
                     </div>
                     <div class="col-7 px-1">
