@@ -177,6 +177,7 @@
                                 <el-dropdown-item>Notification 10</el-dropdown-item>
                                 <el-dropdown-item>Notification 11</el-dropdown-item>
                                 <el-dropdown-item>Notification 12</el-dropdown-item>
+                                <el-dropdown-item divided> <i class="mdi mdi-history"></i> Show All</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
 
