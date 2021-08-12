@@ -11,7 +11,7 @@ class PatientController extends Controller
 {
     public function getPatients()
     {
-        return Patient::orderBy('id', 'DESC')->get();
+        return Patient::with(['history', 'last_history'])->withCount('history')->orderBy('id', 'DESC')->get();
     }
 
     public function managePatients(Patient $patient, PatientPostRequest $request)
@@ -21,8 +21,21 @@ class PatientController extends Controller
         // $request->merge([
         //     'birth_date' => Carbon::parse($request->birth_date)->timezone('Asia/Manila')->format('Y-m-d')
         // ]);
+        $data = null;
+        switch ($request->form_type) {
+            case 'add':
+                $data = Patient::create($request->validated());
+                break;
+            
+            case 'edit':
+                $data = $patient->update($request->validated());
+                break;
+            case 'delete':
+                $data = $patient->delete();
+                break;
+        }
 
-        return Patient::create($request->validated());
+            return $data;
         //dd("patient", $request->validated(), $request->all(), $request->birth_date);
     }
 

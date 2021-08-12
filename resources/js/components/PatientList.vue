@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-5 px-1">
                         <el-input v-model="search" size="mini" prefix-icon="el-icon-search" placeholder="Type to search" clearable>
-                            <template slot="append"> {{ data.length }} Record</template>
+                            <template slot="append"> {{ search?`${ListData.length}/${data.length}`:data.length }} Record</template>
                         </el-input>
                     </div>
                     <div class="col-7 px-1">
@@ -40,8 +40,14 @@
                     <template slot-scope="scope"> {{ calculateAge(scope.row.birth_date) }} </template>
                 </el-table-column>
                 <el-table-column prop="address" label="Address" min-width="300" />
-                <el-table-column prop="id" label="#Exposure" width="100" />
-                <el-table-column prop="date" label="Last Exposure" width="120" />
+                <el-table-column label="#Exposure" width="100">
+                    <template slot-scope="scope"> {{ reduceFalseValue(scope.row.history_count) }} </template>
+                </el-table-column>
+                <el-table-column label="Last Exposure" width="120">
+                    <template slot-scope="scope"> {{ reduceFalseValue(scope.row.last_history) }} </template>
+                </el-table-column>
+                <!-- <el-table-column prop="history_count" label="#Exposure" width="100" />
+                <el-table-column prop="last_history.date" label="Last Exposure" width="120" /> -->
                 <el-table-column width="135" align="center" fixed="right" label="Action">
                     <!-- <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="Type to search"/>
@@ -58,7 +64,7 @@
                         </el-tooltip>-->
                         <el-button-group>
                             <el-tooltip class="item" effect="light" content="Add New Exposure" placement="top" :enterable="false">
-                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="managePatientHistory = true"></el-button>
+                                <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="handleAddNewExposure(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="View" placement="top" :enterable="false">
                                 <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain></el-button>
@@ -67,13 +73,13 @@
                                 <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="handleEdit(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="Delete" placement="top" :enterable="false">
-                                <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete"></el-button>
+                                <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                         </el-button-group>
                     </template>
                 </el-table-column>
                 <template slot="empty" slot-scope="scope">
-                    No Data
+                    {{ search ? `Your search for "${ search }" found no results.` : 'No Data'}}
                 </template>
             </el-table>
             
@@ -92,9 +98,9 @@
         </el-card>
         <div style="text-align: left; overflow-x:auto">  
             <span style="font-size:12px; color:grey">
-                Last Reload: 07/04/2021 1:28pm
+                Last Reload: {{ lastReload }}
                 <el-tooltip effect="light" content="Reload Data" placement="top" :enterable="false">
-                    <el-button  size="mini" circle style="border:none; background-color:rgba(0,0,0,0)">
+                    <el-button  size="mini" circle style="border:none; background-color:rgba(0,0,0,0)" @click="reloadData">
                         <i class="el-icon-refresh"/>
                     </el-button>
                 </el-tooltip>
@@ -102,7 +108,7 @@
         </div>
     </el-col>
     <el-col :span="24">
-        <patient-history-list v-if="managePatientHistory" :visible="managePatientHistory" @close="managePatientHistory=$event" />
+        <patient-history-list v-if="managePatientHistory" :visible="managePatientHistory" @close="managePatientHistory=$event" :selected-patient="selectedPatient" />
         <!-- <el-drawer
             title="I have a nested table inside!"
             :visible.sync="table"
@@ -191,30 +197,50 @@ export default {
             
             managePatientDialog: false,
             managePatientHistory: false,
-            selectedData: null
-            
+            selectedPatient: [],
+            selectedData: null,
+            lastReload: new Date().toLocaleString() 
         }
     },
     methods: {
         ...mapActions(['getPatients', 'managePatients']),
+        handleAddNewExposure(index, row) {
+            this.selectedPatient = row
+            this.managePatientHistory = true
+        },
         handleView(index, row) {
         },
         handleEdit(index, row) {
-            console.log(index, row)
+            //console.log(index, row)
             this.selectedData = row
             this.selectedData.form_type = 'edit'
             this.managePatientDialog = true
         },
-        handleDelete(index, row) {
-            this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
+        async handleDelete(index, row) {
+            console.log(row)
+            await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
                 type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: 'Delete completed'
-                });
+                var form = JSON.parse(JSON.stringify(row))
+                form.form_type = "delete"      
+                this.managePatients(form).then(()=>{
+                    if (this.request.status == 'success') {
+                        this.$message({
+                            type: 'success',
+                            message: 'Delete completed'
+                        });
+                    } else {
+                        this.$notify({
+                            title: 'Error',
+                            message: this.request.message,
+                            type: 'error',
+                            duration: 0,
+                        });
+                    }
+                })
+                
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -230,11 +256,21 @@ export default {
             this.selectedData = null
             this.managePatientDialog = true
         },
-        calculateAge(date) { return calAge(date); }
-        
+        calculateAge(date) { return calAge(date) || 'N/A'; },
+        reduceFalseValue(prop) { return prop?.date? prop?.date : prop || 'N/A'; },
+        reloadData() {
+            this.$store.commit('SET_LOADING_COMPONENT', true)
+            this.$store.dispatch("getPatients").then(()=>{
+                this.$nextTick(()=>{
+                    this.$store.commit('SET_LOADING_COMPONENT', false)
+                    this.lastReload = new Date().toLocaleString()
+
+                })
+            });
+        }
     },
     computed: {
-        ...mapGetters(['patients', 'auth']),
+        ...mapGetters(['patients', 'auth', 'request']),
         data() {
             return this.patients
         },
@@ -266,7 +302,7 @@ export default {
         //this.getPatients();
         //this.data = this.patients
         //console.log(this.$store.state.patients.patients)
-        console.log(this.$route)
+        this.$store.commit('SET_LOADING_COMPONENT', false)
     },
     beforeCreate() {
         //this.data = this.$store.state.patients.patients

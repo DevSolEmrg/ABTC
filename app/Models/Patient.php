@@ -27,4 +27,9 @@ class Patient extends Model
     {
         return $this->hasMany(PatientHistory::class);
     }
+
+    public function last_history()
+    {
+        return $this->hasOne(PatientHistory::class)->ofMany('date');
+    }
 }

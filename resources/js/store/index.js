@@ -2,6 +2,7 @@ import patients from "./modules/patients";
 import users from "./modules/users";
 import createPersistedState from "vuex-persistedstate";
 import request from "./modules/request";
+import loader from "./modules/loader";
 
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -13,7 +14,8 @@ const store =  new Vuex.Store({
         strict: process.env.NODE_ENV !== "production",
         users,
         patients,
-        request
+        request,
+        loader
     },
     plugins: [
         createPersistedState({

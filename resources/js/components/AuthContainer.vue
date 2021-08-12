@@ -49,7 +49,7 @@
             </el-submenu>
             </el-menu>
         </el-aside>-->
-        <el-aside v-if="side_nav" style="background-color: #202124;border-right: 1px solid #eee; overflow-x:hidden">
+        <el-aside v-if="side_nav" style="background-color: #202124; overflow-x:hidden">
             <div class="row" style="background-color:#1A1A1D; text-align:center">
                 <div class="col-12">
                     <el-avatar class="mt-4 mb-3" :size="200" :src="baseUrl + 'image/user.png'" @error="errorHandler" style="background-color:#FFC230">
@@ -76,15 +76,15 @@
                 router
             >
                 
-                <el-menu-item index="Dashboard" :route="{ name: 'Dashboard' }">
+                <el-menu-item index="Dashboard" :route="{ name: 'Dashboard' }" @click="handlePageLoading('Dashboard')">
                     <i class="el-icon-s-home"></i>
                     <span>Dashboard</span>
                 </el-menu-item>
-                <el-menu-item index="Patient List" :route="{ name: 'Patient List' }">
+                <el-menu-item index="Patient List" :route="{ name: 'Patient List' }" @click="handlePageLoading('Patient List')">
                     <i class="el-icon-user-solid"></i>
                     <span>Patient</span>
                 </el-menu-item>
-                <el-menu-item index="Sample" :route="{ name: 'Sample' }">
+                <el-menu-item index="Sample" :route="{ name: 'Sample' }" @click="handlePageLoading('Sample')">
                     <i class="el-icon-s-custom"></i>
                     <span>Personnel</span>
                 </el-menu-item>
@@ -157,10 +157,42 @@
                         </el-dropdown>
 
                         
-<i class="el-icon-bell" style="margin-left: 5px; margin-top:0px;font-size:16px;"> <span v-if="side_nav" style="position:relative; top:-12px; right:3px; background-color:#E40D0D; color:white; border-radius:50%; font-size:10px;padding:3px; font-weight:normal; font-style:normal">12</span> </i>
+<!-- <i class="el-icon-bell" style="margin-left: 5px; margin-top:0px;font-size:16px;"> <span v-if="side_nav" style="position:relative; top:-12px; right:3px; background-color:#E40D0D; color:white; border-radius:50%; font-size:10px;padding:3px; font-weight:normal; font-style:normal">12</span> </i> -->
 
+                        <el-dropdown trigger="click">
+                            <span class="el-dropdown-link">
+                                <i class="el-icon-bell" style="margin-left: 5px; margin-top:0px;font-size:16px;"> <span v-if="side_nav" style="position:relative; top:-12px; right:3px; background-color:#E40D0D; color:white; border-radius:50%; font-size:10px;padding:3px; font-weight:normal; font-style:normal">12</span> </i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown" style="width:300px">
+                                <div class="px-3 mdi mdi-format-list-text" style="color:#409EFF"> &nbsp;Notification List</div>
+                                <el-dropdown-item divided>Notification 1</el-dropdown-item>
+                                <el-dropdown-item>Notification 2</el-dropdown-item>
+                                <el-dropdown-item>Notification 3</el-dropdown-item>
+                                <el-dropdown-item>Notification 4</el-dropdown-item>
+                                <el-dropdown-item>Notification 5</el-dropdown-item>
+                                <el-dropdown-item>Notification 6</el-dropdown-item>
+                                <el-dropdown-item>Notification 7</el-dropdown-item>
+                                <el-dropdown-item>Notification 8</el-dropdown-item>
+                                <el-dropdown-item>Notification 9</el-dropdown-item>
+                                <el-dropdown-item>Notification 10</el-dropdown-item>
+                                <el-dropdown-item>Notification 11</el-dropdown-item>
+                                <el-dropdown-item>Notification 12</el-dropdown-item>
+                                <el-dropdown-item divided> <i class="mdi mdi-history"></i> Show All</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+
+
+                        <!-- <el-popover placement="bottom" width="400" trigger="click">
+                            <div class="px-3 mdi mdi-format-list-text" style="color:#409EFF"> &nbsp;Notification List</div>
+                            <div v-for="o in 12" :key="o" class="text item"> {{'List item ' + o }} </div>
+                            <el-button slot="reference"><i class="el-icon-bell"></i> </el-button>
+                        </el-popover> -->
 
                     </div>
+                </div>
+
+                <div class="loader" v-if="loading_component">
+                    <div class="loaderBar" />
                 </div>
             
             </el-header>
@@ -194,17 +226,30 @@ export default {
             address: 'No. 189, Grove St, Los Angeles'
         };
         return {
+            //sideBarColor: '083421',
             side_nav: true,
             tableData: Array(23).fill(item),
             baseUrl: location.origin.concat('/')
         }
     },
     computed: {
-        ...mapGetters(['auth'])
+        ...mapGetters(['auth', 'loading_component', 'recent_route'])
+    },
+    watch: {
+        loading_component(status) {
+            this.$nextTick(function () {
+                if (!status) this.$store.commit('SET_LOADING_COMPONENT', false);
+            })
+        },
+        $route(to, from) { 
+          this.$store.commit('SET_RECENT_ROUTE', to.name)
+        }
     },
     methods: {
-        samplefunct() {
-            alert("clicke")
+        handlePageLoading(clicked_route) {
+            if (clicked_route != JSON.parse(JSON.stringify(this.recent_route)) && !this.loading_component) {
+                this.$store.commit('SET_LOADING_COMPONENT', true)
+            }
         },
         toggleSideNav() {
             this.side_nav = !this.side_nav
@@ -241,6 +286,7 @@ export default {
         }
     },
     mounted() {
+        this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
         //alert('aDA')
         console.log('auth container mounted:', this.$attrs.auth)
 
