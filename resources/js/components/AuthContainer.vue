@@ -137,7 +137,7 @@
 
                         <el-dropdown trigger="click" @command="logout">
                             <span class="el-dropdown-link">
-                                {{ auth.email.split('@')[0] }}<i class="el-icon-arrow-down el-icon--right"></i>
+                                {{ buildUsernameFromEmail() }}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="a"><span class="mdi mdi-account" /> Profile</el-dropdown-item>
@@ -283,6 +283,9 @@ export default {
         },
         errorHandler() {
             return true
+        },
+        buildUsernameFromEmail() {
+            return this.auth.email?.split('@')[0]
         }
     },
     mounted() {
