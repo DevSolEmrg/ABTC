@@ -35,22 +35,34 @@ const routes = new VueRouter({
                     name: 'Patient List',
                     beforeEnter: authenticated,
                 },
+                {
+                    path: 'medicine',
+                    component: () => import(/* webpackChunkName: "medicine_list" */ './components/MedicineList'),
+                    name: 'Medicine List',
+                    beforeEnter: authenticated,
+                },
             ]
         }
     ]
 });
 
 function authenticated (to, from, next) {
-    axios.get('check_auth').then((response) => {
-        //console.log('then before enter', response)
-        next()
-    }).catch(async(error) => {
-        //console.log('before enter err', error)
-        await store.commit("UNSET_AUTH")
+    let state = localStorage.getItem('state') ? localStorage.getItem('state') : "{}"
+    if (!Object.entries(JSON.parse(state)).length && from.fullPath != "/") {
+        store.commit("UNSET_AUTH")
         alert(`${document.title.toUpperCase()}\n• Session expired please re-login your credential to avoid any error!`)
         location.assign(location.origin.concat('/login'))
-        next()
-    });
+        next(false)
+    } else {
+        axios.get('check_auth').then((response) => {
+            next()
+        }).catch(async(error) => {
+            await store.commit("UNSET_AUTH")
+            alert(`${document.title.toUpperCase()}\n• Session expired please re-login your credential to avoid any error!`)
+            location.assign(location.origin.concat('/login'))
+            next(false)
+        });
+    }
 }
 
 export default routes

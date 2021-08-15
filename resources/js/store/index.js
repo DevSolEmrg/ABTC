@@ -1,5 +1,6 @@
 import patients from "./modules/patients";
 import users from "./modules/users";
+import medicines from "./modules/medicines";
 import createPersistedState from "vuex-persistedstate";
 import request from "./modules/request";
 import loader from "./modules/loader";
@@ -15,13 +16,14 @@ const store =  new Vuex.Store({
         users,
         patients,
         request,
-        loader
+        loader,
+        medicines
     },
     plugins: [
         createPersistedState({
             key: "state",
             reducer (val) {
-                if(!val.users.auth){
+                if (!val.users.auth) {
                     return {}
                 }
                 return val

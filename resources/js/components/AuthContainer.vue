@@ -88,7 +88,7 @@
                     <i class="el-icon-s-custom"></i>
                     <span>Personnel</span>
                 </el-menu-item>
-                <el-menu-item index="7">
+                <el-menu-item index="Medicine List" :route="{ name: 'Medicine List' }" @click="handlePageLoading('Medicine List')">
                     <i class="el-icon-s-order"></i>
                     <span>Medicine</span>
                 </el-menu-item>
