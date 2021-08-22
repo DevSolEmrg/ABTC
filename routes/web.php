@@ -24,6 +24,9 @@ Auth::routes();
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('check_auth', 'HomeController@checkAuth');
     Route::post('manage_patients/{patient?}', 'PatientController@managePatients');
+
+    Route::get('vaccines', 'VaccineController@getVaccines');
+    Route::post('manage_vaccines/{vaccine?}', 'VaccineController@manageVaccines');
     
     Route::get('/home', 'HomeController@index')->name('home');
 

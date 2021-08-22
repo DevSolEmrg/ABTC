@@ -36,9 +36,9 @@ const routes = new VueRouter({
                     beforeEnter: authenticated,
                 },
                 {
-                    path: 'medicine',
-                    component: () => import(/* webpackChunkName: "medicine_list" */ './components/MedicineList'),
-                    name: 'Medicine List',
+                    path: 'vaccine',
+                    component: () => import(/* webpackChunkName: "vaccine_list" */ './components/VaccineList'),
+                    name: 'Vaccine List',
                     beforeEnter: authenticated,
                 },
             ]
