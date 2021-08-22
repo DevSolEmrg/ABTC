@@ -18,3 +18,4 @@ public/css/*
 public/js/*
 public/[0-9]*
 public/fonts/*
+public/mix-manifest.json
