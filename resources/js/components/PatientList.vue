@@ -134,7 +134,7 @@
         </el-drawer> -->
     </el-col>
     <el-col :span="24">
-        <patient-add-update v-if="managePatientDialog" :dialog-visible="managePatientDialog" @close-dialog="managePatientDialog=$event" :selected-data="selectedData" />
+        <patient-add-update v-if="managePatientDialog" :dialog-visible="managePatientDialog" :dialog-title="dialogTitle" @close-dialog="managePatientDialog=$event" :selected-data="selectedData" />
         <!-- <el-dialog
             title="Add Patient"
             :visible.sync="dialogVisible"
@@ -199,7 +199,8 @@ export default {
             managePatientHistory: false,
             selectedPatient: [],
             selectedData: null,
-            lastReload: new Date().toLocaleString() 
+            lastReload: new Date().toLocaleString(),
+            dialogTitle: ''
         }
     },
     methods: {
@@ -214,6 +215,7 @@ export default {
             //console.log(index, row)
             this.selectedData = row
             this.selectedData.form_type = 'edit'
+            this.dialogTitle = 'Edit Patient Info.'
             this.managePatientDialog = true
         },
         async handleDelete(index, row) {
@@ -254,6 +256,7 @@ export default {
         addPatient() {
             //this.managePatients({id: 2, data: ['data1']});
             this.selectedData = null
+            this.dialogTitle = 'Add Patient'
             this.managePatientDialog = true
         },
         calculateAge(date) { return calAge(date) || 'N/A'; },

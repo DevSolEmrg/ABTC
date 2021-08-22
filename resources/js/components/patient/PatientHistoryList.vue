@@ -11,6 +11,7 @@
         :before-close="closeDrawer"
     >
         <div style="margin: 0px 10px">
+            <span>LIST OF EXPOSURE</span>
             <el-card shadow="never" :body-style="{ padding: '0px' }">
                 <div slot="header">
                     <div class="row">

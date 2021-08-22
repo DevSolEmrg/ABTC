@@ -9,33 +9,17 @@
         :before-close="closeDialog"
     >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-            <el-form-item label="Name" prop="name">
+            <el-form-item label="Vaccine" prop="name">
                 <el-input v-model="ruleForm.name" ref="name" clearable></el-input>
             </el-form-item>
-            <el-form-item label="Gender" prop="gender">
-                <el-select v-model="ruleForm.gender" placeholder="Select" clearable>
-                    <el-option label="Male" value="Male"></el-option>
-                    <el-option label="Female" value="Female"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="Birth Date" required>
-                <el-form-item prop="birth_date">
-                    <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.birth_date" style="width: 100%;" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
-                </el-form-item>
-            </el-form-item>
-            <el-form-item label="Address" prop="address">
-                <el-input type="textarea" v-model="ruleForm.address" :clearable="true"></el-input>
+            <el-form-item label="Description" prop="description">
+                <el-input type="textarea" rows="6" v-model="ruleForm.description" :clearable="true"></el-input>
             </el-form-item>
             <el-form-item align="right">
                 <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
                 <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
             </el-form-item>
         </el-form>
-
-        <!-- <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
-        </span> -->
     </el-dialog>
 </template>
 
@@ -50,28 +34,15 @@ export default {
             ruleForm: {
                 form_type: 'add',
                 name: '',
-                gender: '',
-                birth_date: '',
-                address: ''
+                description: ''
             },
             rules: {
                 name: [
-                    { required: true, message: 'Please input patient name', trigger: 'blur' },
+                    { required: true, message: 'Please input vaccine name', trigger: 'blur' },
                 ],
-                gender: [
-                    { required: true, message: 'Please select patient gender', trigger: 'change' }
-                ],
-                birth_date: [
-                    { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
-                ],
-                address: [
-                    { required: true, message: 'Please input patient address', trigger: 'blur' }
+                description: [
+                    { required: true, message: 'Please input vaccine description', trigger: 'blur' }
                 ]
-            },
-            pickerOptions: {
-                disabledDate(time) {
-                    return time.getTime() > Date.now();
-                }
             },
             isEdit: false
         }
@@ -80,17 +51,16 @@ export default {
         ...mapGetters(['request'])
     },
     methods: {
-        ...mapActions(['managePatients']),
+        ...mapActions(['manageVaccines']),
         closeDialog() {
             this.$emit('close-dialog', false)
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
             if (valid) {
-                //alert('submit!');
                 let form = JSON.parse(JSON.stringify(this.ruleForm))
                 form.birth_date = buildDate(form.birth_date)
-                this.managePatients(form).then(()=>{
+                this.manageVaccines(form).then(()=>{
                     if (this.request.status == 'success') {
                       
                         this.$notify({
@@ -106,11 +76,6 @@ export default {
 
                             this.$refs.name.$el.getElementsByTagName('input')[0].focus();
                         })
-                        
-                        // setTimeout(() => {
-                        //     this.closeDialog()
-                        // }, 600);
-                        
                     } else {
                         this.$notify({
                             title: 'Error',
@@ -120,10 +85,8 @@ export default {
                            
                         });
                     }
-                    console.log('ok na')
                 })
             } else {
-                console.log('error submit!!');
                 return false;
             }
             });
