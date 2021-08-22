@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        title="Add Patient"
+        :title="dialogTitle"
         :visible.sync="dialogVisible"
         :width="`${size}%`"
         :close-on-click-modal="false"
@@ -43,7 +43,7 @@
 import { mapGetters, mapActions } from "vuex";
 import { dialogSize, buildDate } from '../../constants'
 export default {
-    props: ['dialogVisible', 'selectedData'],
+    props: ['dialogVisible', 'selectedData', 'dialogTitle'],
     data() {
         return {
             size: 30,
@@ -56,16 +56,16 @@ export default {
             },
             rules: {
                 name: [
-                    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+                    { required: true, message: 'Please input patient name', trigger: 'blur' },
                 ],
                 gender: [
-                    { required: true, message: 'Please select Activity zone', trigger: 'change' }
+                    { required: true, message: 'Please select patient gender', trigger: 'change' }
                 ],
                 birth_date: [
                     { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
                 ],
                 address: [
-                    { required: true, message: 'Please input activity form', trigger: 'blur' }
+                    { required: true, message: 'Please input patient address', trigger: 'blur' }
                 ]
             },
             pickerOptions: {
