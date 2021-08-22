@@ -49,18 +49,18 @@
             </el-submenu>
             </el-menu>
         </el-aside>-->
-        <el-aside v-if="side_nav" style="background-color: #202124; overflow-x:hidden">
-            <div class="row" style="background-color:#1A1A1D; text-align:center">
+        <el-aside v-if="side_nav" style="background-color: #272E3F; overflow-x:hidden">
+            <div class="row" style="background-color:#272E3F; text-align:center">
                 <div class="col-12">
-                    <el-avatar class="mt-4 mb-3" :size="200" :src="baseUrl + 'image/user.png'" @error="errorHandler" style="background-color:#FFC230">
+                    <el-avatar class="mt-4 mb-3" :size="200" :src="baseUrl + 'image/user.png'" @error="errorHandler" style="background-color:#0F6540">
                         <img :src="baseUrl + 'image/user.png'"/>
                     </el-avatar>
                 </div>
-                <div class="col-12" style="background-color:#FFC230">
+                <div class="col-12" style="background-color:#0F6540">
                     <div class="row">
-                        <div class="col-12"><strong>ABTC SORSOGON</strong></div>
-                        <div class="col-12" style="background-color:#FFCD3E">{{ auth.name }}</div>
-                        <div class="col-12" style="background-color:#FFCD3E">Admin</div>
+                        <div class="col-12" style="color:#BDBEC1; text-shadow: 0 1px 0 grey;"><strong>ABTC SORSOGON</strong></div>
+                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">{{ auth.name }}</div>
+                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">Admin</div>
                     </div>
                 </div>
             </div>
@@ -70,9 +70,9 @@
                 class="el-menu-vertical-demo"
                 @open="handleOpen"
                 @close="handleClose"
-                background-color="#202124"
+                background-color="#272E3F"
                 text-color="#fff"
-                active-text-color="#ffd04b"
+                active-text-color="#0B822B"
                 router
             >
                 
@@ -88,9 +88,9 @@
                     <i class="el-icon-s-custom"></i>
                     <span>Personnel</span>
                 </el-menu-item>
-                <el-menu-item index="Medicine List" :route="{ name: 'Medicine List' }" @click="handlePageLoading('Medicine List')">
+                <el-menu-item index="Vaccine List" :route="{ name: 'Vaccine List' }" @click="handlePageLoading('Vaccine List')">
                     <i class="el-icon-s-order"></i>
-                    <span>Medicine</span>
+                    <span>Vaccines</span>
                 </el-menu-item>
 
                 <el-menu-item index="9">
