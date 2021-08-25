@@ -62,16 +62,13 @@ export default {
                 form.birth_date = buildDate(form.birth_date)
                 this.manageVaccines(form).then(()=>{
                     if (this.request.status == 'success') {
-                      
                         this.$notify({
                             title: 'Success',
                             message: this.request.message,
                             type: 'success',
                             duration: 6000,
                         });
-                        
                         this.$nextTick(()=>{
-                            
                             if (!this.isEdit) this.resetForm('ruleForm')
 
                             this.$refs.name.$el.getElementsByTagName('input')[0].focus();
@@ -82,7 +79,6 @@ export default {
                             message: this.request.message,
                             type: 'error',
                             duration: 0,
-                           
                         });
                     }
                 })

@@ -20,7 +20,7 @@
                                     <el-dropdown-item><i class="mdi mdi-cloud-upload"></i> Import</el-dropdown-item>
                                     <el-dropdown-item><i class="mdi mdi-cloud-download"></i> Export</el-dropdown-item>
                                 </el-dropdown-menu>
-                        </el-dropdown>    
+                        </el-dropdown>
                         </el-button-group>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                     {{ search ? `Your search for "${ search }" found no results.` : 'No Data'}}
                 </template>
             </el-table>
-            
+
             <div style="text-align: center; overflow-x:auto">
                 <el-pagination
                     background
@@ -56,10 +56,9 @@
                     hide-on-single-page>
                 </el-pagination>
             </div>
-            
 
         </el-card>
-        <div style="text-align: left; overflow-x:auto">  
+        <div style="text-align: left; overflow-x:auto">
             <span style="font-size:12px; color:grey">
                 Last Reload: {{ lastReload }}
                 <el-tooltip effect="light" content="Reload Data" placement="top" :enterable="false">
@@ -74,13 +73,12 @@
         <vaccine-add-update v-if="manageVaccineDialog" :dialog-title="dialogTitle" :dialog-visible="manageVaccineDialog" @close-dialog="manageVaccineDialog=$event" :selected-data="selectedData" />
     </el-col>
 </el-row>
-    
+
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import VaccineAddUpdate from './vaccine/VaccineAddUpdate'
-import { calAge } from '../constants'
 export default {
     components: { VaccineAddUpdate },
     data() {
@@ -89,7 +87,6 @@ export default {
 	    	pageSize: 10,
             loading: true,
             search: "",
-            
             manageVaccineDialog: false,
             selectedData: null,
             lastReload: new Date().toLocaleString(),
@@ -112,7 +109,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 var form = JSON.parse(JSON.stringify(row))
-                form.form_type = "delete"      
+                form.form_type = "delete"
                 this.manageVaccines(form).then(()=>{
                     if (this.request.status == 'success') {
                         this.$message({
@@ -128,12 +125,11 @@ export default {
                         });
                     }
                 })
-                
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: 'Delete canceled'
-                });          
+                });
             });
 		},
         handleCurrentChange(val) {
