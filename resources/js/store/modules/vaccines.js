@@ -15,8 +15,7 @@ const actions = {
     async manageVaccines({ commit, dispatch }, form) {
         await axios.post(`manage_vaccines/${form.id ?? ""}`, form)
             .then(response => {
-                commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Patient record has been successfully saved!' })
-                //console.log('manage vaccines response:', response)
+                commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Vaccine record has been successfully saved!' })
                 dispatch("getVaccines");
             }).catch(error=>{
                 commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the record!' })
@@ -28,9 +27,6 @@ const mutations = {
     FETCH_ALL_VACCINES: (state, vaccines) => {
         state.vaccines = vaccines
     },
-    // SET_AUTH_USER: (state, user) => {
-    //     state.auth_user = user
-    // },
 };
 
 export default {
