@@ -17,7 +17,7 @@ class CreatePersonnelsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('position');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
