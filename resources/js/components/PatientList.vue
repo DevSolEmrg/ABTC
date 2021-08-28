@@ -6,7 +6,7 @@
                 <!-- <span>Card name</span> -->
                 <!-- <el-button style="float: right; padding: 3px 0" type="text">&nbsp;ADD</el-button>
                 <el-button style="float: right; padding: 3px 0" type="text">EXCEL |</el-button> -->
-                
+
                 <div class="row">
                     <div class="col-5 px-1">
                         <el-input v-model="search" size="mini" prefix-icon="el-icon-search" placeholder="Type to search" clearable>
@@ -26,7 +26,7 @@
                                     <el-dropdown-item><i class="mdi mdi-cloud-upload"></i> Import</el-dropdown-item>
                                     <el-dropdown-item><i class="mdi mdi-cloud-download"></i> Export</el-dropdown-item>
                                 </el-dropdown-menu>
-                        </el-dropdown>    
+                        </el-dropdown>
                         </el-button-group>
                     </div>
                 </div>
@@ -35,15 +35,17 @@
             <el-table  v-loading="loading" :data="ListData" border>
                 <el-table-column prop="name" label="Fullname" width="200" />
                 <el-table-column prop="gender" label="Gender" width="75" />
+                <el-table-column prop="civil_status" label="Civil Status" width="100" />
                 <el-table-column prop="birth_date" label="Birth Date" width="100" />
                 <el-table-column label="Age" width="48">
                     <template slot-scope="scope"> {{ calculateAge(scope.row.birth_date) }} </template>
                 </el-table-column>
                 <el-table-column prop="address" label="Address" min-width="300" />
+                <el-table-column prop="contact_number" label="Contact #" width="110" />
                 <el-table-column label="#Exposure" width="100">
                     <template slot-scope="scope"> {{ reduceFalseValue(scope.row.history_count) }} </template>
                 </el-table-column>
-                <el-table-column label="Last Exposure" width="120">
+                <el-table-column label="Last Exposure" width="155" align="center">
                     <template slot-scope="scope"> {{ reduceFalseValue(scope.row.last_history) }} </template>
                 </el-table-column>
                 <!-- <el-table-column prop="history_count" label="#Exposure" width="100" />
@@ -82,7 +84,7 @@
                     {{ search ? `Your search for "${ search }" found no results.` : 'No Data'}}
                 </template>
             </el-table>
-            
+
             <div style="text-align: center; overflow-x:auto">
                 <el-pagination
                     background
@@ -93,10 +95,10 @@
                     hide-on-single-page>
                 </el-pagination>
             </div>
-            
+
 
         </el-card>
-        <div style="text-align: left; overflow-x:auto">  
+        <div style="text-align: left; overflow-x:auto">
             <span style="font-size:12px; color:grey">
                 Last Reload: {{ lastReload }}
                 <el-tooltip effect="light" content="Reload Data" placement="top" :enterable="false">
@@ -171,7 +173,7 @@
         </el-dialog> -->
     </el-col>
 </el-row>
-    
+
 </template>
 
 <script>
@@ -194,7 +196,7 @@ export default {
 	    	pageSize: 10,
             loading: true,
             search: "",
-            
+
             managePatientDialog: false,
             managePatientHistory: false,
             selectedPatient: [],
@@ -226,7 +228,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 var form = JSON.parse(JSON.stringify(row))
-                form.form_type = "delete"      
+                form.form_type = "delete"
                 this.managePatients(form).then(()=>{
                     if (this.request.status == 'success') {
                         this.$message({
@@ -242,12 +244,12 @@ export default {
                         });
                     }
                 })
-                
+
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: 'Delete canceled'
-                });          
+                });
             });
 		},
         handleCurrentChange(val) {
@@ -260,7 +262,7 @@ export default {
             this.managePatientDialog = true
         },
         calculateAge(date) { return calAge(date) || 'N/A'; },
-        reduceFalseValue(prop) { return prop?.date? prop?.date : prop || 'N/A'; },
+        reduceFalseValue(prop) { return prop?.date_of_incident? prop?.date_of_incident : prop || 'N/A'; },
         reloadData() {
             this.$store.commit('SET_LOADING_COMPONENT', true)
             this.$store.dispatch("getPatients").then(()=>{
