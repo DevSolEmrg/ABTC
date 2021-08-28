@@ -12,8 +12,10 @@ class Patient extends Model
     protected $fillable = [
         'name',
         'gender',
+        'civil_status',
         'birth_date',
-        'address'
+        'address',
+        'contact_number'
     ];
 
     protected $appends = ['date'];
@@ -30,6 +32,6 @@ class Patient extends Model
 
     public function last_history()
     {
-        return $this->hasOne(PatientHistory::class)->ofMany('date');
+        return $this->hasOne(PatientHistory::class)->ofMany('date_of_incident');
     }
 }

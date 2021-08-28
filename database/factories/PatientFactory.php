@@ -24,8 +24,10 @@ class PatientFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'gender' => $this->faker->randomElement(['Male', 'Female']),
+            'civil_status' => $this->faker->randomElement(['Single', 'Married', 'Divorced', 'Widowed']),
             'birth_date' => $this->faker->date(),
             'address' => $this->faker->address(),
+            'contact_number' => '09'.$this->faker->numerify('#########'),
         ];
     }
 }

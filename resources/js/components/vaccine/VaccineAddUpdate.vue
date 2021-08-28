@@ -98,7 +98,6 @@ export default {
         if (this.selectedData) {
             Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
             if (this.selectedData.form_type == 'edit') {
-                this.ruleForm.birth_date = new Date(this.selectedData.birth_date)
                 this.isEdit = true
             }
         }

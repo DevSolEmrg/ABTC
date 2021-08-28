@@ -12,7 +12,7 @@
         console.log('hh', location.origin, location.href)
         location.assign('http://127.0.0.1:8000/home')
     </script>-->
-    
+
     <script>
         if (
             (location.origin.concat('/js/popper.js.map') == location.href) ||
@@ -24,7 +24,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-    
+
 
     <!-- Fonts
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -45,14 +45,14 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    
+
                     <ul class="navbar-nav mr-auto">
 
                     </ul>
 
-                    
+
                     <ul class="navbar-nav ml-auto">
-                        
+
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">

@@ -1,9 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm  justify-content-between fixed-top" style="background-color: #272E3F !important">
+    <a class="navbar-brand" style="color: #bac1c7">
+        <img src="/favicon.ico" width="25" height="25" class="d-inline-block align-top" alt=""> &nbsp;{{ config('app.name', 'ABTC-SORSOGON') }}</a>
+    <form class="form-inline" action="/">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Home</button>
+    </form>
+</nav>
+<div class="container" style="margin-top: 100px;">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 
@@ -70,4 +77,9 @@
         </div>
     </div>
 </div>
+<footer class="footer" style="position: absolute; bottom:0%;   width:100%; border-top:1px solid rgba(0,0,0,0.08); background-color: #272E3F !important">
+    <span style="font-size: 0.7rem; padding-left:15px; color:#bac1c7">
+        © {{ now()->year }} Copyright
+    </span>
+</footer>
 @endsection
