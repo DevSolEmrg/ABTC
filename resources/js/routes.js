@@ -41,6 +41,12 @@ const routes = new VueRouter({
                     name: 'Vaccine List',
                     beforeEnter: authenticated,
                 },
+                {
+                    path: 'personnel',
+                    component: () => import(/* webpackChunkName: "personnel_list" */ './components/PersonnelList'),
+                    name: 'Personnel List',
+                    beforeEnter: authenticated,
+                },
             ]
         }
     ]
@@ -48,6 +54,7 @@ const routes = new VueRouter({
 
 function authenticated (to, from, next) {
     let state = localStorage.getItem('state') ? localStorage.getItem('state') : "{}"
+    //if (!Object.entries(JSON.parse(state)).length && (from.fullPath != "/" || (from.fullPath == "/" && to.fullPath == "/home") )) {
     if (!Object.entries(JSON.parse(state)).length && from.fullPath != "/") {
         store.commit("UNSET_AUTH")
         alert(`${document.title.toUpperCase()}\n• Session expired please re-login your credential to avoid any error!`)

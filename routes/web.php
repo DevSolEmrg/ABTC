@@ -27,7 +27,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
     Route::get('vaccines', 'VaccineController@getVaccines');
     Route::post('manage_vaccines/{vaccine?}', 'VaccineController@manageVaccines');
-    
+
+    Route::get('personnels', 'PersonnelController@getPersonnels');
+    Route::post('manage_personnel/{personnel?}', 'PersonnelController@managePersonnel');
+
     Route::get('/home', 'HomeController@index')->name('home');
 
     Route::get('/home/sample', 'HomeController@index')->name('home');
