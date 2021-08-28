@@ -74,8 +74,9 @@
                 text-color="#fff"
                 active-text-color="#0B822B"
                 router
+                :default-openeds="['1']"
             >
-                
+
                 <el-menu-item index="Dashboard" :route="{ name: 'Dashboard' }" @click="handlePageLoading('Dashboard')">
                     <i class="el-icon-s-home"></i>
                     <span>Dashboard</span>
@@ -84,7 +85,7 @@
                     <i class="el-icon-user-solid"></i>
                     <span>Patient</span>
                 </el-menu-item>
-                <el-menu-item index="Sample" :route="{ name: 'Sample' }" @click="handlePageLoading('Sample')">
+                <el-menu-item index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')">
                     <i class="el-icon-s-custom"></i>
                     <span>Personnel</span>
                 </el-menu-item>
@@ -103,16 +104,16 @@
                     <i class="el-icon-setting"></i>
                     <span>User Setting</span>
                     </template>
-    
+
                     <el-menu-item index="1-1" style="padding-left:53px">My Profile</el-menu-item>
                     <el-menu-item index="1-2" style="padding-left:53px">User Management</el-menu-item>
                     <el-menu-item index="1-3" style="padding-left:53px">Role & Permission</el-menu-item>
                 </el-submenu>
 
-               
+
             </el-menu>
         </el-aside>
-        
+
         <el-container>
             <el-header style="background-color:white;border-bottom: 1px solid #eee; ">
                 <div class="row">
@@ -128,9 +129,9 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                         <span>Tom</span>-->
-<!-- <el-badge :value="200" :max="99" style=" 
+<!-- <el-badge :value="200" :max="99" style="
   margin-right: 10px; background-color:green; height:1px; padding:0px;">
- 
+
 
                         <i class="mdi mdi-bell" style="margin-right: 10px; margin-top:0px;font-size:18px; background-color:red"></i>
 </el-badge> -->
@@ -152,11 +153,11 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>-->
-                                    
+
                             </el-dropdown-menu>
                         </el-dropdown>
 
-                        
+
 <!-- <i class="el-icon-bell" style="margin-left: 5px; margin-top:0px;font-size:16px;"> <span v-if="side_nav" style="position:relative; top:-12px; right:3px; background-color:#E40D0D; color:white; border-radius:50%; font-size:10px;padding:3px; font-weight:normal; font-style:normal">12</span> </i> -->
 
                         <el-dropdown trigger="click">
@@ -194,9 +195,9 @@
                 <div class="loader" v-if="loading_component">
                     <div class="loaderBar" />
                 </div>
-            
+
             </el-header>
-            
+
             <el-main>
                 <!-- <router-link to="/home">Home | </router-link>
                 <router-link to="/user/gg">Page Not Exist | </router-link>
@@ -229,7 +230,8 @@ export default {
             //sideBarColor: '083421',
             side_nav: true,
             tableData: Array(23).fill(item),
-            baseUrl: location.origin.concat('/')
+            baseUrl: location.origin.concat('/'),
+            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         }
     },
     computed: {
@@ -241,7 +243,7 @@ export default {
                 if (!status) this.$store.commit('SET_LOADING_COMPONENT', false);
             })
         },
-        $route(to, from) { 
+        $route(to, from) {
           this.$store.commit('SET_RECENT_ROUTE', to.name)
         }
     },
@@ -267,19 +269,28 @@ export default {
                     if (response.status === 302 || 401) {
                         console.log('logouted')
                         this.$store.commit("UNSET_AUTH")
-                        location.reload()
+                        //location.reload()
+
+                        axios.get('check_auth').then((response) => {
+                            //console.log("succes:::",response)
+                        }).catch(async(error) => {
+                            //console.log("error:::",error)
+                            history.pushState(null, document.title, location.href);
+                            location.replace(location.origin.concat('/login'))
+                        });
                     }
                     else {
-                        console.log('failed')
+                        //console.log('failed')
                         // throw error and go to catch block
                     }
-                    }).catch(error => {
-                        console.log("ee", error)
+                }).catch(error => {
+                        history.pushState(null, document.title, location.href);
+                        location.replace(location.origin.concat('/login'))
                 });
             } else {
                 console.log('profile: ', command)
             }
-            
+
         },
         errorHandler() {
             return true
@@ -290,8 +301,6 @@ export default {
     },
     mounted() {
         this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
-        //alert('aDA')
-        console.log('auth container mounted:', this.$attrs.auth)
 
         if (this.$attrs.auth) {
             this.$store.commit('SET_AUTH', this.$attrs.auth)
@@ -301,7 +310,7 @@ export default {
         window.onresize = function() {
             this.side_nav = window.innerWidth > 767 ? true : false;
         }.bind(this)
-    }
+    },
 }
 </script>
 
@@ -311,7 +320,7 @@ export default {
         color: #333;
         line-height: 60px;
     }
-    
+
     .el-aside {
         color: #333;
     }
