@@ -1,6 +1,6 @@
 <template>
     <el-drawer
-        :title="selectedPatient.name.toUpperCase()"
+        :title="`PATIENT: ${selectedPatient.name.toUpperCase()}`"
         :visible.sync="visible"
         direction="rtl"
         :size="`${size}%`"
@@ -23,23 +23,27 @@
                         <div class="col-4 px-1">
                             <el-button-group style="float: right;">
                                 <el-button type="primary" size="mini"  >ADD</el-button>
-                                
+
                             </el-button-group>
                         </div>
                     </div>
                 </div>
 
-                <el-table :data="ListData" border>
-                    <el-table-column property="date" label="Date" width="100"></el-table-column>
-                    <el-table-column property="place" label="Place" min-width="300"></el-table-column>
-                    
+                <el-table :data="ListData" border :cell-style="moreDetailStyle">
+                    <el-table-column property="date_of_incident" label="Date of Incident" width="155"></el-table-column>
+                    <el-table-column property="place_of_incident" label="Place of Incident" min-width="300"></el-table-column>
                     <el-table-column property="remarks" label="Remarks" min-width="300"></el-table-column>
 
                     <el-table-column type="expand" label="View More" width="100">
                         <template slot-scope="props">
+                            <p><strong>Date of Physical Examination:</strong> {{ props.row.date_of_physical_exam }}</p>
+                            <p><strong>Place of Physical Examination:</strong> {{ props.row.place_of_physical_exam }}</p>
                             <p><strong>Type of Animal:</strong> {{ props.row.type_of_animal }}</p>
-                            <p><strong>Type:</strong> {{ props.row.type }}</p>
-                            <p><strong>Body Parts:</strong> {{ props.row.body_parts }}</p>
+                            <p><strong>Type of Exposure:</strong> {{ props.row.type_of_exposure }}</p>
+                            <p><strong>Site of Infection:</strong> {{ props.row.site_of_infection }}</p>
+                            <p><strong>Washing of Bite:</strong> {{ props.row.is_washed }}</p>
+                            <p><strong>Route:</strong> {{ props.row.route }}</p>
+                            <p><strong>Category:</strong> {{ props.row.category }}</p>
                             <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
                             <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p>
                         </template>
@@ -51,7 +55,7 @@
                     <el-table-column property="outcome" label="Outcome" width="90"></el-table-column>
                     <el-table-column property="biting_animal_status" label="Biting Animal Status" width="160"></el-table-column> -->
 
-                    
+
                     <el-table-column label="Action" align="center" fixed="right" width="135">
                         <el-button @click="innerDrawer = true">Click me!</el-button>
                     </el-table-column>
@@ -72,7 +76,7 @@
                 </div>
             </el-card>
 
-            <div style="text-align: left; overflow-x:auto">  
+            <div style="text-align: left; overflow-x:auto">
                 <span style="font-size:12px; color:grey">
                     Last Reload: {{ lastReload }}
                     <el-tooltip effect="light" content="Reload Data" placement="top" :enterable="false">
@@ -141,7 +145,7 @@ export default {
             }
             this.page = 1;
             return this.data.filter(
-                data => data.date.toLowerCase().includes(this.search.toLowerCase()) || data.place.toLowerCase().includes(this.search.toLowerCase()));
+                data => data.date_of_incident.toLowerCase().includes(this.search.toLowerCase()) || data.place_of_incident.toLowerCase().includes(this.search.toLowerCase()));
         },
         ListData() {
             this.total = this.searching.length;
@@ -161,6 +165,9 @@ export default {
         handleCurrentChange(val) {
 			this.page = val;
 		},
+        moreDetailStyle({row, column, rowIndex, columnIndex}) {
+            return columnIndex == 3 ? 'background-color:rgba(0,0,0,0.01)' : ''
+        }
     },
     created() {
         window.onresize = function() { this.rezize() }.bind(this)

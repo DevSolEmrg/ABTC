@@ -16,13 +16,18 @@ class CreatePatientHistoriesTable extends Migration
         Schema::create('patient_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients');
-            $table->date('date');
-            $table->text('place');
+            $table->dateTime('date_of_incident');
+            $table->text('place_of_incident');
+            $table->dateTime('date_of_physical_exam');
+            $table->text('place_of_physical_exam');
             $table->enum('type_of_animal', ['PD', 'PC']);
-            $table->enum('type', ['B', 'NB']);
-            $table->enum('body_parts', ['R FOOT', 'L LEG', 'L ARM', 'L HAND', 'R LEG', 'BUTTOCKS', 'R HAND']);
+            $table->enum('type_of_exposure', ['B', 'NB']);
+            $table->enum('site_of_infection', ['R FOOT', 'L LEG', 'L ARM', 'L HAND', 'R LEG', 'BUTTOCKS', 'R HAND']);
+            $table->boolean('is_washed')->default(true);
+            $table->string('route');
+            $table->enum('category', ['1', '2', '3']);
             $table->enum('outcome', ['C', 'INC', 'N', 'D']);
-            $table->enum('biting_animal_status', ['alive', 'dead', 'lost']);
+            $table->enum('biting_animal_status', ['ALIVE', 'DEAD', 'LOST']);
             $table->text('remarks');
             $table->timestamps();
         });

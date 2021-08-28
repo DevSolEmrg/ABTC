@@ -24,11 +24,16 @@ class PatientHistoryFactory extends Factory
     {
         return [
             'patient_id' => Patient::inRandomOrder()->first()->id,
-            'date' => $this->faker->date(),
-            'place' => $this->faker->address(),
+            'date_of_incident' => $this->faker->dateTime(now()),
+            'place_of_incident' => $this->faker->address(),
+            'date_of_physical_exam' => $this->faker->dateTime(now()),
+            'place_of_physical_exam' => $this->faker->address(),
             'type_of_animal' => $this->faker->randomElement(['PD', 'PC']),
-            'type' => $this->faker->randomElement(['B', 'NB']),
-            'body_parts' => $this->faker->randomElement(['R FOOT', 'L LEG', 'L ARM', 'L HAND', 'R LEG', 'BUTTOCKS', 'R HAND']),
+            'type_of_exposure' => $this->faker->randomElement(['B', 'NB']),
+            'site_of_infection' => $this->faker->randomElement(['R FOOT', 'L LEG', 'L ARM', 'L HAND', 'R LEG', 'BUTTOCKS', 'R HAND']),
+            'is_washed' => true,
+            'route' => 'ID',
+            'category' => $this->faker->randomElement(['1', '2', '3']),
             'outcome' => $this->faker->randomElement(['C', 'INC', 'N', 'D']),
             'biting_animal_status' => $this->faker->randomElement(['alive', 'dead', 'lost']),
             'remarks' => $this->faker->text()
