@@ -30,7 +30,7 @@ export function calAge(dateString) {
 
 export const permission_color =  {
     'patient' : '#32B87C',
-    'personnel' : '#409EFF',
+    'personnel' : '#3970AA',
     'vaccine' : '#A9AA55',
     'user' : '#5655AA',
     'role' : '#F56C6C',
