@@ -156,7 +156,7 @@ export default {
     computed: {
         ...mapGetters(['request', 'vaccines', 'personnels', 'roles']),
         data() {
-            return this.roles?.roles
+            return this.roles?.roles || []
         },
         searching() {
             if (!this.search) {

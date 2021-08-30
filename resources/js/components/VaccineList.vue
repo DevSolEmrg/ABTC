@@ -154,7 +154,7 @@ export default {
     computed: {
         ...mapGetters(['request', 'vaccines']),
         data() {
-            return this.vaccines
+            return this.vaccines || []
         },
         searching() {
             if (!this.search) {

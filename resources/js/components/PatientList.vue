@@ -277,7 +277,7 @@ export default {
     computed: {
         ...mapGetters(['patients', 'auth', 'request']),
         data() {
-            return this.patients
+            return this.patients || []
         },
         // ListData() {
         //     if(this.search == null) return this.data;

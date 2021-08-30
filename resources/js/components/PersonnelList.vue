@@ -160,7 +160,7 @@ export default {
     computed: {
         ...mapGetters(['request', 'vaccines', 'personnels']),
         data() {
-            return this.personnels
+            return this.personnels || []
         },
         searching() {
             if (!this.search) {
