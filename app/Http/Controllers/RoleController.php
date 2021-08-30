@@ -19,7 +19,8 @@ class RoleController extends Controller
             $roles = Role::with(['permissions'])->get();
             return response([
                 'users' => $users,
-                'roles' => $roles
+                'roles' => $roles,
+                'permissions' => Permission::get()
             ], 200);
         } catch (\Throwable $th) {
             abort(501);
