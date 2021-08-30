@@ -59,7 +59,7 @@
                 <div class="col-12" style="background-color:#0F6540">
                     <div class="row">
                         <div class="col-12" style="color:#BDBEC1; text-shadow: 0 1px 0 grey;"><strong>ABTC SORSOGON</strong></div>
-                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">{{ auth.name }}</div>
+                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">{{ userName() }}</div>
                         <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">Admin</div>
                     </div>
                 </div>
@@ -296,7 +296,10 @@ export default {
             return true
         },
         buildUsernameFromEmail() {
-            return this.auth.email?.split('@')[0]
+            return this.auth?.email?.split('@')[0]
+        },
+        userName() {
+            return this.auth?.name
         }
     },
     mounted() {
