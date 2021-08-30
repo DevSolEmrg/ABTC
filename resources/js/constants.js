@@ -27,3 +27,11 @@ export function calAge(dateString) {
     var birthday = +new Date(dateString);
     return ~~((Date.now() - birthday) / (31557600000));
 }
+
+export const permission_color =  {
+    'patient' : '#32B87C',
+    'personnel' : '#409EFF',
+    'vaccine' : '#A9AA55',
+    'user' : '#5655AA',
+    'role' : '#F56C6C',
+}
