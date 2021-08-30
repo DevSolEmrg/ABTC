@@ -26,7 +26,7 @@
                         </template>
                         <div>
                             <div
-                                v-for="(p, Indx) in permit.permissions"
+                                v-for="p in permit.permissions"
                                 :key="p.name"
                             >
                                 <el-switch
