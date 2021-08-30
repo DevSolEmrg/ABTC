@@ -65,7 +65,7 @@
         </div>
     </el-col>
     <el-col :span="24">
-        <personnel-add-update v-if="manageRecordDialog" :dialog-title="dialogTitle" :dialog-visible="manageRecordDialog" @close-dialog="manageRecordDialog=$event" :selected-data="selectedData" />
+        <role-add-update v-if="manageRecordDialog" :dialog-title="dialogTitle" :dialog-visible="manageRecordDialog" @close-dialog="manageRecordDialog=$event" :selected-data="selectedData" />
     </el-col>
 </el-row>
 
@@ -73,10 +73,10 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import PersonnelAddUpdate from './personnel/PersonnelAddUpdate'
+import RoleAddUpdate from './role/RoleAddUpdate'
 import { permission_color } from '../constants'
 export default {
-    components: { PersonnelAddUpdate },
+    components: { RoleAddUpdate },
     data() {
         return {
             page: 1,
@@ -94,7 +94,7 @@ export default {
         handleEdit(index, row) {
             this.selectedData = row
             this.selectedData.form_type = 'edit'
-            this.dialogTitle = "Edit Personnel Info."
+            this.dialogTitle = "Edit Role Info."
             this.manageRecordDialog = true
         },
         async handleDelete(index, row) {
@@ -132,8 +132,48 @@ export default {
 			this.page = val;
 		},
         handleAdd() {
-            this.selectedData = null
-            this.dialogTitle = 'Add Personnel'
+            let permission_category = []
+            let permissions = this.roles?.permissions
+            let composition = [
+                {
+                    name: '',
+                    permits: [],
+                    color: '',
+                    selected: false
+                },
+            ]
+            if (permissions.length) {
+                permissions.forEach(permit => {
+                    let extract_category = permit.name.split('-')[1]
+                    if (!permission_category.map(p=>p.category_name).includes(extract_category.charAt(0).toUpperCase() + extract_category.substring(1))) {
+                        let collect_permits = permissions.reduce((permits, current)=>{
+                            if (current.name.split('-')[1] == extract_category) {
+                                permits.push({
+                                    name: current.name,
+                                    selected: false
+                                })
+                            }
+                            return permits
+                        }, [])
+                        permission_category.push({
+                            category_name: extract_category.charAt(0).toUpperCase() + extract_category.substring(1),
+                            color: permission_color[extract_category] || '#725F72',
+                            selected: false,
+                            permissions: collect_permits,
+                            count: `0/${collect_permits.length}`,
+                            has_selected: false
+                        })
+                    }
+                });
+            }
+            console.log(this.roles.permissions, permission_category)
+
+            this.selectedData = {
+                name: '',
+                permission_category: permission_category
+            }
+            //this.selectedData = null
+            this.dialogTitle = 'Add Role'
             this.manageRecordDialog = true
         },
         reloadData() {
