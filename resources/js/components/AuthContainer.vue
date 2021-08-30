@@ -107,7 +107,7 @@
 
                     <el-menu-item index="1-1" style="padding-left:53px">My Profile</el-menu-item>
                     <el-menu-item index="1-2" style="padding-left:53px">User Management</el-menu-item>
-                    <el-menu-item index="1-3" style="padding-left:53px">Role & Permission</el-menu-item>
+                    <el-menu-item index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List')" style="padding-left:53px">Role & Permission</el-menu-item>
                 </el-submenu>
 
 
