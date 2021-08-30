@@ -21,7 +21,7 @@
                 <el-table-column prop="name" label="Role" width="200" />
                 <el-table-column label="Permissions" >
                     <template slot-scope="scope">
-                        <el-tag size="small" style="margin:3px; color:white" :color="generateColor(permission)" v-for="permission in scope.row.permissions" :key="permission.id">{{ permission.name }}</el-tag>
+                        <el-tag size="small" style="margin:1px; color:white" :color="generateColor(permission)" v-for="permission in scope.row.permissions" :key="permission.id">{{ permission.name }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column width="80" align="center" fixed="right" label="Action">
