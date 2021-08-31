@@ -45,10 +45,10 @@ export default {
             },
             rules: {
                 name: [
-                    { required: true, message: 'Please input personnel name', trigger: 'blur' },
+                    { required: true, message: 'Please input personnel name', trigger: 'change' },
                 ],
                 position: [
-                    { required: true, message: 'Please input personnel position', trigger: 'blur' }
+                    { required: true, message: 'Please input personnel position', trigger: 'change' }
                 ],
                 is_active: [
                     { required: true, message: 'Please select personnel status', trigger: 'change' }

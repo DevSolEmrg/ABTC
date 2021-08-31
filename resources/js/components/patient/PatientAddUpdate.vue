@@ -69,7 +69,7 @@ export default {
             },
             rules: {
                 name: [
-                    { required: true, message: 'Please input patient name', trigger: 'blur' },
+                    { required: true, message: 'Please input patient name', trigger: 'change' },
                 ],
                 gender: [
                     { required: true, message: 'Please select patient gender', trigger: 'change' }
@@ -81,10 +81,10 @@ export default {
                     { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
                 ],
                 address: [
-                    { required: true, message: 'Please input patient address', trigger: 'blur' }
+                    { required: true, message: 'Please input patient address', trigger: 'change' }
                 ],
                 contact_number: [
-                    { required: true, message: 'Please input patient contact number', trigger: 'blur' },
+                    { required: true, message: 'Please input patient contact number', trigger: 'change' },
                 ],
             },
             pickerOptions: {
