@@ -13,7 +13,7 @@
                 <el-input v-model="ruleForm.name" ref="name" clearable></el-input>
             </el-form-item>
 
-            <el-form-item label="Permissions">
+            <el-form-item label="Permissions" prop="selected_permission">
                 <el-collapse>
                     <el-collapse-item :name="i+1" v-for="(permit, i) in permission_category" :key="permit.category_name">
                         <template slot="title">
@@ -59,18 +59,14 @@ export default {
             ruleForm: {
                 form_type: 'add',
                 name: '',
-                position: '',
-                is_active: '1'
+                selected_permission: []
             },
             rules: {
                 name: [
-                    { required: true, message: 'Please input personnel name', trigger: 'blur' },
+                    { required: true, message: 'Please input role name', trigger: 'change' },
                 ],
-                position: [
-                    { required: true, message: 'Please input personnel position', trigger: 'blur' }
-                ],
-                is_active: [
-                    { required: true, message: 'Please select personnel status', trigger: 'change' }
+                selected_permission: [
+                    { required: true, message: 'Please select role permission', trigger: 'change' }
                 ],
             },
             isEdit: false,
@@ -88,36 +84,40 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
             if (valid) {
-                let form = JSON.parse(JSON.stringify(this.ruleForm))
-                form.birth_date = buildDate(form.birth_date)
-                this.managePersonnel(form).then(()=>{
-                    if (this.request.status == 'success') {
-                        this.$notify({
-                            title: 'Success',
-                            message: this.request.message,
-                            type: 'success',
-                            duration: 6000,
-                        });
-                        this.$nextTick(()=>{
-                            if (!this.isEdit) this.resetForm('ruleForm')
+                // let form = JSON.parse(JSON.stringify(this.ruleForm))
+                // form.birth_date = buildDate(form.birth_date)
+                // this.managePersonnel(form).then(()=>{
+                //     if (this.request.status == 'success') {
+                //         this.$notify({
+                //             title: 'Success',
+                //             message: this.request.message,
+                //             type: 'success',
+                //             duration: 6000,
+                //         });
+                //         this.$nextTick(()=>{
+                //             if (!this.isEdit) this.resetForm('ruleForm')
 
-                            this.$refs.name.$el.getElementsByTagName('input')[0].focus();
-                        })
-                    } else {
-                        this.$notify({
-                            title: 'Error',
-                            message: this.request.message,
-                            type: 'error',
-                            duration: 0,
-                        });
-                    }
-                })
+                //             this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+                //         })
+                //     } else {
+                //         this.$notify({
+                //             title: 'Error',
+                //             message: this.request.message,
+                //             type: 'error',
+                //             duration: 0,
+                //         });
+                //     }
+                // })
+                //alert('valid')
+                return true
             } else {
+                //alert('in valid')
                 return false;
             }
             });
         },
         resetForm(formName) {
+            this.permission_category = JSON.parse(JSON.stringify(this.selectedData.permission_category))
             this.$refs[formName].resetFields();
         },
         rezize() {
@@ -130,12 +130,20 @@ export default {
             let count = JSON.parse(JSON.stringify(this.permission_category[index].permissions)).filter(p=>p.selected==true)
             this.permission_category[index].count =`${count.length}/${this.permission_category[index].permissions.length}`
             this.permission_category[index].has_selected = count.length ? true : false
+            this.fillPermissionValue()
         },
         hasChange(index) {
             this.permission_category[index].selected = this.permission_category[index].permissions.every(p=>p.selected == true)
             let count = JSON.parse(JSON.stringify(this.permission_category[index].permissions)).filter(p=>p.selected==true)
             this.permission_category[index].count =`${count.length}/${this.permission_category[index].permissions.length}`
             this.permission_category[index].has_selected = count.length ? true : false
+            this.fillPermissionValue()
+        },
+        fillPermissionValue() {
+            this.ruleForm.selected_permission = JSON.parse(JSON.stringify(this.permission_category)).reduce((permits, current) => {
+                current.permissions.forEach(p => { if (p.selected == true) permits.push(p.name); })
+                return permits;
+            },[])
         }
     },
     created() {
