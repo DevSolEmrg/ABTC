@@ -50,7 +50,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { dialogSize, buildDate } from '../../constants'
+import { dialogSize } from '../../constants'
 export default {
     props: ['dialogVisible', 'selectedData', 'dialogTitle'],
     data() {
@@ -77,43 +77,39 @@ export default {
         ...mapGetters(['request'])
     },
     methods: {
-        ...mapActions(['managePersonnel']),
+        ...mapActions(['manageRole']),
         closeDialog() {
             this.$emit('close-dialog', false)
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
-            if (valid) {
-                // let form = JSON.parse(JSON.stringify(this.ruleForm))
-                // form.birth_date = buildDate(form.birth_date)
-                // this.managePersonnel(form).then(()=>{
-                //     if (this.request.status == 'success') {
-                //         this.$notify({
-                //             title: 'Success',
-                //             message: this.request.message,
-                //             type: 'success',
-                //             duration: 6000,
-                //         });
-                //         this.$nextTick(()=>{
-                //             if (!this.isEdit) this.resetForm('ruleForm')
+                if (valid) {
+                    let form = JSON.parse(JSON.stringify(this.ruleForm))
+                    this.manageRole(form).then(()=>{
+                        if (this.request.status == 'success') {
+                            this.$notify({
+                                title: 'Success',
+                                message: this.request.message,
+                                type: 'success',
+                                duration: 6000,
+                            });
+                            this.$nextTick(()=>{
+                                if (!this.isEdit) this.resetForm('ruleForm')
 
-                //             this.$refs.name.$el.getElementsByTagName('input')[0].focus();
-                //         })
-                //     } else {
-                //         this.$notify({
-                //             title: 'Error',
-                //             message: this.request.message,
-                //             type: 'error',
-                //             duration: 0,
-                //         });
-                //     }
-                // })
-                //alert('valid')
-                return true
-            } else {
-                //alert('in valid')
-                return false;
-            }
+                                this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+                            })
+                        } else {
+                            this.$notify({
+                                title: 'Error',
+                                message: this.request.message,
+                                type: 'error',
+                                duration: 0,
+                            });
+                        }
+                    })
+                } else {
+                    return false;
+                }
             });
         },
         resetForm(formName) {
@@ -151,7 +147,10 @@ export default {
         if (this.selectedData) {
             Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
             if (this.selectedData.form_type == 'edit') {
-                this.ruleForm.is_active = this.selectedData.is_active.toString()
+                if (this.selectedData.current_permission.length) {
+                    this.ruleForm.id = this.selectedData.id
+                    this.ruleForm.selected_permission = this.selectedData.current_permission
+                }
                 this.isEdit = true
             }
         }
