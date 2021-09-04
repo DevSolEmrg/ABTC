@@ -90,15 +90,46 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['managePersonnel']),
+        ...mapActions(['manageRole']),
         handleEdit(index, row) {
-            this.selectedData = row
+            let current_permission = row.permissions.map(p=>p.name)
+            let permission_category = []
+            let permissions = this.roles?.permissions
+            if (permissions.length) {
+                permissions.forEach(permit => {
+                    let extract_category = permit.name.split('-')[1]
+                    if (!permission_category.map(p=>p.category_name).includes(extract_category.charAt(0).toUpperCase() + extract_category.substring(1))) {
+                        let collect_permits = permissions.reduce((permits, current)=>{
+                            if (current.name.split('-')[1] == extract_category) {
+                                permits.push({
+                                    name: current.name,
+                                    selected: current_permission.includes(current.name) ? true : false
+                                })
+                            }
+                            return permits
+                        }, [])
+                        permission_category.push({
+                            category_name: extract_category.charAt(0).toUpperCase() + extract_category.substring(1),
+                            color: permission_color[extract_category] || '#725F72',
+                            selected: collect_permits.filter(v=>v.selected==true).length == collect_permits.length,
+                            permissions: collect_permits,
+                            count: `${collect_permits.filter(v=>v.selected==true).length || '0'}/${collect_permits.length}`,
+                            has_selected: collect_permits.filter(v=>v.selected==true).length > 0
+                        })
+                    }
+                });
+            }
+            this.selectedData = {
+                id: row.id,
+                name: row.name,
+                permission_category: permission_category,
+                current_permission: current_permission
+            }
             this.selectedData.form_type = 'edit'
             this.dialogTitle = "Edit Role Info."
             this.manageRecordDialog = true
         },
         async handleDelete(index, row) {
-            console.log(row)
             await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
@@ -106,7 +137,7 @@ export default {
             }).then(() => {
                 var form = JSON.parse(JSON.stringify(row))
                 form.form_type = "delete"
-                this.managePersonnel(form).then(()=>{
+                this.manageRole(form).then(()=>{
                     if (this.request.status == 'success') {
                         this.$message({
                             type: 'success',
@@ -134,14 +165,6 @@ export default {
         handleAdd() {
             let permission_category = []
             let permissions = this.roles?.permissions
-            let composition = [
-                {
-                    name: '',
-                    permits: [],
-                    color: '',
-                    selected: false
-                },
-            ]
             if (permissions.length) {
                 permissions.forEach(permit => {
                     let extract_category = permit.name.split('-')[1]
@@ -166,19 +189,16 @@ export default {
                     }
                 });
             }
-            console.log(this.roles.permissions, permission_category)
-
             this.selectedData = {
                 name: '',
                 permission_category: permission_category
             }
-            //this.selectedData = null
             this.dialogTitle = 'Add Role'
             this.manageRecordDialog = true
         },
         reloadData() {
             this.$store.commit('SET_LOADING_COMPONENT', true)
-            this.$store.dispatch("getPersonnels").then(()=>{
+            this.$store.dispatch("getRoles").then(()=>{
                 this.$nextTick(()=>{
                     this.$store.commit('SET_LOADING_COMPONENT', false)
                     this.lastReload = new Date().toLocaleString()
@@ -194,7 +214,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['request', 'vaccines', 'personnels', 'roles']),
+        ...mapGetters(['request', 'roles']),
         data() {
             return this.roles?.roles || []
         },
@@ -220,7 +240,6 @@ export default {
         this.$store.commit('SET_LOADING_COMPONENT', false)
     },
     beforeCreate() {
-        this.$store.dispatch("getPersonnels");
         this.$store.dispatch("getRoles");
     }
 }
