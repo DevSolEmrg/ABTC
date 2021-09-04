@@ -105,7 +105,6 @@ export default {
             this.manageRecordDialog = true
         },
         async handleDelete(index, row) {
-            console.log(row)
             await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',

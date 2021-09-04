@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Vaccine;
 use App\Http\Requests\VaccinePostRequest;
+use Illuminate\Support\Facades\DB;
 
 class VaccineController extends Controller
 {
@@ -16,18 +17,26 @@ class VaccineController extends Controller
 
     public function manageVaccines(Vaccine $vaccine, VaccinePostRequest $request)
     {
+        DB::beginTransaction();
         $data = null;
-        switch ($request->form_type) {
-            case 'add':
-                $data = Vaccine::create($request->validated());
-                break;
-            case 'edit':
-                $data = $vaccine->update($request->validated());
-                break;
-            case 'delete':
-                $data = $vaccine->delete();
-                break;
+        try {
+            switch ($request->form_type) {
+                case 'add':
+                    $vaccine->create($request->validated());
+                    break;
+                case 'edit':
+                    $vaccine->update($request->validated());
+                    break;
+                case 'delete':
+                    $vaccine->delete();
+                    break;
+            }
+            $data = 'Success';
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(response()->json('Failed', 500));
         }
+        DB::commit();
         return $data;
     }
 

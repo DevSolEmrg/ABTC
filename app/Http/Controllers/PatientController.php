@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\{Patient};
 //use Carbon\Carbon;
 use App\Http\Requests\PatientPostRequest;
+use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
@@ -21,21 +22,27 @@ class PatientController extends Controller
         // $request->merge([
         //     'birth_date' => Carbon::parse($request->birth_date)->timezone('Asia/Manila')->format('Y-m-d')
         // ]);
+        DB::beginTransaction();
         $data = null;
-        switch ($request->form_type) {
-            case 'add':
-                $data = Patient::create($request->validated());
-                break;
-            
-            case 'edit':
-                $data = $patient->update($request->validated());
-                break;
-            case 'delete':
-                $data = $patient->delete();
-                break;
+        try {
+            switch ($request->form_type) {
+                case 'add':
+                    $patient->create($request->validated());
+                    break;
+                case 'edit':
+                    $patient->update($request->validated());
+                    break;
+                case 'delete':
+                    $patient->delete();
+                    break;
+            }
+            $data = 'Success';
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(response()->json('Failed', 500));
         }
-
-            return $data;
+        DB::commit();
+        return $data;
         //dd("patient", $request->validated(), $request->all(), $request->birth_date);
     }
 

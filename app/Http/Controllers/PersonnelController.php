@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Personnel;
 use App\Http\Requests\PersonnelPostRequest;
+use Illuminate\Support\Facades\DB;
 
 class PersonnelController extends Controller
 {
@@ -16,18 +17,26 @@ class PersonnelController extends Controller
 
     public function managePersonnel(Personnel $personnel, PersonnelPostRequest $request)
     {
+        DB::beginTransaction();
         $data = null;
-        switch ($request->form_type) {
-            case 'add':
-                $data = Personnel::create($request->validated());
-                break;
-            case 'edit':
-                $data = $personnel->update($request->validated());
-                break;
-            case 'delete':
-                $data = $personnel->delete();
-                break;
+        try {
+            switch ($request->form_type) {
+                case 'add':
+                    $personnel->create($request->validated());
+                    break;
+                case 'edit':
+                    $personnel->update($request->validated());
+                    break;
+                case 'delete':
+                    $personnel->delete();
+                    break;
+            }
+            $data = 'Success';
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(response()->json('Failed', 500));
         }
+        DB::commit();
         return $data;
     }
 }
