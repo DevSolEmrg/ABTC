@@ -33,7 +33,7 @@
             </div>
 
             <el-table  v-loading="loading" :data="ListData" border>
-                <el-table-column prop="name" label="Fullname" width="200" />
+                <el-table-column prop="name" label="Fullname" width="200" fixed="left" />
                 <el-table-column prop="gender" label="Gender" width="75" />
                 <el-table-column prop="civil_status" label="Civil Status" width="100" />
                 <el-table-column prop="birth_date" label="Birth Date" width="100" />
@@ -50,7 +50,7 @@
                 </el-table-column>
                 <!-- <el-table-column prop="history_count" label="#Exposure" width="100" />
                 <el-table-column prop="last_history.date" label="Last Exposure" width="120" /> -->
-                <el-table-column width="135" align="center" fixed="right" label="Action">
+                <el-table-column width="135" align="center" label="Action">
                     <!-- <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="Type to search"/>
                     </template> -->
@@ -277,7 +277,7 @@ export default {
     computed: {
         ...mapGetters(['patients', 'auth', 'request']),
         data() {
-            return this.patients
+            return this.patients || []
         },
         // ListData() {
         //     if(this.search == null) return this.data;

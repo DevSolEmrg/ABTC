@@ -38,10 +38,10 @@ export default {
             },
             rules: {
                 name: [
-                    { required: true, message: 'Please input vaccine name', trigger: 'blur' },
+                    { required: true, message: 'Please input vaccine name', trigger: 'change' },
                 ],
                 description: [
-                    { required: true, message: 'Please input vaccine description', trigger: 'blur' }
+                    { required: true, message: 'Please input vaccine description', trigger: 'change' }
                 ]
             },
             isEdit: false

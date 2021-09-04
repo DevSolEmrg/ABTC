@@ -59,7 +59,7 @@
                 <div class="col-12" style="background-color:#0F6540">
                     <div class="row">
                         <div class="col-12" style="color:#BDBEC1; text-shadow: 0 1px 0 grey;"><strong>ABTC SORSOGON</strong></div>
-                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">{{ auth.name }}</div>
+                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">{{ userName() }}</div>
                         <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">Admin</div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
 
                     <el-menu-item index="1-1" style="padding-left:53px">My Profile</el-menu-item>
                     <el-menu-item index="1-2" style="padding-left:53px">User Management</el-menu-item>
-                    <el-menu-item index="1-3" style="padding-left:53px">Role & Permission</el-menu-item>
+                    <el-menu-item index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List')" style="padding-left:53px">Role & Permission</el-menu-item>
                 </el-submenu>
 
 
@@ -296,7 +296,10 @@ export default {
             return true
         },
         buildUsernameFromEmail() {
-            return this.auth.email?.split('@')[0]
+            return this.auth?.email?.split('@')[0]
+        },
+        userName() {
+            return this.auth?.name
         }
     },
     mounted() {

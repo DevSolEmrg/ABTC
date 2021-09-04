@@ -2,6 +2,7 @@ import patients from "./modules/patients";
 import users from "./modules/users";
 import vaccines from "./modules/vaccines";
 import personnels from "./modules/personnel";
+import roles from "./modules/role";
 import createPersistedState from "vuex-persistedstate";
 import request from "./modules/request";
 import loader from "./modules/loader";
@@ -19,7 +20,8 @@ const store =  new Vuex.Store({
         request,
         loader,
         vaccines,
-        personnels
+        personnels,
+        roles
     },
     plugins: [
         createPersistedState({

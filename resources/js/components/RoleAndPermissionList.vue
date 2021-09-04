@@ -12,25 +12,17 @@
                     <div class="col-7 px-1">
                         <el-button-group style="float: right;">
                             <el-button type="primary" size="mini" @click="handleAdd">ADD</el-button>
-                            <el-dropdown>
-                                <el-button type="primary"  size="mini"   >
-                                    EXCEL<i class="el-icon-arrow-down el-icon--right"></i>
-                                </el-button>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item><i class="mdi mdi-cloud-upload"></i> Import</el-dropdown-item>
-                                    <el-dropdown-item><i class="mdi mdi-cloud-download"></i> Export</el-dropdown-item>
-                                </el-dropdown-menu>
-                        </el-dropdown>
                         </el-button-group>
                     </div>
                 </div>
             </div>
 
             <el-table  v-loading="loading" :data="ListData" border>
-                <el-table-column prop="name" label="Fullname" width="200" />
-                <el-table-column prop="position" label="Position" min-width="350" />
-                <el-table-column label="Active" width="70">
-                    <template slot-scope="scope"> {{ booleanToStr(scope.row.is_active) }} </template>
+                <el-table-column prop="name" label="Role" width="200" />
+                <el-table-column label="Permissions" >
+                    <template slot-scope="scope">
+                        <el-tag size="small" style="margin:1px; color:white" :color="generateColor(permission)" v-for="permission in scope.row.permissions" :key="permission.id">{{ permission.name }}</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column width="80" align="center" fixed="right" label="Action">
                     <template slot-scope="scope">
@@ -73,7 +65,7 @@
         </div>
     </el-col>
     <el-col :span="24">
-        <personnel-add-update v-if="manageRecordDialog" :dialog-title="dialogTitle" :dialog-visible="manageRecordDialog" @close-dialog="manageRecordDialog=$event" :selected-data="selectedData" />
+        <role-add-update v-if="manageRecordDialog" :dialog-title="dialogTitle" :dialog-visible="manageRecordDialog" @close-dialog="manageRecordDialog=$event" :selected-data="selectedData" />
     </el-col>
 </el-row>
 
@@ -81,9 +73,10 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import PersonnelAddUpdate from './personnel/PersonnelAddUpdate'
+import RoleAddUpdate from './role/RoleAddUpdate'
+import { permission_color } from '../constants'
 export default {
-    components: { PersonnelAddUpdate },
+    components: { RoleAddUpdate },
     data() {
         return {
             page: 1,
@@ -97,15 +90,46 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['managePersonnel']),
+        ...mapActions(['manageRole']),
         handleEdit(index, row) {
-            this.selectedData = row
+            let current_permission = row.permissions.map(p=>p.name)
+            let permission_category = []
+            let permissions = this.roles?.permissions
+            if (permissions.length) {
+                permissions.forEach(permit => {
+                    let extract_category = permit.name.split('-')[1]
+                    if (!permission_category.map(p=>p.category_name).includes(extract_category.charAt(0).toUpperCase() + extract_category.substring(1))) {
+                        let collect_permits = permissions.reduce((permits, current)=>{
+                            if (current.name.split('-')[1] == extract_category) {
+                                permits.push({
+                                    name: current.name,
+                                    selected: current_permission.includes(current.name) ? true : false
+                                })
+                            }
+                            return permits
+                        }, [])
+                        permission_category.push({
+                            category_name: extract_category.charAt(0).toUpperCase() + extract_category.substring(1),
+                            color: permission_color[extract_category] || '#725F72',
+                            selected: collect_permits.filter(v=>v.selected==true).length == collect_permits.length,
+                            permissions: collect_permits,
+                            count: `${collect_permits.filter(v=>v.selected==true).length || '0'}/${collect_permits.length}`,
+                            has_selected: collect_permits.filter(v=>v.selected==true).length > 0
+                        })
+                    }
+                });
+            }
+            this.selectedData = {
+                id: row.id,
+                name: row.name,
+                permission_category: permission_category,
+                current_permission: current_permission
+            }
             this.selectedData.form_type = 'edit'
-            this.dialogTitle = "Edit Personnel Info."
+            this.dialogTitle = "Edit Role Info."
             this.manageRecordDialog = true
         },
         async handleDelete(index, row) {
-            console.log(row)
             await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
@@ -113,7 +137,7 @@ export default {
             }).then(() => {
                 var form = JSON.parse(JSON.stringify(row))
                 form.form_type = "delete"
-                this.managePersonnel(form).then(()=>{
+                this.manageRole(form).then(()=>{
                     if (this.request.status == 'success') {
                         this.$message({
                             type: 'success',
@@ -139,13 +163,42 @@ export default {
 			this.page = val;
 		},
         handleAdd() {
-            this.selectedData = null
-            this.dialogTitle = 'Add Personnel'
+            let permission_category = []
+            let permissions = this.roles?.permissions
+            if (permissions.length) {
+                permissions.forEach(permit => {
+                    let extract_category = permit.name.split('-')[1]
+                    if (!permission_category.map(p=>p.category_name).includes(extract_category.charAt(0).toUpperCase() + extract_category.substring(1))) {
+                        let collect_permits = permissions.reduce((permits, current)=>{
+                            if (current.name.split('-')[1] == extract_category) {
+                                permits.push({
+                                    name: current.name,
+                                    selected: false
+                                })
+                            }
+                            return permits
+                        }, [])
+                        permission_category.push({
+                            category_name: extract_category.charAt(0).toUpperCase() + extract_category.substring(1),
+                            color: permission_color[extract_category] || '#725F72',
+                            selected: false,
+                            permissions: collect_permits,
+                            count: `0/${collect_permits.length}`,
+                            has_selected: false
+                        })
+                    }
+                });
+            }
+            this.selectedData = {
+                name: '',
+                permission_category: permission_category
+            }
+            this.dialogTitle = 'Add Role'
             this.manageRecordDialog = true
         },
         reloadData() {
             this.$store.commit('SET_LOADING_COMPONENT', true)
-            this.$store.dispatch("getPersonnels").then(()=>{
+            this.$store.dispatch("getRoles").then(()=>{
                 this.$nextTick(()=>{
                     this.$store.commit('SET_LOADING_COMPONENT', false)
                     this.lastReload = new Date().toLocaleString()
@@ -155,12 +208,15 @@ export default {
         },
         booleanToStr(value) {
             return value ? 'Yes' : 'No'
+        },
+        generateColor(permission) {
+            return permission_color[permission?.name?.split('-')[1]] || '#725F72'
         }
     },
     computed: {
-        ...mapGetters(['request', 'vaccines', 'personnels']),
+        ...mapGetters(['request', 'roles']),
         data() {
-            return this.personnels || []
+            return this.roles?.roles || []
         },
         searching() {
             if (!this.search) {
@@ -169,7 +225,7 @@ export default {
             }
             this.page = 1;
             return this.data.filter(
-                data => data.name.toLowerCase().includes(this.search.toLowerCase()) || data.position.toLowerCase().includes(this.search.toLowerCase()));
+                data => data.name.toLowerCase().includes(this.search.toLowerCase()) );
         },
         ListData() {
             this.total = this.searching.length;
@@ -184,7 +240,7 @@ export default {
         this.$store.commit('SET_LOADING_COMPONENT', false)
     },
     beforeCreate() {
-        this.$store.dispatch("getPersonnels");
+        this.$store.dispatch("getRoles");
     }
 }
 </script>
