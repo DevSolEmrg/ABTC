@@ -99,7 +99,15 @@ export default {
                 if (!re.test(value)) {
                     callback(new Error('Please input a correct email address'));
                 } else {
-                    callback();
+                    if (this.exist_email.length) {
+                        if (this.exist_email.includes(value) && (!this.isEdit || (this.isEdit && value != this.edit_exist_email))) {
+                            callback(new Error('Email address already exist.'));
+                        } else {
+                            callback();
+                        }
+                    } else {
+                        callback();
+                    }
                 }
             }
         };
@@ -121,7 +129,7 @@ export default {
                     { required: true, message: 'Please input user role', trigger: 'change' },
                 ],
                 email: [
-                    { validator: validateEmail, required: true, message: 'Please input correct email address', trigger: 'change' }
+                    { validator: validateEmail, required: true, trigger: 'change' }
                 ],
                 password: [
                     { validator: validatePass, required: true, message: 'Please input password', trigger: 'change' }
@@ -130,14 +138,16 @@ export default {
                     { validator: validatePass2, required: true, trigger: 'change' }
                 ],
             },
-            isEdit: false
+            isEdit: false,
+            exist_email: [],
+            edit_exist_email: ''
         }
     },
     computed: {
-        ...mapGetters(['request', 'personnels', 'roles'])
+        ...mapGetters(['request', 'personnels', 'roles', 'all_user'])
     },
     methods: {
-        ...mapActions(['getPersonnels', 'getRoles', 'manageUser']),
+        ...mapActions(['getPersonnels', 'getRoles', 'getUsers', 'manageUser']),
         closeDialog() {
             this.$emit('close-dialog', false)
         },
@@ -153,9 +163,12 @@ export default {
                             type: 'success',
                             duration: 6000,
                         });
+                        this.getUsers().then(()=>{
+                            this.exist_email = this.all_user.map(u=>u.email)
+                            this.edit_exist_email = this.ruleForm.email
+                        })
                         this.$nextTick(()=>{
                             if (!this.isEdit) this.resetForm('ruleForm')
-
                             this.$refs.name.$el.getElementsByTagName('input')[0].focus();
                         })
                     } else {
@@ -197,6 +210,7 @@ export default {
                 if (this.selectedData.roles.length) {
                     this.ruleForm.role = this.selectedData.roles.map(r=>r.name)
                 }
+                this.edit_exist_email = this.selectedData.email
                 this.isEdit = true
             }
         }
@@ -207,6 +221,7 @@ export default {
     },
     mounted() {
         this.rezize()
+        this.exist_email = this.all_user.map(u=>u.email)
     }
 }
 </script>
