@@ -25,8 +25,8 @@ class UserPostRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string|confirmed',
+            'email' => 'required|string|email|max:255|unique:App\Models\User,id,'.auth()->user()->id,
+            'password' => 'required|string|confirmed|regex:/^[A-Za-z0-9_]+$/',
         ];
     }
 }
