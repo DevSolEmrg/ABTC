@@ -34,6 +34,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('roles', 'RoleController@getRoles');
     Route::post('manage_role/{role?}', 'RoleController@manageRole');
 
+    Route::get('users', 'UserController@getUsers');
+    Route::post('manage_user/{user?}', 'UserController@manageUser');
+
     Route::get('/home', 'HomeController@index')->name('home');
 
     Route::get('/home/sample', 'HomeController@index')->name('home');

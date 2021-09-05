@@ -53,6 +53,12 @@ const routes = new VueRouter({
                     name: 'Role & Permission List',
                     beforeEnter: authenticated,
                 },
+                {
+                    path: 'user_management',
+                    component: () => import(/* webpackChunkName: "user_list" */ './components/UserList'),
+                    name: 'User List',
+                    beforeEnter: authenticated,
+                },
             ]
         }
     ]
