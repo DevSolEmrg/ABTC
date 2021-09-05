@@ -20,7 +20,9 @@ const actions = {
         await axios.post(`manage_user/${form.id ?? ""}`, form)
             .then(response => {
                 commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'User account info has been successfully saved!' })
-                dispatch("getUsers");
+                if (form.form_type != "edit") {
+                    dispatch("getUsers");
+                }
             }).catch(error=>{
                 commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the record!' })
             });
