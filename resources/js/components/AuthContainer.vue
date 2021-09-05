@@ -59,8 +59,8 @@
                 <div class="col-12" style="background-color:#0F6540">
                     <div class="row">
                         <div class="col-12" style="color:#BDBEC1; text-shadow: 0 1px 0 grey;"><strong>ABTC SORSOGON</strong></div>
-                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">{{ userName() }}</div>
-                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133">Admin</div>
+                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133; text-shadow: 0 1px 0 #BDBEC1; border-bottom:1px solid rgba(0,0,0,.08)">{{ userName() }}</div>
+                        <div class="col-12" style="color:#9C9EA3; background-color:#0C5133; overflow-x:auto; white-space:nowrap;">&nbsp;&nbsp;{{ userRole() }}&nbsp;&nbsp;</div>
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                     </template>
 
                     <el-menu-item index="1-1" style="padding-left:53px">My Profile</el-menu-item>
-                    <el-menu-item index="1-2" style="padding-left:53px">User Management</el-menu-item>
+                    <el-menu-item index="User List" :route="{ name: 'User List' }" @click="handlePageLoading('User List')" style="padding-left:53px">User Management</el-menu-item>
                     <el-menu-item index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List')" style="padding-left:53px">Role & Permission</el-menu-item>
                 </el-submenu>
 
@@ -300,11 +300,13 @@ export default {
         },
         userName() {
             return this.auth?.name
+        },
+        userRole() {
+            return this.auth?.roles?.map(i=>i.name).join(', ') || ''
         }
     },
     mounted() {
         this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
-
         if (this.$attrs.auth) {
             this.$store.commit('SET_AUTH', this.$attrs.auth)
         }

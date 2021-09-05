@@ -69,7 +69,6 @@ export default {
             this.$refs[formName].validate((valid) => {
             if (valid) {
                 let form = JSON.parse(JSON.stringify(this.ruleForm))
-                form.birth_date = buildDate(form.birth_date)
                 this.managePersonnel(form).then(()=>{
                     if (this.request.status == 'success') {
                         this.$notify({
