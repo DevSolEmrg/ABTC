@@ -106,7 +106,7 @@
                     </template>
 
                     <el-menu-item index="1-1" style="padding-left:53px">My Profile</el-menu-item>
-                    <el-menu-item index="1-2" style="padding-left:53px">User Management</el-menu-item>
+                    <el-menu-item index="User List" :route="{ name: 'User List' }" @click="handlePageLoading('User List')" style="padding-left:53px">User Management</el-menu-item>
                     <el-menu-item index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List')" style="padding-left:53px">Role & Permission</el-menu-item>
                 </el-submenu>
 
@@ -304,7 +304,6 @@ export default {
     },
     mounted() {
         this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
-
         if (this.$attrs.auth) {
             this.$store.commit('SET_AUTH', this.$attrs.auth)
         }
