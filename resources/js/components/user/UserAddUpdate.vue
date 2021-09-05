@@ -79,7 +79,11 @@ export default {
                 if (this.ruleForm.password_confirmation !== '') {
                     this.$refs.ruleForm.validateField('password_confirmation');
                 }
-                callback();
+                if (!(/^[a-z0-9]+$/i.test(value))) {
+                    callback(new Error('Password can contain only " [a-z,A-Z,0-9] " characters.'));
+                } else {
+                    callback();
+                }
             }
         };
         var validatePass2 = (rule, value, callback) => {
@@ -88,7 +92,11 @@ export default {
             } else if (value !== this.ruleForm.password) {
                 callback(new Error('Two inputs don\'t match!'));
             } else {
-                callback();
+                if (!(/^[a-z0-9]+$/i.test(value))) {
+                    callback(new Error('Password can contain only " [a-z,A-Z,0-9] " characters.'));
+                } else {
+                    callback();
+                }
             }
         };
         var validateEmail = (rule, value, callback) => {
@@ -132,7 +140,7 @@ export default {
                     { validator: validateEmail, required: true, trigger: 'change' }
                 ],
                 password: [
-                    { validator: validatePass, required: true, message: 'Please input password', trigger: 'change' }
+                    { validator: validatePass, required: true, trigger: 'change' }
                 ],
                 password_confirmation: [
                     { validator: validatePass2, required: true, trigger: 'change' }
