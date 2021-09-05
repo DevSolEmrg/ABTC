@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home')->with('auth', auth()->user());
+        return view('home')->with('auth', auth()->user()->with(['roles' => function($q){ $q->with('permissions'); }])->whereId(auth()->user()->id)->first());
     }
 
     public function checkAuth()
