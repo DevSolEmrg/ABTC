@@ -18,7 +18,7 @@ class UserController extends Controller
     public function manageUser(User $user, UserPostRequest $request)
     {
         DB::beginTransaction();
-        $data = null;
+        $data = 'Success';
         try {
             switch ($request->form_type) {
                 case 'add':
@@ -35,7 +35,6 @@ class UserController extends Controller
                     $user->delete();
                     break;
             }
-            $data = 'Success';
         } catch (\Throwable $th) {
             DB::rollBack();
             abort(response()->json('Failed', 500));

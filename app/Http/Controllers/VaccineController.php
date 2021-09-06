@@ -18,7 +18,7 @@ class VaccineController extends Controller
     public function manageVaccines(Vaccine $vaccine, VaccinePostRequest $request)
     {
         DB::beginTransaction();
-        $data = null;
+        $data = 'Success';
         try {
             switch ($request->form_type) {
                 case 'add':
@@ -31,7 +31,6 @@ class VaccineController extends Controller
                     $vaccine->delete();
                     break;
             }
-            $data = 'Success';
         } catch (\Throwable $th) {
             DB::rollBack();
             abort(response()->json('Failed', 500));

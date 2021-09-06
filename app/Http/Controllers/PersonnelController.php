@@ -18,7 +18,7 @@ class PersonnelController extends Controller
     public function managePersonnel(Personnel $personnel, PersonnelPostRequest $request)
     {
         DB::beginTransaction();
-        $data = null;
+        $data = 'Success';
         try {
             switch ($request->form_type) {
                 case 'add':
@@ -31,7 +31,6 @@ class PersonnelController extends Controller
                     $personnel->delete();
                     break;
             }
-            $data = 'Success';
         } catch (\Throwable $th) {
             DB::rollBack();
             abort(response()->json('Failed', 500));

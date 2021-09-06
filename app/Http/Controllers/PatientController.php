@@ -23,7 +23,7 @@ class PatientController extends Controller
         //     'birth_date' => Carbon::parse($request->birth_date)->timezone('Asia/Manila')->format('Y-m-d')
         // ]);
         DB::beginTransaction();
-        $data = null;
+        $data = 'Success';
         try {
             switch ($request->form_type) {
                 case 'add':
@@ -36,7 +36,6 @@ class PatientController extends Controller
                     $patient->delete();
                     break;
             }
-            $data = 'Success';
         } catch (\Throwable $th) {
             DB::rollBack();
             abort(response()->json('Failed', 500));
