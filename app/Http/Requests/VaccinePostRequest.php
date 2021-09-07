@@ -24,8 +24,8 @@ class VaccinePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'description' => 'nullable'
+            'name' => 'required|string',
+            'description' => 'nullable|string'
         ];
     }
 }

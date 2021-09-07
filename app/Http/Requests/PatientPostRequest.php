@@ -24,11 +24,11 @@ class PatientPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'gender' => 'required',
-            'civil_status' => 'required',
+            'name' => 'required|string',
+            'gender' => 'required|string',
+            'civil_status' => 'required|string',
             'birth_date' => 'required|date',
-            'address' => 'required',
+            'address' => 'required|string',
             'contact_number' => 'required',
         ];
     }

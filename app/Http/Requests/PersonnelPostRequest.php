@@ -24,8 +24,8 @@ class PersonnelPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'position' => 'required',
+            'name' => 'required|string',
+            'position' => 'required|string',
             'is_active' => 'required|boolean'
         ];
     }
