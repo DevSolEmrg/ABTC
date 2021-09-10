@@ -13,7 +13,22 @@
                 <el-input v-model="ruleForm.name" ref="name" clearable></el-input>
             </el-form-item>
             <el-form-item label="Position" prop="position">
-                <el-input type="textarea" rows="3" v-model="ruleForm.position" :clearable="true"></el-input>
+                <!-- <el-input type="textarea" rows="3" v-model="ruleForm.position" :clearable="true"></el-input> -->
+                <el-autocomplete
+                    class="inline-input"
+                    v-model="ruleForm.position"
+                    value-key="position"
+                    :clearable="true"
+                    :fetch-suggestions="querySearch"
+                    style="width:100%"
+                    autocomplete="off"
+                >
+                    <template slot-scope="{ item }">
+                        <div :title="item.position">
+                            {{ item.position }}
+                        </div>
+                    </template>
+                </el-autocomplete>
             </el-form-item>
             <el-form-item label="Active" prop="is_active">
                 <el-select v-model="ruleForm.is_active" placeholder="Select">
@@ -58,7 +73,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['request'])
+        ...mapGetters(['request', 'personnels'])
     },
     methods: {
         ...mapActions(['managePersonnel']),
@@ -101,7 +116,17 @@ export default {
         },
         rezize() {
             this.size = dialogSize(window.innerWidth)
-        }
+        },
+        querySearch(queryString, cb) {
+            var personnels = this.personnels;
+            var results = queryString ? personnels.filter(this.createFilter(queryString)) : personnels;
+            cb(results);
+        },
+        createFilter(queryString) {
+            return (personnel) => {
+                return (personnel.position.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
     },
     created() {
         if (this.selectedData) {
