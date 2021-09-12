@@ -30,6 +30,11 @@
                 </div>
 
                 <el-table :data="ListData" border :cell-style="moreDetailStyle">
+                    <el-table-column label="Age of Patient" width="120" align="center">
+                        <template slot-scope="props">
+                            {{ calculateAge(props.row.date_of_incident) }}
+                        </template>
+                    </el-table-column>
                     <el-table-column property="date_of_incident" label="Date of Incident" width="155"></el-table-column>
                     <el-table-column property="place_of_incident" label="Place of Incident" min-width="300"></el-table-column>
                     <el-table-column property="remarks" label="Remarks" min-width="300"></el-table-column>
@@ -95,14 +100,17 @@
             :size="`${size-1}%`"
         >
             <p>_(:зゝ∠)_</p>
+            <PatientTreatmentAddUpdate />
         </el-drawer>
     </el-drawer>
 </template>
 
 <script>
-import { drawerSize } from '../../constants'
+import { drawerSize, calAge } from '../../constants'
+import PatientTreatmentAddUpdate from './PatientTreatmentAddUpdate'
 export default {
     props: ['visible', 'selectedPatient'],
+    components: { PatientTreatmentAddUpdate },
     data() {
         return {
             size: 60,
@@ -166,6 +174,10 @@ export default {
 		},
         moreDetailStyle({row, column, rowIndex, columnIndex}) {
             return columnIndex == 3 ? 'background-color:rgba(0,0,0,0.01)' : ''
+        },
+        calculateAge(date_of_incident_string) {
+            var date_of_incident_timestamp = new Date((Date.parse(date_of_incident_string)/1000)) * 1000
+            return calAge(this.selectedPatient.birth_date, date_of_incident_timestamp) || 'N/A'
         }
     },
     created() {
