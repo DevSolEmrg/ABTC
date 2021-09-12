@@ -55,7 +55,6 @@
                     <el-table-column property="outcome" label="Outcome" width="90"></el-table-column>
                     <el-table-column property="biting_animal_status" label="Biting Animal Status" width="160"></el-table-column> -->
 
-
                     <el-table-column label="Action" align="center" fixed="right" width="135">
                         <el-button @click="innerDrawer = true">Click me!</el-button>
                     </el-table-column>
