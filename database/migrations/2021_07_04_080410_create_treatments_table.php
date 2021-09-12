@@ -21,7 +21,7 @@ class CreateTreatmentsTable extends Migration
             //$table->date('rig_date');
             //$table->string('route');
             $table->date('date');
-            $table->text('vaccine_given');
+            $table->foreignId('vaccine_id')->constrained('vaccines');
             //$table->text('physician_order');//todo
             //$table->text('nurce_notes');//todo
             $table->timestamps();
