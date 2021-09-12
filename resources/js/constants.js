@@ -23,9 +23,9 @@ export function buildDate(param_date) {
     return `${yr}-${mon}-${day}`
 }
 
-export function calAge(dateString) {
+export function calAge(dateString, now = Date.now()) {
     var birthday = +new Date(dateString);
-    return ~~((Date.now() - birthday) / (31557600000));
+    return ~~((now - birthday) / (31557600000));
 }
 
 export const permission_color =  {
