@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\PatientHistory::factory(1000)->create();
         \App\Models\Vaccine::factory(17)->create();
         \App\Models\Personnel::factory(20)->create();
+        \App\Models\Treatment::factory(500)->create();
 
         $default_user = \App\Models\User::create([
             'name' => 'John Doe Dee',
