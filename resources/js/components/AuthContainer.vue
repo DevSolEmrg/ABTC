@@ -74,9 +74,8 @@
                 text-color="#fff"
                 active-text-color="#0B822B"
                 router
-                :default-openeds="['1']"
+                :default-openeds="navExpandOpen"
             >
-
                 <el-menu-item index="Dashboard" :route="{ name: 'Dashboard' }" @click="handlePageLoading('Dashboard')">
                     <i class="el-icon-s-home"></i>
                     <span>Dashboard</span>
@@ -99,15 +98,14 @@
                     <span>Reports</span>
                 </el-menu-item>
 
-                <el-submenu index="1">
+                <el-submenu index="user_setting">
                     <template slot="title">
-                    <i class="el-icon-setting"></i>
-                    <span>User Setting</span>
+                        <i class="el-icon-setting"></i>
+                        <span>User Setting</span>
                     </template>
-
                     <el-menu-item index="1-1" style="padding-left:53px">My Profile</el-menu-item>
-                    <el-menu-item index="User List" :route="{ name: 'User List' }" @click="handlePageLoading('User List')" style="padding-left:53px">User Management</el-menu-item>
-                    <el-menu-item index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List')" style="padding-left:53px">Role & Permission</el-menu-item>
+                    <el-menu-item index="User List" :route="{ name: 'User List' }" @click="handlePageLoading('User List', 'user_setting')" style="padding-left:53px">User Management</el-menu-item>
+                    <el-menu-item index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List', 'user_setting')" style="padding-left:53px">Role & Permission</el-menu-item>
                 </el-submenu>
 
 
@@ -232,6 +230,7 @@ export default {
             tableData: Array(23).fill(item),
             baseUrl: location.origin.concat('/'),
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            navExpandOpen: []
         }
     },
     computed: {
@@ -248,7 +247,21 @@ export default {
         }
     },
     methods: {
-        handlePageLoading(clicked_route) {
+        checkIfHasExpandedNav(clicked_route = null, expandIndex = null) {
+            this.navExpandOpen = []
+            var expandOption = {
+                'user_setting' : ['User List', 'Role & Permission List']
+            }
+            this.$nextTick(()=>{
+                Object.entries(expandOption).forEach(index=>{
+                    if (index[1].includes(clicked_route?clicked_route:this.$route.name) && !this.navExpandOpen.includes(expandIndex)) {
+                        this.navExpandOpen.push(index[0])
+                    }
+                })
+            })
+        },
+        handlePageLoading(clicked_route, expandIndex = null) {
+            this.checkIfHasExpandedNav(clicked_route, expandIndex)
             if (clicked_route != JSON.parse(JSON.stringify(this.recent_route)) && !this.loading_component) {
                 this.$store.commit('SET_LOADING_COMPONENT', true)
             }
@@ -304,6 +317,9 @@ export default {
         userRole() {
             return this.auth?.roles?.map(i=>i.name).join(', ') || ''
         }
+    },
+    created() {
+        this.checkIfHasExpandedNav()
     },
     mounted() {
         this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
