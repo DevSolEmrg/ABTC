@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('check_auth', 'HomeController@checkAuth');
@@ -37,10 +37,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('users', 'UserController@getUsers');
     Route::post('manage_user/{user?}', 'UserController@manageUser');
 
-    Route::get('/home', 'HomeController@index')->name('home');
+    //Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::get('/home/sample', 'HomeController@index')->name('home');
-    Route::get('/{any}', 'HomeController@index')->name('home')->where('any',  '.*');
+    //Route::get('/home/sample', 'HomeController@index')->name('home');
+    Route::get('/{any}', 'HomeController@index')->name('basePage')->where('any',  '.*');
 });
 //Route::get('/home/sample', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //Route::get('/{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->where('any',  '.*');
