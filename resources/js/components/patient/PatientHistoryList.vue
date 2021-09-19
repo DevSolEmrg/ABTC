@@ -99,8 +99,7 @@
             :visible.sync="innerDrawer"
             :size="`${size-1}%`"
         >
-            <p>_(:зゝ∠)_</p>
-            <PatientTreatmentAddUpdate />
+            <PatientTreatmentAddUpdate :selected-patient="selectedPatient" />
         </el-drawer>
     </el-drawer>
 </template>
