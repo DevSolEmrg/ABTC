@@ -3,6 +3,7 @@ import users from "./modules/users";
 import vaccines from "./modules/vaccines";
 import personnels from "./modules/personnel";
 import roles from "./modules/role";
+import enums from "./modules/enum";
 import createPersistedState from "vuex-persistedstate";
 import request from "./modules/request";
 import loader from "./modules/loader";
@@ -21,7 +22,8 @@ const store =  new Vuex.Store({
         loader,
         vaccines,
         personnels,
-        roles
+        roles,
+        enums
     },
     plugins: [
         createPersistedState({
