@@ -23,7 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home')->with('auth', auth()->user()->with(['roles' => function($q){ $q->with('permissions'); }])->whereId(auth()->user()->id)->first());
+        return view('home')->with('data', [
+            'auth' => auth()->user()->with(['roles' => function($q){ $q->with('permissions'); }])->whereId(auth()->user()->id)->first(),
+            'enums' => json_encode((new \App\Constants)->enumValues())
+        ]);
     }
 
     public function checkAuth()
