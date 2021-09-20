@@ -325,6 +325,7 @@ export default {
         this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
         if (this.$attrs.auth) {
             this.$store.commit('SET_AUTH', this.$attrs.auth)
+            this.$store.commit('SET_ENUM', this.$attrs.enums)
         }
         this.side_nav = window.innerWidth > 767 ? true : false;
 
