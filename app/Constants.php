@@ -17,11 +17,11 @@ class Constants {
     public $type_of_exposure = [
         [
             'code' => 'B',
-            'desc' => 'B'
+            'desc' => 'Bite'
         ],
         [
             'code' => 'NB',
-            'desc' => 'NB'
+            'desc' => 'Non-Bite'
         ]
     ];
 
