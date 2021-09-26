@@ -23,6 +23,7 @@ class TreatmentFactory extends Factory
     {
         return [
             'patient_history_id' => PatientHistory::inRandomOrder()->first()->id,
+            'designated_day' => $this->faker->randomElement(['0', '3', '7', '28', 'ERIG']),
             'date' => $this->faker->date(),
             'vaccine_id' => Vaccine::inRandomOrder()->first()->id
         ];

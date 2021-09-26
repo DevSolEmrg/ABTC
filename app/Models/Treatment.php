@@ -9,7 +9,7 @@ class Treatment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['patient_history_id', 'date', 'vaccine_id'];
+    protected $fillable = ['patient_history_id', 'designated_day', 'date', 'vaccine_id'];
 
     public function history()
     {

@@ -20,6 +20,7 @@ class CreateTreatmentsTable extends Migration
             //$table->boolean('is_washed')->default(true);
             //$table->date('rig_date');
             //$table->string('route');
+            $table->string('designated_day');
             $table->date('date');
             $table->foreignId('vaccine_id')->constrained('vaccines');
             //$table->text('physician_order');//todo
