@@ -43,26 +43,22 @@
                 </el-form-item>
                 <el-form-item label="Type of Animal" prop="type_of_animal">
                     <el-select v-model="ruleForm.type_of_animal" placeholder="Select" clearable>
-                        <el-option label="Male" value="Male"></el-option>
-                        <el-option label="Female" value="Female"></el-option>
+                        <el-option v-for="type in enumValues.type_of_animal" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Type of Expos." prop="type_of_exposure">
                     <el-select v-model="ruleForm.type_of_exposure" placeholder="Select" clearable>
-                        <el-option label="Male" value="Male"></el-option>
-                        <el-option label="Female" value="Female"></el-option>
+                        <el-option v-for="type in enumValues.type_of_exposure" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Site of Infect." prop="site_of_infection">
-                    <el-select v-model="ruleForm.site_of_infection" multiple placeholder="Select one or more" style="width:100%">
-                        <el-option label="Male" value="Male"></el-option>
-                        <el-option label="Female" value="Female"></el-option>
+                    <el-select v-model="ruleForm.site_of_infection" multiple placeholder="Select one or more" style="width:100%" allow-create filterable default-first-option>
+                        <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Washed ?" prop="is_washed">
                     <el-select v-model="ruleForm.is_washed" placeholder="Select" clearable>
-                        <el-option label="Yes" value="1"></el-option>
-                        <el-option label="No" value="0"></el-option>
+                        <el-option v-for="type in enumValues.is_washed" :key="type.code" :label="type.desc" :value="type.code" :title="type.desc" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Route" prop="route">
@@ -70,20 +66,17 @@
                 </el-form-item>
                 <el-form-item label="Category" prop="category">
                     <el-select v-model="ruleForm.category" placeholder="Select" clearable>
-                        <el-option label="Male" value="Male"></el-option>
-                        <el-option label="Female" value="Female"></el-option>
+                        <el-option v-for="type in enumValues.category" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Outcome" prop="outcome">
                     <el-select v-model="ruleForm.outcome" placeholder="Select" clearable>
-                        <el-option label="Male" value="Male"></el-option>
-                        <el-option label="Female" value="Female"></el-option>
+                        <el-option v-for="type in enumValues.outcome" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="Animal Status" prop="biting_animal_status">
-                    <el-select v-model="ruleForm.biting_animal_status" placeholder="Select" clearable>
-                        <el-option label="Male" value="Male"></el-option>
-                        <el-option label="Female" value="Female"></el-option>
+                <el-form-item label="Animal Status" prop="bitting_animal_status">
+                    <el-select v-model="ruleForm.bitting_animal_status" placeholder="Select" clearable>
+                        <el-option v-for="type in enumValues.bitting_animal_status" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Remarks" prop="remarks">
@@ -120,7 +113,7 @@
 import { mapGetters, mapActions } from "vuex";
 import { dialogSize, buildDate } from '../../constants'
 export default {
-    props: ['dialogVisible', 'selectedData', 'dialogTitle', 'selectedPatient'],
+    props: ['dialogVisible', 'selectedData', 'dialogTitle', 'selectedPatient', 'selectedHistory'],
     data() {
         return {
             size: 30,
@@ -137,7 +130,7 @@ export default {
                 route: '',
                 category: '',
                 outcome: '',
-                biting_animal_status: '',
+                bitting_animal_status: '',
                 remarks: ''
             },
             rules: {
@@ -174,7 +167,7 @@ export default {
                 outcome: [
                     { required: true, message: 'Please select outcome', trigger: 'change' },
                 ],
-                biting_animal_status: [
+                bitting_animal_status: [
                     { required: true, message: 'Please select bitting animal status', trigger: 'change' },
                 ],
                 remarks: [
@@ -187,11 +180,12 @@ export default {
                     return time.getTime() > Date.now();
                 }
             },
-            isEdit: false
+            isEdit: false,
+            enumValues: []
         }
     },
     computed: {
-        ...mapGetters(['request'])
+        ...mapGetters(['request', 'enum', 'patients'])
     },
     methods: {
         ...mapActions(['manageVaccines']),
@@ -237,6 +231,19 @@ export default {
         }
     },
     created() {
+        this.enumValues = JSON.parse(JSON.stringify(this.enum))
+        var col_histories = this.patients.reduce((histories, row)=>{
+            if (row.history.length) {
+                row.history.map(h=>h.site_of_infection).forEach(h=>{
+                    if (!histories.map(c=>c.code).includes(h)) {
+                        histories.push({code: h, desc: h})
+                    }
+                })
+            }
+            return histories
+        }, [])
+        this.enumValues.site_of_infection_history = col_histories
+
         if (this.selectedData) {
             Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
             if (this.selectedData.form_type == 'edit') {
