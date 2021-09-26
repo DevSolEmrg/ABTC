@@ -60,8 +60,20 @@
                     <el-table-column property="outcome" label="Outcome" width="90"></el-table-column>
                     <el-table-column property="biting_animal_status" label="Biting Animal Status" width="160"></el-table-column> -->
 
-                    <el-table-column label="Action" align="center" fixed="right" width="135">
+                    <!-- <el-table-column label="Action" align="center" fixed="right" width="135">
                         <el-button @click="innerDrawer = true">Click me!</el-button>
+                    </el-table-column> -->
+                    <el-table-column width="80" align="center" label="Action">
+                        <template slot-scope="scope">
+                            <el-button-group>
+                                <el-tooltip class="item" effect="light" content="Edit" placement="top" :enterable="false">
+                                    <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="selectedHistory=scope.row; innerDrawer=true"></el-button>
+                                </el-tooltip>
+                                <el-tooltip class="item" effect="light" content="Delete" placement="top" :enterable="false">
+                                    <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="selectedHistory=scope.row;"></el-button>
+                                </el-tooltip>
+                            </el-button-group>
+                        </template>
                     </el-table-column>
                     <template slot="empty" slot-scope="scope">
                         {{ search ? `Your search for "${ search }" found no results.` : 'No Data'}}
@@ -94,12 +106,12 @@
         </div>
 
         <el-drawer
-            title="I'm inner Drawer"
+            :title="`DATE OF INCIDENT: ${getSelectedHistoryTitle()}`"
             :append-to-body="true"
             :visible.sync="innerDrawer"
             :size="`${size-1}%`"
         >
-            <PatientTreatmentAddUpdate :selected-patient="selectedPatient" />
+            <PatientTreatmentAddUpdate :selected-patient="selectedPatient" :selected-history="selectedHistory" />
         </el-drawer>
     </el-drawer>
 </template>
@@ -137,7 +149,8 @@ export default {
 	    	pageSize: 5,
             loading: true,
             search: "",
-            lastReload: new Date().toLocaleString()
+            lastReload: new Date().toLocaleString(),
+            selectedHistory: null,
         }
     },
     computed: {
@@ -177,6 +190,9 @@ export default {
         calculateAge(date_of_incident_string) {
             var date_of_incident_timestamp = new Date((Date.parse(date_of_incident_string)/1000)) * 1000
             return calAge(this.selectedPatient.birth_date, date_of_incident_timestamp) || 'N/A'
+        },
+        getSelectedHistoryTitle() {
+            return this.selectedHistory ? this.selectedHistory?.date_of_incident : ""
         }
     },
     created() {
