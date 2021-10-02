@@ -12,7 +12,11 @@ class PatientController extends Controller
 {
     public function getPatients()
     {
-        return Patient::with(['history', 'last_history'])->withCount('history')->orderBy('id', 'DESC')->get();
+        return Patient::with(['history' => function($q){
+            $q->with(['treatment']);
+        }, 'last_history' => function($q){
+            $q->with(['treatment']);
+        }])->withCount('history')->orderBy('id', 'DESC')->get();
     }
 
     public function managePatients(Patient $patient, PatientPostRequest $request)
