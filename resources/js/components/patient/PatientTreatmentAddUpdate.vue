@@ -82,14 +82,25 @@
                 <el-form-item label="Remarks" prop="remarks">
                     <el-input type="textarea" rows="6" v-model="ruleForm.remarks" :clearable="true"></el-input>
                 </el-form-item>
+                <el-form-item align="right">
+                    <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
+                </el-form-item>
             </el-tab-pane>
-            <el-tab-pane label="Patient Session">Patient Session1</el-tab-pane>
+            <el-tab-pane label="Patient Treatment Session">
+                <el-form-item align="right">
+                    <el-button type="primary">Add New</el-button>
+                </el-form-item>
+                <div v-for="o in 2" :key="o">
+                    <TreatmentSession />
+                </div>
+            </el-tab-pane>
         </el-tabs>
 
-            <el-form-item align="right">
+            <!-- <el-form-item align="right">
                 <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
                 <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
-            </el-form-item>
+            </el-form-item> -->
         </el-form>
   </div>
 <!-- </el-card> -->
@@ -112,8 +123,12 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { dialogSize, buildDate } from '../../constants'
+import TreatmentSession from './TreatmentSession'
 export default {
     props: ['dialogVisible', 'selectedData', 'dialogTitle', 'selectedPatient', 'selectedHistory'],
+    components: {
+        TreatmentSession
+    },
     data() {
         return {
             size: 30,
