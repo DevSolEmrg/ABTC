@@ -111,7 +111,7 @@
             :visible.sync="innerDrawer"
             :size="`${size-1}%`"
         >
-            <PatientTreatmentAddUpdate :selected-patient="selectedPatient" :selected-history="selectedHistory" />
+            <PatientTreatmentAddUpdate v-if="innerDrawer" :selected-patient="selectedPatient" :selected-history="selectedHistory" />
         </el-drawer>
     </el-drawer>
 </template>
