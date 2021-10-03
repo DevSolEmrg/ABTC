@@ -91,8 +91,10 @@
                 <el-form-item align="right">
                     <el-button type="primary">Add New</el-button>
                 </el-form-item>
-                <div v-for="o in 2" :key="o">
-                    <TreatmentSession />
+                <div v-if="treatmentList.length">
+                    <div v-for="t in treatmentList" :key="t.id">
+                        <TreatmentSession :treatment="t"/>
+                    </div>
                 </div>
             </el-tab-pane>
         </el-tabs>
@@ -196,14 +198,15 @@ export default {
                 }
             },
             isEdit: false,
-            enumValues: []
+            enumValues: [],
+            treatmentList: []
         }
     },
     computed: {
-        ...mapGetters(['request', 'enum', 'patients'])
+        ...mapGetters(['request', 'enum', 'patients', 'vaccines'])
     },
     methods: {
-        ...mapActions(['manageVaccines']),
+        ...mapActions(['manageVaccines', 'getVaccines']),
         closeDialog() {
             this.$emit('close-dialog', false)
         },
@@ -258,6 +261,12 @@ export default {
             return histories
         }, [])
         this.enumValues.site_of_infection_history = col_histories
+
+        this.getVaccines()
+        this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory.treatment))
+        this.treatmentList.forEach(t=>{
+            t.vaccine = JSON.parse(JSON.stringify(this.vaccines)).find(v=>v.id == t.vaccine_id)
+        })
 
         if (this.selectedData) {
             Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
