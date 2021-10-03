@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card" style="margin-bottom:5px">
         <div slot="header" class="clearfix">
-            <label style="margin-bottom:0px;vertical-align: middle;text-align: center;">SAMPLE</label>
+            <label style="margin-bottom:0px;vertical-align: middle;text-align: center;"> {{ ruleForm.designated_day }} </label>
             <!-- <el-button style="float: right; padding: 3px 0" type="text">Operation button</el-button>
             <el-button style="float: right; padding: 3px 0" type="text">Operation button</el-button>
             <el-button style="float: right; padding: 3px 0" type="text">Operation button</el-button> -->
@@ -18,7 +18,7 @@
             {{'List item ' + o }}
         </div> -->
         <div>
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm" :inline="true">
                 <el-form-item label="Desig. Day" prop="designated_day">
                     <el-input type="text" ref="designated_day" v-model="ruleForm.designated_day" :clearable="true"></el-input>
                 </el-form-item>
@@ -28,11 +28,16 @@
                         <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.date" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
                     </el-form-item>
                 </el-form-item>
-                <!-- <el-form-item label="Vaccine" prop="vaccine_id">
+                <el-form-item label="Vaccine" prop="vaccine_id">
                     <el-select v-model="ruleForm.vaccine_id" placeholder="Select" clearable>
-                        <el-option v-for="type in enumValues.type_of_animal" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                        <el-option v-for="vac in vaccines" :key="vac.id" :label="vac.name" :value="vac.id" :title="`${vac.name} - ${vac.description}`" />
                     </el-select>
-                </el-form-item> -->
+                </el-form-item>
+
+                <el-form-item >
+                    <el-button>Cancel</el-button>
+                    <el-button type="primary">Save</el-button>
+                </el-form-item>
 
 
             <!-- <el-form-item align="right">
@@ -41,14 +46,16 @@
             </el-form-item> -->
         </el-form>
         </div>
-        <div>
+        <!-- <div>
             <el-button type="primary" style="width:100%">SAVE</el-button>
-        </div>
+        </div> -->
     </el-card>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
+    props: ['treatment'],
     data() {
         return {
             ruleForm: {
@@ -72,8 +79,11 @@ export default {
                 disabledDate(time) {
                     return time.getTime() > Date.now();
                 }
-            },
+            }
         }
+    },
+    computed: {
+        ...mapGetters(['vaccines']),
     },
     methods: {
         handleEdit() {
@@ -82,6 +92,13 @@ export default {
         handleDelete() {
 
         }
+    },
+    created() {
+        let treatment = JSON.parse(JSON.stringify(this.treatment))
+        this.ruleForm.designated_day = treatment.designated_day
+        this.ruleForm.date = treatment.date
+        this.ruleForm.vaccine_id = treatment.vaccine_id
+        //this.card_title = treatment.designated_day
     }
 }
 </script>
