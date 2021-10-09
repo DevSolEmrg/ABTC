@@ -20,23 +20,23 @@
         <div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm" :inline="true">
                 <el-form-item label="Desig. Day" prop="designated_day">
-                    <el-input type="text" ref="designated_day" v-model="ruleForm.designated_day" :clearable="true"></el-input>
+                    <el-input type="text" ref="designated_day" v-model="ruleForm.designated_day" size="small" :clearable="true"></el-input>
                 </el-form-item>
 
                 <el-form-item label="Date" required>
                     <el-form-item prop="date">
-                        <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.date" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
+                        <el-date-picker type="date" placeholder="Pick a date" size="small" v-model="ruleForm.date" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
                     </el-form-item>
                 </el-form-item>
                 <el-form-item label="Vaccine" prop="vaccine_id">
-                    <el-select v-model="ruleForm.vaccine_id" placeholder="Select" clearable>
+                    <el-select v-model="ruleForm.vaccine_id" placeholder="Select" size="small" clearable>
                         <el-option v-for="vac in vaccines" :key="vac.id" :label="vac.name" :value="vac.id" :title="`${vac.name} - ${vac.description}`" />
                     </el-select>
                 </el-form-item>
 
                 <el-form-item >
-                    <el-button>Cancel</el-button>
-                    <el-button type="primary">Save</el-button>
+                    <el-button size="small">Cancel</el-button>
+                    <el-button size="small" type="primary">Save</el-button>
                 </el-form-item>
 
 
