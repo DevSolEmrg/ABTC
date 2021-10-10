@@ -33,7 +33,7 @@
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Date of Incident" required>
                             <el-form-item prop="date_of_incident">
-                                <el-date-picker ref="name" type="date" style="width:100%" size="small" placeholder="Pick a date" v-model="ruleForm.date_of_incident" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
+                                <el-date-picker ref="name" type="date" style="width:100%" size="small" placeholder="Pick a date" @change="checkDateOfSecondDate" v-model="ruleForm.date_of_incident" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
                             </el-form-item>
                         </el-form-item>
                     </el-col>
@@ -48,7 +48,7 @@
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Date of Exam" required>
                             <el-form-item prop="date_of_physical_exam">
-                                <el-date-picker type="date" style="width:100%" size="small" placeholder="Pick a date" v-model="ruleForm.date_of_physical_exam" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
+                                <el-date-picker type="date" style="width:100%" size="small" placeholder="Pick a date" v-model="ruleForm.date_of_physical_exam" :picker-options="pickerOptionsInBetween" timezone="UTC"></el-date-picker>
                             </el-form-item>
                         </el-form-item>
                     </el-col>
@@ -240,6 +240,11 @@ export default {
                     return time.getTime() > Date.now();
                 }
             },
+            pickerOptionsInBetween: {
+                disabledDate: time => {
+                    return time.getTime() < new Date(this.ruleForm?.date_of_incident) || time.getTime() > Date.now()
+                }
+            },
             isEdit: false,
             enumValues: [],
             treatmentList: []
@@ -296,6 +301,13 @@ export default {
                 date: '',
                 vaccine_id: ''
             })
+        },
+        checkDateOfSecondDate($event) {
+            if (!!this.ruleForm.date_of_physical_exam && this.ruleForm.date_of_physical_exam != "") {
+                if ($event > this.ruleForm.date_of_physical_exam) {
+                    this.ruleForm.date_of_physical_exam = ""
+                }
+            }
         }
     },
     created() {
