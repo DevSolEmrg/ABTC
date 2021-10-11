@@ -49,6 +49,69 @@
         <!-- <div>
             <el-button type="primary" style="width:100%">SAVE</el-button>
         </div> -->
+
+
+
+        <el-button @click="addRow">Add</el-button>
+  <el-button @click="saveAll">Save All</el-button>
+  <el-table :data="tableData" style="width: 100%" max-height="250">
+    <el-table-column prop="date" label="Date" width="150">
+      <template slot-scope="scope">
+          <el-input size="small"
+            style="text-align:center"
+            v-model="scope.row.date" controls-position="right"></el-input>
+       </template>
+    </el-table-column>
+    <el-table-column prop="name" label="Name" width="120">
+      <template slot-scope="scope">
+          <el-input size="small"
+            style="text-align:center"
+            v-model="scope.row.name"></el-input>
+       </template>
+    </el-table-column>
+    <el-table-column prop="state" label="State" width="120">
+      <template slot-scope="scope">
+          <el-input size="small"
+            style="text-align:center"
+            v-model="scope.row.state"
+            :disabled="scope.$index<addCount"></el-input>
+       </template>
+    </el-table-column>
+    <el-table-column prop="city" label="City" width="120">
+      <template slot-scope="scope">
+          <el-input size="small"
+            style="text-align:center"
+            v-model="scope.row.city"></el-input>
+       </template>
+    </el-table-column>
+    <el-table-column prop="address" label="Address" width="300">
+      <template slot-scope="scope">
+          <el-input size="small"
+            style="text-align:center"
+            v-model="scope.row.address"></el-input>
+       </template>
+    </el-table-column>
+    <el-table-column prop="zip" label="Zip" width="120">
+      <template slot-scope="scope">
+          <el-input size="small"
+            style="text-align:center"
+            v-model="scope.row.zip"
+            :disabled="scope.$index<addCount"></el-input>
+       </template>
+    </el-table-column>
+    <el-table-column fixed="right" label="Operations" width="120">
+      <template slot-scope="scope">
+        <el-button @click.native.prevent="saveRow(scope.$index, scope.row)" type="text" size="small">
+         Save
+        </el-button>
+        <el-button @click.native.prevent="deleteRow(scope.$index, scope.row)" type="text" size="small">
+          Delete
+        </el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+
+
     </el-card>
 </template>
 
@@ -79,7 +142,44 @@ export default {
                 disabledDate(time) {
                     return time.getTime() > Date.now();
                 }
-            }
+            },
+
+
+
+            tableData: [{
+          date: '2016-05-03',
+          name: 'Tom',
+          state: 'California',
+          city: 'Los Angeles',
+          address: 'No. 189, Grove St, Los Angeles',
+          zip: 'CA 90036',
+          tag: 'Home'
+        }, {
+          date: '2016-05-02',
+          name: 'Tom',
+          state: 'California',
+          city: 'Los Angeles',
+          address: 'No. 189, Grove St, Los Angeles',
+          zip: 'CA 90036',
+          tag: 'Office'
+        }, {
+          date: '2016-05-04',
+          name: 'Tom',
+          state: 'California',
+          city: 'Los Angeles',
+          address: 'No. 189, Grove St, Los Angeles',
+          zip: 'CA 90036',
+          tag: 'Home'
+        }, {
+          date: '2016-05-01',
+          name: 'Tom',
+          state: 'California',
+          city: 'Los Angeles',
+          address: 'No. 189, Grove St, Los Angeles',
+          zip: 'CA 90036',
+          tag: 'Office'
+        }],
+       addCount:0
         }
     },
     computed: {
@@ -91,7 +191,29 @@ export default {
         },
         handleDelete() {
 
-        }
+        },
+
+
+        deleteRow(index, rows) {
+        this.tableData.splice(index, 1);
+        if(this.addCount > 0)
+          -- this.addCount;
+      },
+     saveRow(index, rows) {
+        //  api
+      },
+     addRow(){
+       let newRow  = {
+         state:"California",
+         zip: "CA 90036",
+       };
+       this.tableData = [newRow,...this.tableData];
+       ++ this.addCount;
+     },
+     saveAll:function(){
+       // api
+       //console.log(JSON.stringify(this.disabledList));
+     },
     },
     created() {
         let treatment = JSON.parse(JSON.stringify(this.treatment))
@@ -124,4 +246,14 @@ export default {
     .box-card {
         width: 480px;
     }
+
+
+
+
+    .el-table__row .el-input .el-input__inner{
+  border-style:none;
+}
+.hover-row .el-input .el-input__inner{
+  border-style:solid;
+}
 </style>
