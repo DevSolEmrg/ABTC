@@ -54,59 +54,79 @@
 
         <el-button @click="addRow">Add</el-button>
   <el-button @click="saveAll">Save All</el-button>
-  <el-table :data="tableData" style="width: 100%" max-height="250">
-    <el-table-column prop="date" label="Date" width="150">
+  <el-table :data="tableData" style="width: 100%" border>
+    <el-table-column prop="name" label="Designated Day" width="200">
       <template slot-scope="scope">
-          <el-input size="small"
+          <span v-if="!scope.row.manage">{{ scope.row.name }}</span>
+          <el-input
+            v-else
+            :class="`custom-border-table-input-${scope.row.manage?'solid':'none'}`"
+            :readonly="!scope.row.manage"
+            size="small"
             style="text-align:center"
-            v-model="scope.row.date" controls-position="right"></el-input>
+            v-model="scope.row.name"
+            clearable></el-input>
        </template>
     </el-table-column>
-    <el-table-column prop="name" label="Name" width="120">
+    <el-table-column prop="date" label="Date" width="243">
       <template slot-scope="scope">
-          <el-input size="small"
+          <!-- <el-input size="small"
             style="text-align:center"
-            v-model="scope.row.name"></el-input>
+            v-model="scope.row.date" controls-position="right"></el-input> -->
+            <span v-if="!scope.row.manage">{{ scope.row.date }}</span>
+            <el-date-picker
+                v-else
+                value-format="yyyy-MM-dd"
+                :class="`custom-border-table-input-${scope.row.manage?'solid':'none'}`"
+                :readonly="!scope.row.manage"
+                type="date" placeholder="Pick a date" size="small" v-model="scope.row.date" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
        </template>
     </el-table-column>
-    <el-table-column prop="state" label="State" width="120">
+
+    <el-table-column prop="zip" label="Vaccine" min-width="143">
       <template slot-scope="scope">
-          <el-input size="small"
-            style="text-align:center"
-            v-model="scope.row.state"
-            :disabled="scope.$index<addCount"></el-input>
-       </template>
-    </el-table-column>
-    <el-table-column prop="city" label="City" width="120">
-      <template slot-scope="scope">
-          <el-input size="small"
-            style="text-align:center"
-            v-model="scope.row.city"></el-input>
-       </template>
-    </el-table-column>
-    <el-table-column prop="address" label="Address" width="300">
-      <template slot-scope="scope">
-          <el-input size="small"
-            style="text-align:center"
-            v-model="scope.row.address"></el-input>
-       </template>
-    </el-table-column>
-    <el-table-column prop="zip" label="Zip" width="120">
-      <template slot-scope="scope">
-          <el-input size="small"
+          <!-- <el-input size="small"
             style="text-align:center"
             v-model="scope.row.zip"
-            :disabled="scope.$index<addCount"></el-input>
+            :disabled="scope.$index<addCount"></el-input> -->
+            <span v-if="!scope.row.manage">{{ getVaccineName(scope.row.vaccine_id) }}</span>
+            <el-select
+                v-else
+                :class="`custom-border-table-input-${scope.row.manage?'solid':'none'}`"
+                :readonly="!scope.row.manage"
+                v-model="scope.row.vaccine_id" placeholder="Select" size="small" clearable>
+                        <el-option v-for="vac in vaccines" :key="vac.id" :label="vac.name" :value="vac.id" :title="`${vac.name} - ${vac.description}`" />
+                    </el-select>
        </template>
     </el-table-column>
-    <el-table-column fixed="right" label="Operations" width="120">
+    <el-table-column fixed="right" label="Action" width="80">
       <template slot-scope="scope">
+        <!-- <el-button @click.native.prevent="saveRow(scope.$index, scope.row)" type="text" size="small">
+         Edit
+        </el-button>
         <el-button @click.native.prevent="saveRow(scope.$index, scope.row)" type="text" size="small">
          Save
         </el-button>
         <el-button @click.native.prevent="deleteRow(scope.$index, scope.row)" type="text" size="small">
           Delete
-        </el-button>
+        </el-button> -->
+
+        <el-button-group style="float: right;">
+            <el-tooltip v-if="!scope.row.manage" class="item" effect="light" content="Edit" placement="top" :enterable="false" style="margin-bottom:0px">
+                <el-button :disabled="isEditing()" type="primary" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="handleEdit(scope.$index, scope.row)"></el-button>
+            </el-tooltip>
+            <el-tooltip v-if="!scope.row.manage" class="item" effect="light" content="Delete" placement="top" :enterable="false" style="margin-bottom:0px">
+                <el-button :disabled="isEditing()" type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete(scope.$index, scope.row)"></el-button>
+            </el-tooltip>
+
+            <el-tooltip v-if="scope.row.manage" class="item" effect="light" content="Cancel" placement="top" :enterable="false" style="margin-bottom:0px">
+                <el-button type="warning" size="mini" icon="mdi mdi-close-thick" circle @click="handleCancel(scope.$index, scope.row)"></el-button>
+            </el-tooltip>
+            <el-tooltip v-if="scope.row.manage" class="item" effect="light" content="Save" placement="top" :enterable="false" style="margin-bottom:0px">
+                <el-button type="success" size="mini" icon="mdi mdi-check-bold" circle @click="saveRow(scope.$index, scope.row)"></el-button>
+            </el-tooltip>
+        </el-button-group>
+
       </template>
     </el-table-column>
   </el-table>
@@ -153,7 +173,9 @@ export default {
           city: 'Los Angeles',
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036',
-          tag: 'Home'
+          tag: 'Home',
+          vaccine_id: 1,
+          manage: false
         }, {
           date: '2016-05-02',
           name: 'Tom',
@@ -161,7 +183,9 @@ export default {
           city: 'Los Angeles',
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036',
-          tag: 'Office'
+          tag: 'Office',
+          vaccine_id: 1,
+          manage: true
         }, {
           date: '2016-05-04',
           name: 'Tom',
@@ -169,7 +193,9 @@ export default {
           city: 'Los Angeles',
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036',
-          tag: 'Home'
+          tag: 'Home',
+          vaccine_id: 1,
+          manage: false
         }, {
           date: '2016-05-01',
           name: 'Tom',
@@ -177,7 +203,9 @@ export default {
           city: 'Los Angeles',
           address: 'No. 189, Grove St, Los Angeles',
           zip: 'CA 90036',
-          tag: 'Office'
+          tag: 'Office',
+          vaccine_id: 1,
+          manage: false
         }],
        addCount:0
         }
@@ -186,29 +214,47 @@ export default {
         ...mapGetters(['vaccines']),
     },
     methods: {
-        handleEdit() {
-
+        handleEdit(index, rows) {
+            this.tableData[index].manage = true
         },
-        handleDelete() {
-
+        handleDelete(index, rows) {
+            this.tableData.splice(index, 1);
+            if(this.addCount > 0)
+            -- this.addCount;
+        },
+        handleCancel(index, rows) {
+            if (rows?.form_type == 'add') {
+                this.tableData.splice(index, 1);
+            } else {
+                this.tableData[index].manage = false
+            }
+        },
+        getVaccineName(vac_id) {
+            return this.vaccines.find(v=>v?.id==vac_id)?.name || ''
+        },
+        isEditing() {
+            return this.tableData.some(d=>d.manage==true)
         },
 
 
         deleteRow(index, rows) {
-        this.tableData.splice(index, 1);
-        if(this.addCount > 0)
-          -- this.addCount;
+            this.tableData.splice(index, 1);
+            if(this.addCount > 0)
+            -- this.addCount;
       },
      saveRow(index, rows) {
         //  api
       },
      addRow(){
-       let newRow  = {
-         state:"California",
-         zip: "CA 90036",
-       };
-       this.tableData = [newRow,...this.tableData];
-       ++ this.addCount;
+         this.tableData.forEach(d=>d.manage=false)
+        let newRow  = {
+            form_type: 'add',
+            manage: true,
+            state:"California",
+            zip: "CA 90036",
+        };
+        this.tableData = [newRow,...this.tableData];
+        ++ this.addCount;
      },
      saveAll:function(){
        // api
@@ -250,10 +296,5 @@ export default {
 
 
 
-    .el-table__row .el-input .el-input__inner{
-  border-style:none;
-}
-.hover-row .el-input .el-input__inner{
-  border-style:solid;
-}
+
 </style>
