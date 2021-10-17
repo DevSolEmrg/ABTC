@@ -41,7 +41,7 @@
 
                     <el-table-column type="expand" label="View More" width="100">
                         <template slot-scope="props">
-                            <p><strong>Date of Physical Examination:</strong> {{ props.row.date_of_physical_exam }}</p>
+                            <!-- <p><strong>Date of Physical Examination:</strong> {{ props.row.date_of_physical_exam }}</p>
                             <p><strong>Place of Physical Examination:</strong> {{ props.row.place_of_physical_exam }}</p>
                             <p><strong>Type of Animal:</strong> {{ props.row.type_of_animal }}</p>
                             <p><strong>Type of Exposure:</strong> {{ props.row.type_of_exposure }}</p>
@@ -50,7 +50,30 @@
                             <p><strong>Route:</strong> {{ props.row.route }}</p>
                             <p><strong>Category:</strong> {{ props.row.category }}</p>
                             <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
-                            <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p>
+                            <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p> -->
+                            <el-row :gutter="10">
+                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                                    <!-- first -->
+                                    <p><strong>Date of Physical Examination:</strong> {{ props.row.date_of_physical_exam }}</p>
+                                    <p><strong>Place of Physical Examination:</strong> {{ props.row.place_of_physical_exam }}</p>
+                                    <p><strong>Type of Animal:</strong> {{ props.row.type_of_animal }}</p>
+                                    <p><strong>Type of Exposure:</strong> {{ props.row.type_of_exposure }}</p>
+                                    <p><strong>Site of Infection:</strong> {{ props.row.site_of_infection }}</p>
+                                    <p><strong>Washing of Bite:</strong> {{ props.row.is_washed }}</p>
+                                    <p><strong>Route:</strong> {{ props.row.route }}</p>
+                                    <p><strong>Category:</strong> {{ props.row.category }}</p>
+                                    <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
+                                    <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p>
+                                </el-col>
+                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                                    <!-- second -->
+                                    <el-table :data="props.row.treatment" size="mini" border style="width: 100%">
+                                        <el-table-column prop="designated_day" label="Desig. Day" width="180"> </el-table-column>
+                                        <el-table-column prop="date" label="Date" width="180"> </el-table-column>
+                                        <el-table-column prop="vaccine_id" label="Vaccine"> </el-table-column>
+                                    </el-table>
+                                </el-col>
+                            </el-row>
                         </template>
                     </el-table-column>
 
