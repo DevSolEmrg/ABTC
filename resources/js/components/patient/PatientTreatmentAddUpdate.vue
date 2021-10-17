@@ -132,13 +132,79 @@
             </el-tab-pane>
             <el-tab-pane label="Patient Treatment Session">
                 <el-form-item align="right">
-                    <el-button type="primary" @click="addTreatmentSession">Add New</el-button>
+                    <el-button v-if="!!isEditingTreatmentSession || addCount > 0" type="primary" size="small" disabled>Add New</el-button>
+                    <el-button v-else type="primary" size="small" @click="addRow()">Add New</el-button>
                 </el-form-item>
-                <div v-if="treatmentList.length">
+                <!-- <div v-if="treatmentList.length">
                     <div v-for="t in treatmentList" :key="t.id">
                         <TreatmentSession :treatment="t"/>
                     </div>
-                </div>
+                </div> -->
+
+                <el-table :data="treatmentList" style="width: 100%" :row-class-name="tableRowClassName" border>
+                    <el-table-column prop="designated_day" label="Designated Day" width="200">
+                        <template slot-scope="scope">
+                            <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ scope.row.designated_day }}</span>
+                            <el-input
+                                v-else
+                                size="small"
+                                placeholder="E.g. D0, D3, D7..."
+                                v-model="scope.row.designated_day"
+                                clearable
+                            />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="date" label="Date of Apperance" width="243">
+                        <template slot-scope="scope">
+                            <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ scope.row.date }}</span>
+                            <el-date-picker
+                                v-else
+                                value-format="yyyy-MM-dd"
+                                type="date"
+                                placeholder="Pick a date"
+                                size="small"
+                                v-model="scope.row.date"
+                                :picker-options="pickerOptions"
+                                timezone="UTC"
+                            />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="vaccine_id" label="Vaccine" min-width="143">
+                        <template slot-scope="scope">
+                            <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ getVaccineName(scope.row.vaccine_id) }}</span>
+                            <el-select
+                                v-else
+                                v-model="scope.row.vaccine_id"
+                                placeholder="Select"
+                                size="small"
+                                clearable
+                            >
+                                <el-option v-for="vac in vaccines" :key="vac.id" :label="vac.name" :value="vac.id" :title="`${vac.name} - ${vac.description}`" />
+                            </el-select>
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed="right" label="Action" width="80">
+                        <template slot-scope="scope">
+                            <el-button-group style="float: right;">
+                                <el-tooltip v-if="!scope.row.manage" class="item" effect="light" content="Edit" placement="top" :enterable="false" style="margin-bottom:0px">
+                                    <el-button v-if="!!isEditingTreatmentSession" type="primary" size="mini" icon="mdi mdi-lead-pencil" circle plain disabled />
+                                    <el-button v-else type="primary" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+                                <el-tooltip v-if="!scope.row.manage" class="item" effect="light" content="Delete" placement="top" :enterable="false" style="margin-bottom:0px">
+                                    <el-button v-if="!!isEditingTreatmentSession" type="danger" size="mini" icon="mdi mdi-delete" circle plain disabled />
+                                    <el-button v-else type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+                                <el-tooltip v-if="scope.row.manage && !!isEditingTreatmentSession" class="item" effect="light" content="Cancel" placement="top" :enterable="false" style="margin-bottom:0px">
+                                    <el-button type="warning" size="mini" icon="mdi mdi-close-thick" circle @click="handleCancel(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+                                <el-tooltip v-if="scope.row.manage && !!isEditingTreatmentSession" class="item" effect="light" content="Save" placement="top" :enterable="false" style="margin-bottom:0px">
+                                    <el-button type="success" size="mini" icon="mdi mdi-check-bold" circle @click="saveRow(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+                            </el-button-group>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
             </el-tab-pane>
         </el-tabs>
 
@@ -247,11 +313,84 @@ export default {
             },
             isEdit: false,
             enumValues: [],
-            treatmentList: []
+            treatmentList: [],
+            tableData: [
+                {
+                    date: '2016-05-03',
+                    designated_day: 'Tom',
+                    state: 'California',
+                    city: 'Los Angeles',
+                    address: 'No. 189, Grove St, Los Angeles',
+                    zip: 'CA 90036',
+                    tag: 'Home',
+                    vaccine_id: 1,
+                    manage: false
+                }, {
+                    date: '2016-05-02',
+                    designated_day: 'Tom',
+                    state: 'California',
+                    city: 'Los Angeles',
+                    address: 'No. 189, Grove St, Los Angeles',
+                    zip: 'CA 90036',
+                    tag: 'Office',
+                    vaccine_id: 1,
+                    manage: true
+                }, {
+                    date: '2016-05-04',
+                    designated_day: 'Tom',
+                    state: 'California',
+                    city: 'Los Angeles',
+                    address: 'No. 189, Grove St, Los Angeles',
+                    zip: 'CA 90036',
+                    tag: 'Home',
+                    vaccine_id: 1,
+                    manage: false
+                }, {
+                    date: '2016-05-01',
+                    designated_day: 'Tom',
+                    state: 'California',
+                    city: 'Los Angeles',
+                    address: 'No. 189, Grove St, Los Angeles',
+                    zip: 'CA 90036',
+                    tag: 'Office',
+                    vaccine_id: 1,
+                    manage: false
+                }
+            ],
+            addCount:0,
+            isEditingTreatmentSession: false
         }
     },
     computed: {
-        ...mapGetters(['request', 'enum', 'patients', 'vaccines'])
+        ...mapGetters(['request', 'enum', 'patients', 'vaccines']),
+        // treatmentSessionChanges() {
+        //     var s = this.treatmentList
+        //     console.log('has changes')
+        //     return s
+        // }
+    },
+    watch: {
+        treatmentList(val) {
+            console.log('has changes')
+        }
+        // treatmentList: {
+        //    // 'handle1',
+        //     function handle2 (val, oldVal) { /* ... */ console.log('has changes') },
+        //     //{
+        //         //handler: function handle3 (val, oldVal) { /* ... */ },
+        //         /* ... */
+        //    // }
+        // },
+        // treatmentList: {
+        //     handler (val) {
+        //         console.log('has changes', val)
+        //     },
+        //     deep: true
+        // }
+        // handleChange (newVal) {
+        // // Handle changes here!
+        //     console.log('has changes to this object', newVal);
+        // },
     },
     methods: {
         ...mapActions(['manageVaccines', 'getVaccines']),
@@ -308,6 +447,70 @@ export default {
                     this.ruleForm.date_of_physical_exam = ""
                 }
             }
+        },
+        handleEdit(index, rows) {
+
+            console.log("edit", index, rows)
+            // this.$nextTick(()=>{
+            //     this.treatmentList[index].manage = true
+            // })
+            // setTimeout(() => {
+            //     console.log('done')
+                //this.treatmentList[index].manage = true
+
+                this.$set(this.treatmentList[index], 'manage', true)
+                this.isEditingTreatmentSession = true
+                //this.isEditing()
+            // }, 5000);
+        },
+        handleDelete(index, rows) {
+            this.treatmentList.splice(index, 1);
+            if(this.addCount > 0)
+            -- this.addCount;
+        },
+        handleCancel(index, rows) {
+            if (rows?.form_type == 'add') {
+                this.treatmentList.splice(index, 1);
+                this.addCount = 0
+            } else {
+                //this.treatmentList[index].manage = false
+                this.$set(this.treatmentList[index], 'manage', false)
+            }
+            this.isEditingTreatmentSession = false
+            ///this.isEditing()
+        },
+        getVaccineName(vac_id) {
+            return this.vaccines.find(v=>v?.id==vac_id)?.name || ''
+        },
+        isEditing() {
+            this.isEditingTreatmentSession = this.treatmentList.some(d=>d.manage==true)
+        },
+        saveRow(index, rows) {
+            //  api
+        },
+        addRow(){
+            if (this.addCount < 1) {
+                this.treatmentList.forEach(d=>d.manage=false)
+                let newRow  = {
+                    form_type: 'add',
+                    manage: true,
+                    state:"California",
+                    zip: "CA 90036",
+                };
+                this.treatmentList = [newRow,...this.treatmentList];
+                ++ this.addCount;
+
+                this.isEditingTreatmentSession = true
+            } else {
+                alert('Add once at a time please check')
+            }
+        },
+        saveAll:function(){
+            // api
+            //console.log(JSON.stringify(this.disabledList));
+        },
+        tableRowClassName({row, rowIndex}) {
+            return row.manage ? 'highlight-row' : ''
         }
     },
     created() {
@@ -327,6 +530,8 @@ export default {
         this.getVaccines()
         this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory.treatment))
         this.treatmentList.forEach(t=>{
+            //this.$watch(() => t, this.handleChange, {deep: true});
+            t.manage = false
             t.vaccine = JSON.parse(JSON.stringify(this.vaccines)).find(v=>v.id == t.vaccine_id)
         })
 
