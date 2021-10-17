@@ -68,9 +68,15 @@
                                 <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                                     <!-- second -->
                                     <el-table :data="props.row.treatment" size="mini" border style="width: 100%">
-                                        <el-table-column prop="designated_day" label="Desig. Day" width="180"> </el-table-column>
+                                         <el-table-column label="Treatment Session List" align="center">
+                                            <el-table-column prop="designated_day" label="Desig. Day" width="180"> </el-table-column>
+                                            <el-table-column prop="date" label="Date" width="180"> </el-table-column>
+                                            <el-table-column prop="vaccine_id" label="Vaccine"> </el-table-column>
+                                        </el-table-column>
+
+                                        <!-- <el-table-column prop="designated_day" label="Desig. Day" width="180"> </el-table-column>
                                         <el-table-column prop="date" label="Date" width="180"> </el-table-column>
-                                        <el-table-column prop="vaccine_id" label="Vaccine"> </el-table-column>
+                                        <el-table-column prop="vaccine_id" label="Vaccine"> </el-table-column> -->
                                     </el-table>
                                 </el-col>
                             </el-row>
