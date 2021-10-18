@@ -191,16 +191,16 @@
                             />
                         </template>
                     </el-table-column>
-                    <el-table-column prop="time" label="Time" width="243">
+                    <el-table-column prop="time" label="Time (24hr)" width="243">
                         <template slot-scope="scope">
                             <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ scope.row.time }}</span>
                             <el-time-select
                                 v-else
                                 value-format="HH:mm"
                                 :picker-options="{
-                                    start: '01:01',
-                                    step: '00:15',
-                                    end: '23:59'
+                                    start: '01:00',
+                                    step: '00:10',
+                                    end: '24:00'
                                 }"
                                 placeholder="Pick a time"
                                 size="small"
