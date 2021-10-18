@@ -33,7 +33,19 @@
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Date of Incident" required>
                             <el-form-item prop="date_of_incident">
-                                <el-date-picker ref="name" type="date" style="width:100%" size="small" placeholder="Pick a date" @change="checkDateOfSecondDate" v-model="ruleForm.date_of_incident" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
+                                <!-- <el-date-picker ref="name" type="date" style="width:100%" size="small" placeholder="Pick a date" @change="checkDateOfSecondDate" v-model="ruleForm.date_of_incident" :picker-options="pickerOptions" timezone="UTC"></el-date-picker> -->
+                                <el-date-picker
+                                    ref="name"
+                                    style="width:100%"
+                                    size="small"
+                                    @change="checkDateOfSecondDate"
+                                    v-model="ruleForm.date_of_incident"
+                                    :picker-options="pickerOptionShortcut"
+                                    timezone="UTC"
+                                    type="datetime"
+                                    placeholder="Pick a date and time"
+                                    default-time="12:00:00"
+                                />
                             </el-form-item>
                         </el-form-item>
                     </el-col>
@@ -48,7 +60,17 @@
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Date of Exam" required>
                             <el-form-item prop="date_of_physical_exam">
-                                <el-date-picker type="date" style="width:100%" size="small" placeholder="Pick a date" v-model="ruleForm.date_of_physical_exam" :picker-options="pickerOptionsInBetween" timezone="UTC"></el-date-picker>
+                                <!-- <el-date-picker type="date" style="width:100%" size="small" placeholder="Pick a date" v-model="ruleForm.date_of_physical_exam" :picker-options="pickerOptionsInBetween" timezone="UTC"></el-date-picker> -->
+                                <el-date-picker
+                                    style="width:100%"
+                                    size="small"
+                                    v-model="ruleForm.date_of_physical_exam"
+                                    :picker-options="pickerOptionsInBetween"
+                                    timezone="UTC"
+                                    type="datetime"
+                                    placeholder="Pick a date and time"
+                                    default-time="12:00:00"
+                                />
                             </el-form-item>
                         </el-form-item>
                     </el-col>
@@ -165,6 +187,24 @@
                                 size="small"
                                 v-model="scope.row.date"
                                 :picker-options="pickerOptions"
+                                timezone="UTC"
+                            />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="time" label="Time" width="243">
+                        <template slot-scope="scope">
+                            <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ scope.row.time }}</span>
+                            <el-time-select
+                                v-else
+                                value-format="HH:mm"
+                                :picker-options="{
+                                    start: '01:01',
+                                    step: '00:15',
+                                    end: '23:59'
+                                }"
+                                placeholder="Pick a time"
+                                size="small"
+                                v-model="scope.row.time"
                                 timezone="UTC"
                             />
                         </template>
@@ -309,6 +349,31 @@ export default {
             pickerOptionsInBetween: {
                 disabledDate: time => {
                     return time.getTime() < new Date(this.ruleForm?.date_of_incident) || time.getTime() > Date.now()
+                }
+            },
+            pickerOptionShortcut: {
+                shortcuts: [{
+                    text: 'Today',
+                    onClick(picker) {
+                    picker.$emit('pick', new Date());
+                    }
+                }, {
+                    text: 'Yesterday',
+                    onClick(picker) {
+                    const date = new Date();
+                    date.setTime(date.getTime() - 3600 * 1000 * 24);
+                    picker.$emit('pick', date);
+                    }
+                }, {
+                    text: 'A week ago',
+                    onClick(picker) {
+                    const date = new Date();
+                    date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', date);
+                    }
+                }],
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
                 }
             },
             isEdit: false,
