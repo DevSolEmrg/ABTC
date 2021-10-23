@@ -458,7 +458,7 @@ export default {
         // },
     },
     methods: {
-        ...mapActions(['manageVaccines', 'getVaccines']),
+        ...mapActions(['manageVaccines', 'getVaccines', 'manageTreatment']),
         closeDialog() {
             this.$emit('close-dialog', false)
         },
@@ -552,6 +552,11 @@ export default {
         },
         saveRow(index, rows) {
             //  api
+            this.manageTreatment(this.treatmentList[index]).then(()=>{
+                alert('success')
+            }).catch(()=>{
+                alert('error')
+            })
         },
         addRow(){
             if (this.addCount < 1) {
@@ -561,6 +566,7 @@ export default {
                     manage: true,
                     state:"California",
                     zip: "CA 90036",
+                    patient_history_id: this.selectedHistory.id
                 };
                 this.treatmentList = [newRow,...this.treatmentList];
                 ++ this.addCount;

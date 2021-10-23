@@ -25,6 +25,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('check_auth', 'HomeController@checkAuth');
     Route::post('manage_patients/{patient?}', 'PatientController@managePatients');
 
+    Route::post('manage_treatment/{treatment?}', 'PatientController@manageTreatment');
+
     Route::get('vaccines', 'VaccineController@getVaccines');
     Route::post('manage_vaccines/{vaccine?}', 'VaccineController@manageVaccines');
 
