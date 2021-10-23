@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Treatment;
+use App\Models\{PatientHistory, Treatment, Vaccine};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TreatmentFactory extends Factory
@@ -22,7 +22,11 @@ class TreatmentFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'patient_history_id' => PatientHistory::inRandomOrder()->first()->id,
+            'designated_day' => $this->faker->randomElement(['0', '3', '7', '28', 'ERIG']),
+            'date' => $this->faker->date(),
+            'time' => '12:00',
+            'vaccine_id' => Vaccine::inRandomOrder()->first()->id
         ];
     }
 }

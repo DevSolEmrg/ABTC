@@ -22,6 +22,16 @@ const actions = {
             }).catch(error=>{
                 commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the patient record!' })
             });
+    },
+    async manageTreatment({ commit, dispatch }, form) {
+        await axios.post(`manage_treatment/${form.id ?? ""}`, form)
+            .then(response => {
+                commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Treatment seesion has been successfully saved!' })
+                //console.log('manage patients response:', response)
+                // dispatch("getPatients");
+            }).catch(error=>{
+                commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the treatment session!' })
+            });
     }
 };
 

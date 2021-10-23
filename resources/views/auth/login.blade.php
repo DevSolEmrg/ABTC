@@ -77,6 +77,7 @@
         </div>
     </div>
 </div>
+<div style="background-color:#e4e5e9; height:140px; position: absolute; bottom:0%; width:100%; border-top:1px solid #ccc8c8;" class="d-none d-sm-block d-sm-none"></div>
 <footer class="footer" style="position: absolute; bottom:0%;   width:100%; border-top:1px solid rgba(0,0,0,0.08); background-color: #272E3F !important">
     <span style="font-size: 0.7rem; padding-left:15px; color:#bac1c7">
         © {{ now()->year }} Copyright

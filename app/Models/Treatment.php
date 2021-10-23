@@ -9,6 +9,8 @@ class Treatment extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['patient_history_id', 'designated_day', 'date', 'time', 'vaccine_id'];
+
     public function history()
     {
         return $this->belongsTo(PatientHistory::class);

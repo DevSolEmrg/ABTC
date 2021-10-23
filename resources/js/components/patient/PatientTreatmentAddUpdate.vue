@@ -1,33 +1,644 @@
 <template>
-    <el-drawer
-        title="I'm inner Drawer"
-        :visible.sync="visible"
-        size="59%"
-        :wrapperClosable="false"
+    <!-- <el-dialog
+        :title="dialogTitle"
+        :visible.sync="dialogVisible"
+        :width="`${size}%`"
+        :close-on-click-modal="false"
         :close-on-press-escape="false"
         :destroy-on-close="true"
-        :before-close="closeTreatment"
-    >
-        <p>_(:зゝ∠)_</p>
-    </el-drawer>
+        :before-close="closeDialog"
+    > -->
+<div class="px-1" style="margin:0px !important">
+
+    <!-- <el-tabs type="border-card">
+        <el-tab-pane label="Patient History">Patient History1</el-tab-pane>
+        <el-tab-pane label="Patient Session">Patient Session1</el-tab-pane>
+    </el-tabs> -->
+
+    <!-- <el-divider content-position="left" style="margin-top:0px">Rabindranath Tagore</el-divider> -->
+    <!-- <el-card class="box-card" :body-style="{ padding: '12px' }" shadow="hover">
+  <div slot="header" class="clearfix">
+    <span>Card name</span>
+    <el-button style="float: right; padding: 3px 0" type="text">Operation button</el-button>
+  </div> -->
+  <div class="text item">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+        <el-tabs type="border-card" class="mb-3">
+            <el-tab-pane label="Patient Exposure">
+                <!-- <el-row :gutter="10">
+                    <el-col :xs="12" :sm="12" :md="16" :lg="16" :xl="16"><div class="grid-content bg-purple"></div></el-col>
+                    <el-col :xs="12" :sm="12" :md="16" :lg="16" :xl="16"><div class="grid-content bg-purple-light"></div></el-col>
+                </el-row> -->
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Date of Incident" required>
+                            <el-form-item prop="date_of_incident">
+                                <!-- <el-date-picker ref="name" type="date" style="width:100%" size="small" placeholder="Pick a date" @change="checkDateOfSecondDate" v-model="ruleForm.date_of_incident" :picker-options="pickerOptions" timezone="UTC"></el-date-picker> -->
+                                <el-date-picker
+                                    ref="name"
+                                    style="width:100%"
+                                    size="small"
+                                    @change="checkDateOfSecondDate"
+                                    v-model="ruleForm.date_of_incident"
+                                    :picker-options="pickerOptionShortcut"
+                                    timezone="UTC"
+                                    type="datetime"
+                                    placeholder="Pick a date and time"
+                                    default-time="12:00:00"
+                                />
+                            </el-form-item>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Place of Inci." prop="place_of_incident">
+                            <el-input type="textarea" rows="1" style="width:100%" v-model="ruleForm.place_of_incident" :clearable="true"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Date of Exam" required>
+                            <el-form-item prop="date_of_physical_exam">
+                                <!-- <el-date-picker type="date" style="width:100%" size="small" placeholder="Pick a date" v-model="ruleForm.date_of_physical_exam" :picker-options="pickerOptionsInBetween" timezone="UTC"></el-date-picker> -->
+                                <el-date-picker
+                                    style="width:100%"
+                                    size="small"
+                                    v-model="ruleForm.date_of_physical_exam"
+                                    :picker-options="pickerOptionsInBetween"
+                                    timezone="UTC"
+                                    type="datetime"
+                                    placeholder="Pick a date and time"
+                                    default-time="12:00:00"
+                                />
+                            </el-form-item>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Place of Exam" prop="place_of_physical_exam">
+                            <el-input type="textarea" rows="1" style="width:100%" v-model="ruleForm.place_of_physical_exam" :clearable="true"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Type of Animal" prop="type_of_animal">
+                            <el-select v-model="ruleForm.type_of_animal" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.type_of_animal" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Type of Expos." prop="type_of_exposure">
+                            <el-select v-model="ruleForm.type_of_exposure" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.type_of_exposure" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Site of Infect." prop="site_of_infection">
+                            <el-select v-model="ruleForm.site_of_infection" multiple placeholder="Select one or more" style="width:100%" size="small" allow-create filterable default-first-option>
+                                <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                        <el-form-item label="Washed ?" prop="is_washed">
+                            <el-select v-model="ruleForm.is_washed" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.is_washed" :key="type.code" :label="type.desc" :value="type.code" :title="type.desc" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                        <el-form-item label="Route" prop="route">
+                            <el-input v-model="ruleForm.route" style="width:100%" size="small" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+                        <el-form-item label="Category" prop="category">
+                            <el-select v-model="ruleForm.category" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.category" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+                        <el-form-item label="Outcome" prop="outcome">
+                            <el-select v-model="ruleForm.outcome" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.outcome" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+                        <el-form-item label="Animal Status" prop="bitting_animal_status">
+                            <el-select v-model="ruleForm.bitting_animal_status" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.bitting_animal_status" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-form-item label="Remarks" prop="remarks">
+                    <el-input type="textarea" rows="4" v-model="ruleForm.remarks" size="small" :clearable="true"></el-input>
+                </el-form-item>
+                <el-form-item align="right">
+                    <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
+                </el-form-item>
+            </el-tab-pane>
+            <el-tab-pane label="Patient Treatment Session">
+                <el-form-item align="right">
+                    <el-button v-if="!!isEditingTreatmentSession || addCount > 0" type="primary" size="small" disabled>Add New</el-button>
+                    <el-button v-else type="primary" size="small" @click="addRow()">Add New</el-button>
+                </el-form-item>
+                <!-- <div v-if="treatmentList.length">
+                    <div v-for="t in treatmentList" :key="t.id">
+                        <TreatmentSession :treatment="t"/>
+                    </div>
+                </div> -->
+
+                <el-table :data="treatmentList" style="width: 100%" :row-class-name="tableRowClassName" border>
+                    <el-table-column prop="designated_day" label="Designated Day" width="200">
+                        <template slot-scope="scope">
+                            <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ scope.row.designated_day }}</span>
+                            <el-input
+                                v-else
+                                size="small"
+                                placeholder="E.g. D0, D3, D7..."
+                                v-model="scope.row.designated_day"
+                                clearable
+                            />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="date" label="Date of Apperance" width="243">
+                        <template slot-scope="scope">
+                            <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ scope.row.date }}</span>
+                            <el-date-picker
+                                v-else
+                                value-format="yyyy-MM-dd"
+                                type="date"
+                                placeholder="Pick a date"
+                                size="small"
+                                v-model="scope.row.date"
+                                :picker-options="pickerOptions"
+                                timezone="UTC"
+                            />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="time" label="Time (24hr)" width="243">
+                        <template slot-scope="scope">
+                            <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ scope.row.time }}</span>
+                            <el-time-select
+                                v-else
+                                value-format="HH:mm"
+                                :picker-options="{
+                                    start: '01:00',
+                                    step: '00:10',
+                                    end: '24:00'
+                                }"
+                                placeholder="Pick a time"
+                                size="small"
+                                v-model="scope.row.time"
+                                timezone="UTC"
+                            />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="vaccine_id" label="Vaccine" min-width="143">
+                        <template slot-scope="scope">
+                            <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ getVaccineName(scope.row.vaccine_id) }}</span>
+                            <el-select
+                                v-else
+                                v-model="scope.row.vaccine_id"
+                                placeholder="Select"
+                                size="small"
+                                clearable
+                            >
+                                <el-option v-for="vac in vaccines" :key="vac.id" :label="vac.name" :value="vac.id" :title="`${vac.name} - ${vac.description}`" />
+                            </el-select>
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed="right" label="Action" width="80">
+                        <template slot-scope="scope">
+                            <el-button-group style="float: right;">
+                                <el-tooltip v-if="!scope.row.manage" class="item" effect="light" content="Edit" placement="top" :enterable="false" style="margin-bottom:0px">
+                                    <el-button v-if="!!isEditingTreatmentSession" type="primary" size="mini" icon="mdi mdi-lead-pencil" circle plain disabled />
+                                    <el-button v-else type="primary" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+                                <el-tooltip v-if="!scope.row.manage" class="item" effect="light" content="Delete" placement="top" :enterable="false" style="margin-bottom:0px">
+                                    <el-button v-if="!!isEditingTreatmentSession" type="danger" size="mini" icon="mdi mdi-delete" circle plain disabled />
+                                    <el-button v-else type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+                                <el-tooltip v-if="scope.row.manage && !!isEditingTreatmentSession" class="item" effect="light" content="Cancel" placement="top" :enterable="false" style="margin-bottom:0px">
+                                    <el-button type="warning" size="mini" icon="mdi mdi-close-thick" circle @click="handleCancel(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+                                <el-tooltip v-if="scope.row.manage && !!isEditingTreatmentSession" class="item" effect="light" content="Save" placement="top" :enterable="false" style="margin-bottom:0px">
+                                    <el-button type="success" size="mini" icon="mdi mdi-check-bold" circle @click="saveRow(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+                            </el-button-group>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+            </el-tab-pane>
+        </el-tabs>
+
+            <!-- <el-form-item align="right">
+                <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
+            </el-form-item> -->
+        </el-form>
+  </div>
+<!-- </el-card> -->
+        <!-- <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm" style="background-color:green">
+            <el-form-item label="Vaccine" prop="name">
+                <el-input v-model="ruleForm.name" ref="name" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="Description" prop="description">
+                <el-input type="textarea" rows="6" v-model="ruleForm.description" :clearable="true"></el-input>
+            </el-form-item>
+            <el-form-item align="right">
+                <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
+            </el-form-item>
+        </el-form> -->
+        </div>
+    <!-- </el-dialog> -->
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import { dialogSize, buildDate } from '../../constants'
+import TreatmentSession from './TreatmentSession'
 export default {
-    props: ['visible'],
+    props: ['dialogVisible', 'selectedData', 'dialogTitle', 'selectedPatient', 'selectedHistory'],
+    components: {
+        TreatmentSession
+    },
     data() {
         return {
+            size: 30,
+            ruleForm: {
+                form_type: 'add',
+                date_of_incident: '',
+                place_of_incident: '',
+                date_of_physical_exam: '',
+                place_of_physical_exam: '',
+                type_of_animal: '',
+                type_of_exposure: '',
+                site_of_infection: [],
+                is_washed: '',
+                route: '',
+                category: '',
+                outcome: '',
+                bitting_animal_status: '',
+                remarks: ''
+            },
+            rules: {
+                date_of_incident: [
+                    { type: 'date', required: true, message: 'Please pick a date of incident', trigger: 'change' }
+                ],
+                place_of_incident: [
+                    { required: true, message: 'Please input place of incident', trigger: 'change' }
+                ],
+                date_of_physical_exam: [
+                    { type: 'date', required: true, message: 'Please pick a date of physical examination', trigger: 'change' }
+                ],
+                place_of_physical_exam: [
+                    { required: true, message: 'Please input place of physical examination', trigger: 'change' }
+                ],
+                type_of_animal: [
+                    { required: true, message: 'Please select type of animal', trigger: 'change' },
+                ],
+                type_of_exposure: [
+                    { required: true, message: 'Please select type of exposure', trigger: 'change' },
+                ],
+                site_of_infection: [
+                    { required: true, message: 'Please select site of infection', trigger: 'change' },
+                ],
+                is_washed: [
+                    { required: true, message: 'Please select if infected area washed or not', trigger: 'change' },
+                ],
+                route: [
+                    { required: true, message: 'Please input route', trigger: 'change' },
+                ],
+                category: [
+                    { required: true, message: 'Please select category', trigger: 'change' },
+                ],
+                outcome: [
+                    { required: true, message: 'Please select outcome', trigger: 'change' },
+                ],
+                bitting_animal_status: [
+                    { required: true, message: 'Please select bitting animal status', trigger: 'change' },
+                ],
+                remarks: [
+                    { required: true, message: 'Please input remarks', trigger: 'change' }
+                ],
 
+            },
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
+                }
+            },
+            pickerOptionsInBetween: {
+                disabledDate: time => {
+                    return time.getTime() < new Date(this.ruleForm?.date_of_incident) || time.getTime() > Date.now()
+                }
+            },
+            pickerOptionShortcut: {
+                shortcuts: [{
+                    text: 'Today',
+                    onClick(picker) {
+                    picker.$emit('pick', new Date());
+                    }
+                }, {
+                    text: 'Yesterday',
+                    onClick(picker) {
+                    const date = new Date();
+                    date.setTime(date.getTime() - 3600 * 1000 * 24);
+                    picker.$emit('pick', date);
+                    }
+                }, {
+                    text: 'A week ago',
+                    onClick(picker) {
+                    const date = new Date();
+                    date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', date);
+                    }
+                }],
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
+                }
+            },
+            isEdit: false,
+            enumValues: [],
+            treatmentList: [],
+            tableData: [
+                {
+                    date: '2016-05-03',
+                    designated_day: 'Tom',
+                    state: 'California',
+                    city: 'Los Angeles',
+                    address: 'No. 189, Grove St, Los Angeles',
+                    zip: 'CA 90036',
+                    tag: 'Home',
+                    vaccine_id: 1,
+                    manage: false
+                }, {
+                    date: '2016-05-02',
+                    designated_day: 'Tom',
+                    state: 'California',
+                    city: 'Los Angeles',
+                    address: 'No. 189, Grove St, Los Angeles',
+                    zip: 'CA 90036',
+                    tag: 'Office',
+                    vaccine_id: 1,
+                    manage: true
+                }, {
+                    date: '2016-05-04',
+                    designated_day: 'Tom',
+                    state: 'California',
+                    city: 'Los Angeles',
+                    address: 'No. 189, Grove St, Los Angeles',
+                    zip: 'CA 90036',
+                    tag: 'Home',
+                    vaccine_id: 1,
+                    manage: false
+                }, {
+                    date: '2016-05-01',
+                    designated_day: 'Tom',
+                    state: 'California',
+                    city: 'Los Angeles',
+                    address: 'No. 189, Grove St, Los Angeles',
+                    zip: 'CA 90036',
+                    tag: 'Office',
+                    vaccine_id: 1,
+                    manage: false
+                }
+            ],
+            addCount:0,
+            isEditingTreatmentSession: false
         }
     },
-    methods: {
-        closeTreatment() {
-            this.$emit('close', false)
+    computed: {
+        ...mapGetters(['request', 'enum', 'patients', 'vaccines']),
+        // treatmentSessionChanges() {
+        //     var s = this.treatmentList
+        //     console.log('has changes')
+        //     return s
+        // }
+    },
+    watch: {
+        treatmentList(val) {
+            console.log('has changes')
         }
+        // treatmentList: {
+        //    // 'handle1',
+        //     function handle2 (val, oldVal) { /* ... */ console.log('has changes') },
+        //     //{
+        //         //handler: function handle3 (val, oldVal) { /* ... */ },
+        //         /* ... */
+        //    // }
+        // },
+        // treatmentList: {
+        //     handler (val) {
+        //         console.log('has changes', val)
+        //     },
+        //     deep: true
+        // }
+        // handleChange (newVal) {
+        // // Handle changes here!
+        //     console.log('has changes to this object', newVal);
+        // },
+    },
+    methods: {
+        ...mapActions(['manageVaccines', 'getVaccines', 'manageTreatment']),
+        closeDialog() {
+            this.$emit('close-dialog', false)
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+            if (valid) {
+                let form = JSON.parse(JSON.stringify(this.ruleForm))
+                this.manageVaccines(form).then(()=>{
+                    if (this.request.status == 'success') {
+                        this.$notify({
+                            title: 'Success',
+                            message: this.request.message,
+                            type: 'success',
+                            duration: 6000,
+                        });
+                        this.$nextTick(()=>{
+                            if (!this.isEdit) this.resetForm('ruleForm')
+
+                            this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+                        })
+                    } else {
+                        this.$notify({
+                            title: 'Error',
+                            message: this.request.message,
+                            type: 'error',
+                            duration: 0,
+                        });
+                    }
+                })
+            } else {
+                return false;
+            }
+            });
+        },
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
+        rezize() {
+            this.size = dialogSize(window.innerWidth)
+        },
+        addTreatmentSession() {
+            this.treatmentList.unshift({
+                designated_day: '',
+                date: '',
+                vaccine_id: ''
+            })
+        },
+        checkDateOfSecondDate($event) {
+            if (!!this.ruleForm.date_of_physical_exam && this.ruleForm.date_of_physical_exam != "") {
+                if ($event > this.ruleForm.date_of_physical_exam) {
+                    this.ruleForm.date_of_physical_exam = ""
+                }
+            }
+        },
+        handleEdit(index, rows) {
+
+            console.log("edit", index, rows)
+            // this.$nextTick(()=>{
+            //     this.treatmentList[index].manage = true
+            // })
+            // setTimeout(() => {
+            //     console.log('done')
+                //this.treatmentList[index].manage = true
+
+                this.$set(this.treatmentList[index], 'manage', true)
+                this.isEditingTreatmentSession = true
+                //this.isEditing()
+            // }, 5000);
+        },
+        handleDelete(index, rows) {
+            this.treatmentList.splice(index, 1);
+            if(this.addCount > 0)
+            -- this.addCount;
+        },
+        handleCancel(index, rows) {
+            if (rows?.form_type == 'add') {
+                this.treatmentList.splice(index, 1);
+                this.addCount = 0
+            } else {
+                //this.treatmentList[index].manage = false
+                this.$set(this.treatmentList[index], 'manage', false)
+            }
+            this.isEditingTreatmentSession = false
+            ///this.isEditing()
+        },
+        getVaccineName(vac_id) {
+            return this.vaccines.find(v=>v?.id==vac_id)?.name || ''
+        },
+        isEditing() {
+            this.isEditingTreatmentSession = this.treatmentList.some(d=>d.manage==true)
+        },
+        saveRow(index, rows) {
+            //  api
+            this.manageTreatment(this.treatmentList[index]).then(()=>{
+                alert('success')
+            }).catch(()=>{
+                alert('error')
+            })
+        },
+        addRow(){
+            if (this.addCount < 1) {
+                this.treatmentList.forEach(d=>d.manage=false)
+                let newRow  = {
+                    form_type: 'add',
+                    manage: true,
+                    state:"California",
+                    zip: "CA 90036",
+                    patient_history_id: this.selectedHistory.id
+                };
+                this.treatmentList = [newRow,...this.treatmentList];
+                ++ this.addCount;
+
+                this.isEditingTreatmentSession = true
+            } else {
+                alert('Add once at a time please check')
+            }
+        },
+        saveAll:function(){
+            // api
+            //console.log(JSON.stringify(this.disabledList));
+        },
+        tableRowClassName({row, rowIndex}) {
+            return row.manage ? 'highlight-row' : ''
+        }
+    },
+    created() {
+        this.enumValues = JSON.parse(JSON.stringify(this.enum))
+        var col_histories = this.patients.reduce((histories, row)=>{
+            if (row.history.length) {
+                row.history.map(h=>h.site_of_infection).forEach(h=>{
+                    if (!histories.map(c=>c.code).includes(h)) {
+                        histories.push({code: h, desc: h})
+                    }
+                })
+            }
+            return histories
+        }, [])
+        this.enumValues.site_of_infection_history = col_histories
+
+        this.getVaccines()
+        this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory.treatment))
+        this.treatmentList.forEach(t=>{
+            //this.$watch(() => t, this.handleChange, {deep: true});
+            t.manage = false
+            t.vaccine = JSON.parse(JSON.stringify(this.vaccines)).find(v=>v.id == t.vaccine_id)
+        })
+
+        if (this.selectedData) {
+            Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
+            if (this.selectedData.form_type == 'edit') {
+                this.isEdit = true
+            }
+        }
+        window.onresize = function() { this.rezize() }.bind(this)
+    },
+    mounted() {
+        this.rezize()
     }
 }
 </script>
 
-<style>
+<style scoped>
+.text {
+    font-size: 14px;
+  }
 
+  .item {
+
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  .box-card {
+    width: 100%;
+  }
 </style>

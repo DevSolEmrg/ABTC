@@ -83,3 +83,17 @@
     }
 }
 //End Loading
+
+//custom table input style when in editable
+.el-table__row .custom-border-table-input-solid .el-input__inner{
+    border-style:solid;
+    background-color: rgba(0, 0, 0, 0);
+}
+.el-table__row .custom-border-table-input-none .el-input__inner{
+    border-style:none;
+    background-color: rgba(0, 0, 0, 0);
+}
+//Highlight row in table
+.el-table .highlight-row {
+    background: #F5F7FA;
+}

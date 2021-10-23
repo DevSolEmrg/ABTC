@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }} <br> {{ $auth }}
+                    {{ __('You are logged in!') }} <br>
 
                     <div id="app">
                         <example-component />
@@ -27,7 +27,7 @@
 
 <div id="app">
     {{-- <auth-container /> --}}
-    <router-view :auth="{{ $auth }}"/>
+    <router-view :auth="{{ $data['auth'] }}" :enums="{{ $data['enums'] }}"/>
 
     {{-- {{ $auth }} --}}
 </div>

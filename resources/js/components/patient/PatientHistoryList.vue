@@ -30,13 +30,18 @@
                 </div>
 
                 <el-table :data="ListData" border :cell-style="moreDetailStyle">
+                    <el-table-column label="Age of Patient" width="120" align="center">
+                        <template slot-scope="props">
+                            {{ calculateAge(props.row.date_of_incident) }}
+                        </template>
+                    </el-table-column>
                     <el-table-column property="date_of_incident" label="Date of Incident" width="155"></el-table-column>
                     <el-table-column property="place_of_incident" label="Place of Incident" min-width="300"></el-table-column>
                     <el-table-column property="remarks" label="Remarks" min-width="300"></el-table-column>
 
                     <el-table-column type="expand" label="View More" width="100">
                         <template slot-scope="props">
-                            <p><strong>Date of Physical Examination:</strong> {{ props.row.date_of_physical_exam }}</p>
+                            <!-- <p><strong>Date of Physical Examination:</strong> {{ props.row.date_of_physical_exam }}</p>
                             <p><strong>Place of Physical Examination:</strong> {{ props.row.place_of_physical_exam }}</p>
                             <p><strong>Type of Animal:</strong> {{ props.row.type_of_animal }}</p>
                             <p><strong>Type of Exposure:</strong> {{ props.row.type_of_exposure }}</p>
@@ -45,7 +50,36 @@
                             <p><strong>Route:</strong> {{ props.row.route }}</p>
                             <p><strong>Category:</strong> {{ props.row.category }}</p>
                             <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
-                            <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p>
+                            <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p> -->
+                            <el-row :gutter="10">
+                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                                    <!-- first -->
+                                    <p><strong>Date of Physical Examination:</strong> {{ props.row.date_of_physical_exam }}</p>
+                                    <p><strong>Place of Physical Examination:</strong> {{ props.row.place_of_physical_exam }}</p>
+                                    <p><strong>Type of Animal:</strong> {{ props.row.type_of_animal }}</p>
+                                    <p><strong>Type of Exposure:</strong> {{ props.row.type_of_exposure }}</p>
+                                    <p><strong>Site of Infection:</strong> {{ props.row.site_of_infection }}</p>
+                                    <p><strong>Washing of Bite:</strong> {{ props.row.is_washed }}</p>
+                                    <p><strong>Route:</strong> {{ props.row.route }}</p>
+                                    <p><strong>Category:</strong> {{ props.row.category }}</p>
+                                    <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
+                                    <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p>
+                                </el-col>
+                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                                    <!-- second -->
+                                    <el-table :data="props.row.treatment" size="mini" border style="width: 100%">
+                                         <el-table-column label="Treatment Session List" align="center">
+                                            <el-table-column prop="designated_day" label="Desig. Day" width="180"> </el-table-column>
+                                            <el-table-column prop="date" label="Date" width="180"> </el-table-column>
+                                            <el-table-column prop="vaccine_id" label="Vaccine"> </el-table-column>
+                                        </el-table-column>
+
+                                        <!-- <el-table-column prop="designated_day" label="Desig. Day" width="180"> </el-table-column>
+                                        <el-table-column prop="date" label="Date" width="180"> </el-table-column>
+                                        <el-table-column prop="vaccine_id" label="Vaccine"> </el-table-column> -->
+                                    </el-table>
+                                </el-col>
+                            </el-row>
                         </template>
                     </el-table-column>
 
@@ -55,9 +89,20 @@
                     <el-table-column property="outcome" label="Outcome" width="90"></el-table-column>
                     <el-table-column property="biting_animal_status" label="Biting Animal Status" width="160"></el-table-column> -->
 
-
-                    <el-table-column label="Action" align="center" fixed="right" width="135">
+                    <!-- <el-table-column label="Action" align="center" fixed="right" width="135">
                         <el-button @click="innerDrawer = true">Click me!</el-button>
+                    </el-table-column> -->
+                    <el-table-column width="80" align="center" label="Action">
+                        <template slot-scope="scope">
+                            <el-button-group>
+                                <el-tooltip class="item" effect="light" content="Edit" placement="top" :enterable="false">
+                                    <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="selectedHistory=scope.row; innerDrawer=true"></el-button>
+                                </el-tooltip>
+                                <el-tooltip class="item" effect="light" content="Delete" placement="top" :enterable="false">
+                                    <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="selectedHistory=scope.row;"></el-button>
+                                </el-tooltip>
+                            </el-button-group>
+                        </template>
                     </el-table-column>
                     <template slot="empty" slot-scope="scope">
                         {{ search ? `Your search for "${ search }" found no results.` : 'No Data'}}
@@ -90,20 +135,22 @@
         </div>
 
         <el-drawer
-            title="I'm inner Drawer"
+            :title="`DATE OF INCIDENT: ${getSelectedHistoryTitle()}`"
             :append-to-body="true"
             :visible.sync="innerDrawer"
             :size="`${size-1}%`"
         >
-            <p>_(:зゝ∠)_</p>
+            <PatientTreatmentAddUpdate v-if="innerDrawer" :selected-patient="selectedPatient" :selected-history="selectedHistory" />
         </el-drawer>
     </el-drawer>
 </template>
 
 <script>
-import { drawerSize } from '../../constants'
+import { drawerSize, calAge } from '../../constants'
+import PatientTreatmentAddUpdate from './PatientTreatmentAddUpdate'
 export default {
     props: ['visible', 'selectedPatient'],
+    components: { PatientTreatmentAddUpdate },
     data() {
         return {
             size: 60,
@@ -131,7 +178,8 @@ export default {
 	    	pageSize: 5,
             loading: true,
             search: "",
-            lastReload: new Date().toLocaleString()
+            lastReload: new Date().toLocaleString(),
+            selectedHistory: null,
         }
     },
     computed: {
@@ -167,6 +215,13 @@ export default {
 		},
         moreDetailStyle({row, column, rowIndex, columnIndex}) {
             return columnIndex == 3 ? 'background-color:rgba(0,0,0,0.01)' : ''
+        },
+        calculateAge(date_of_incident_string) {
+            var date_of_incident_timestamp = new Date((Date.parse(date_of_incident_string)/1000)) * 1000
+            return calAge(this.selectedPatient.birth_date, date_of_incident_timestamp) || 'N/A'
+        },
+        getSelectedHistoryTitle() {
+            return this.selectedHistory ? this.selectedHistory?.date_of_incident : ""
         }
     },
     created() {
