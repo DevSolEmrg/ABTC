@@ -171,8 +171,9 @@
                                 v-else
                                 size="small"
                                 placeholder="E.g. D0, D3, D7..."
-                                v-model="scope.row.designated_day"
+                                v-model.trim="scope.row.designated_day"
                                 clearable
+                                @input="(val) => (scope.row.designated_day = scope.row.designated_day.toUpperCase())"
                             />
                         </template>
                     </el-table-column>
