@@ -554,6 +554,7 @@ export default {
         saveRow(index, rows) {
             //  api
             this.manageTreatment(this.treatmentList[index]).then(()=>{
+                //this.$root.$emit('reload_patient_data')
                 alert('success')
             }).catch(()=>{
                 alert('error')
@@ -567,7 +568,8 @@ export default {
                     manage: true,
                     state:"California",
                     zip: "CA 90036",
-                    patient_history_id: this.selectedHistory.id
+                    patient_history_id: this.selectedHistory.id,
+                    patient_id: this.selectedHistory.patient_id
                 };
                 this.treatmentList = [newRow,...this.treatmentList];
                 ++ this.addCount;
