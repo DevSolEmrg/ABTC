@@ -19,6 +19,15 @@ class PatientController extends Controller
         }])->withCount('history')->orderBy('id', 'DESC')->get();
     }
 
+    public function getSelectedPatient(Request $request)
+    {
+        return Patient::with(['history' => function($q){
+            $q->with(['treatment']);
+        }, 'last_history' => function($q){
+            $q->with(['treatment']);
+        }])->withCount('history')->find($request->id);
+    }
+
     public function managePatients(Patient $patient, PatientPostRequest $request)
     {
         //$request->birth_date = Carbon::parse($request->birth_date)->timezone('Asia/Manila')->format('Y-m-d');
