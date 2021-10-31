@@ -555,6 +555,7 @@ export default {
             //  api
             this.manageTreatment(this.treatmentList[index]).then(()=>{
                 //this.$root.$emit('reload_patient_data')
+                this.treatmentList.forEach(d=>d.manage=false)
                 alert('success')
             }).catch(()=>{
                 alert('error')
