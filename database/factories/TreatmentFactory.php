@@ -22,8 +22,9 @@ class TreatmentFactory extends Factory
     public function definition()
     {
         return [
-            'patient_history_id' => PatientHistory::inRandomOrder()->first()->id,
-            'designated_day' => $this->faker->randomElement(['0', '3', '7', '28', 'ERIG']),
+            //on database seeder
+            //'patient_history_id' => PatientHistory::inRandomOrder()->first()->id,
+            //'designated_day' => $this->faker->randomElement(['D0', 'D3', 'D7', 'D14', 'D28', 'ERIG']),
             'date' => $this->faker->date(),
             'time' => '12:00',
             'vaccine_id' => Vaccine::inRandomOrder()->first()->id
