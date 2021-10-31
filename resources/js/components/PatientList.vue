@@ -308,6 +308,9 @@ export default {
         //this.data = this.patients
         //console.log(this.$store.state.patients.patients)
         this.$store.commit('SET_LOADING_COMPONENT', false)
+        // this.$root.$on('reload_patient_data', () => {
+        //     this.reloadData()
+        // })
     },
     beforeCreate() {
         //this.data = this.$store.state.patients.patients

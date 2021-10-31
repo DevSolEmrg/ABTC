@@ -171,8 +171,9 @@
                                 v-else
                                 size="small"
                                 placeholder="E.g. D0, D3, D7..."
-                                v-model="scope.row.designated_day"
+                                v-model.trim="scope.row.designated_day"
                                 clearable
+                                @input="(val) => (scope.row.designated_day = scope.row.designated_day.toUpperCase())"
                             />
                         </template>
                     </el-table-column>
@@ -553,6 +554,8 @@ export default {
         saveRow(index, rows) {
             //  api
             this.manageTreatment(this.treatmentList[index]).then(()=>{
+                //this.$root.$emit('reload_patient_data')
+                this.treatmentList.forEach(d=>d.manage=false)
                 alert('success')
             }).catch(()=>{
                 alert('error')
@@ -566,7 +569,8 @@ export default {
                     manage: true,
                     state:"California",
                     zip: "CA 90036",
-                    patient_history_id: this.selectedHistory.id
+                    patient_history_id: this.selectedHistory.id,
+                    patient_id: this.selectedHistory.patient_id
                 };
                 this.treatmentList = [newRow,...this.treatmentList];
                 ++ this.addCount;
