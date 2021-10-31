@@ -10,10 +10,16 @@ class Treatment extends Model
     use HasFactory;
 
     protected $fillable = ['patient_history_id', 'designated_day', 'date', 'time', 'vaccine_id'];
+    protected $appends = ['vaccine'];
 
     public function history()
     {
         return $this->belongsTo(PatientHistory::class);
+    }
+
+    public function getVaccineAttribute()
+    {
+        return Vaccine::whereId($this->attributes['vaccine_id'])->first();
     }
 
 }

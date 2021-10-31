@@ -71,7 +71,7 @@
                                          <el-table-column label="Treatment Session List" align="center">
                                             <el-table-column prop="designated_day" label="Desig. Day" width="180"> </el-table-column>
                                             <el-table-column prop="date" label="Date" width="180"> </el-table-column>
-                                            <el-table-column prop="vaccine_id" label="Vaccine"> </el-table-column>
+                                            <el-table-column prop="vaccine.name" label="Vaccine"> </el-table-column>
                                         </el-table-column>
 
                                         <!-- <el-table-column prop="designated_day" label="Desig. Day" width="180"> </el-table-column>
