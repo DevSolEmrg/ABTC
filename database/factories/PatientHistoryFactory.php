@@ -35,7 +35,7 @@ class PatientHistoryFactory extends Factory
             'route' => 'ID',
             'category' => $this->faker->randomElement(['1', '2', '3']),
             'outcome' => $this->faker->randomElement(['C', 'INC', 'N', 'D']),
-            'biting_animal_status' => $this->faker->randomElement(['alive', 'dead', 'lost']),
+            'biting_animal_status' => $this->faker->randomElement(['ALIVE', 'DEAD', 'LOST']),
             'remarks' => $this->faker->text()
         ];
     }
