@@ -265,6 +265,9 @@ export default {
             if (clicked_route != JSON.parse(JSON.stringify(this.recent_route)) && !this.loading_component) {
                 this.$store.commit('SET_LOADING_COMPONENT', true)
             }
+            if (window.innerWidth < 768) {
+                this.side_nav = false
+            }
         },
         toggleSideNav() {
             this.side_nav = !this.side_nav
