@@ -135,7 +135,7 @@ export default {
         if (this.selectedData) {
             Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
             if (this.selectedData.form_type == 'edit') {
-                this.ruleForm.is_active = this.selectedData.is_active.toString()
+                this.ruleForm.is_active = (this.selectedData.is_active ? 1 : 0).toString()
                 this.isEdit = true
             }
         }

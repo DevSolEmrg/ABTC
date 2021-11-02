@@ -59,7 +59,7 @@
                                     <p><strong>Type of Animal:</strong> {{ props.row.type_of_animal }}</p>
                                     <p><strong>Type of Exposure:</strong> {{ props.row.type_of_exposure }}</p>
                                     <p><strong>Site of Infection:</strong> {{ props.row.site_of_infection }}</p>
-                                    <p><strong>Washing of Bite:</strong> {{ props.row.is_washed }}</p>
+                                    <p><strong>Is washed:</strong> {{ (props.row.is_washed ? 'Yes' : 'No') }}</p>
                                     <p><strong>Route:</strong> {{ props.row.route }}</p>
                                     <p><strong>Category:</strong> {{ props.row.category }}</p>
                                     <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
