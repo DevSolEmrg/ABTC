@@ -119,7 +119,7 @@ export default {
         },
         querySearch(queryString, cb) {
             var personnels = this.personnels;
-            var results = queryString ? personnels.filter(this.createFilter(queryString)) : personnels;
+            var results = queryString ? personnels.filter(this.createFilter(queryString)) : JSON.parse(JSON.stringify(personnels));
             try {
                 results.sort((a,b) => (a.position > b.position) ? 1 : ((b.position > a.position) ? -1 : 0))
             } catch (error) { }
