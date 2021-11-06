@@ -556,9 +556,31 @@ export default {
             this.manageTreatment(this.treatmentList[index]).then(()=>{
                 //this.$root.$emit('reload_patient_data')
                 this.treatmentList.forEach(d=>d.manage=false)
-                alert('success')
+                if (this.request.status == 'success') {
+                    this.$notify({
+                        title: 'Success',
+                        message: this.request.message,
+                        type: 'success',
+                        duration: 6000,
+                    });
+                } else {
+                    this.$notify({
+                        title: 'Error',
+                        message: this.request.message,
+                        type: 'error',
+                        duration: 0,
+                    });
+                }
+                //alert('success')
             }).catch(()=>{
-                alert('error')
+                //alert('error')
+                this.$notify({
+                    title: 'Error',
+                    message: this.request.message,
+                    type: 'error',
+                    duration: 0,
+
+                });
             })
         },
         addRow(){
