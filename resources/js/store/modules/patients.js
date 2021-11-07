@@ -1,6 +1,7 @@
 const state = {
     patients: [],
-    selected_patient: []
+    selected_patient: [],
+    //selected_history: []
 };
 
 const getters = {
@@ -61,6 +62,9 @@ const mutations = {
     SET_SELECTED_PATIENT: (state, data) => {
         state.selected_patient = data
     },
+    // SET_SELECTED_HISTORY: (state, data) => {
+    //     state.selected_history = data
+    // },
     // SET_AUTH_USER: (state, user) => {
     //     state.auth_user = user
     // },

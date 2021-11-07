@@ -208,6 +208,8 @@ export default {
     methods: {
         ...mapActions(['getPatients', 'managePatients']),
         handleAddNewExposure(index, row) {
+            //this.$store.commit('SET_SELECTED_HISTORY', row)
+            this.$store.commit('SET_SELECTED_PATIENT', row)
             this.selectedPatient = row
             this.managePatientHistory = true
         },

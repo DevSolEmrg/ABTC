@@ -146,6 +146,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { drawerSize, calAge } from '../../constants'
 import PatientTreatmentAddUpdate from './PatientTreatmentAddUpdate'
 export default {
@@ -182,9 +183,17 @@ export default {
             selectedHistory: null,
         }
     },
+    watch: {
+        selected_patient (val) {
+            var current_history_id = JSON.parse(JSON.stringify(this.selectedHistory?.id))
+            this.selectedHistory = val.history.find(h=>h.id==current_history_id)
+        }
+    },
     computed: {
+        ...mapGetters(['selected_patient']),
         data() {
-            return JSON.parse(JSON.stringify(this.selectedPatient.history))
+            // return JSON.parse(JSON.stringify(this.selectedPatient.history))
+            return JSON.parse(JSON.stringify(this.selected_patient.history))
         },
         searching() {
             if (!this.search) {

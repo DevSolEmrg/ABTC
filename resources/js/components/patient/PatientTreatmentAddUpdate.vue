@@ -428,7 +428,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['request', 'enum', 'patients', 'vaccines']),
+        ...mapGetters(['request', 'enum', 'patients', 'vaccines', 'selected_patient']),
         // treatmentSessionChanges() {
         //     var s = this.treatmentList
         //     console.log('has changes')
@@ -438,6 +438,9 @@ export default {
     watch: {
         treatmentList(val) {
             console.log('has changes')
+        },
+        selected_patient(val) {
+            this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory?.treatment))
         }
         // treatmentList: {
         //    // 'handle1',
