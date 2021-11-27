@@ -424,7 +424,8 @@ export default {
                 }
             ],
             addCount:0,
-            isEditingTreatmentSession: false
+            isEditingTreatmentSession: false,
+            old_value_edit_item: {}
         }
     },
     computed: {
@@ -518,6 +519,7 @@ export default {
             }
         },
         handleEdit(index, rows) {
+            this.old_value_edit_item = JSON.parse(JSON.stringify(rows))
 
             console.log("edit", index, rows)
             // this.$nextTick(()=>{
@@ -528,14 +530,48 @@ export default {
                 //this.treatmentList[index].manage = true
 
                 this.$set(this.treatmentList[index], 'manage', true)
+
+                this.$set(this.treatmentList[index], 'form_type', 'edit')
+                this.$set(this.treatmentList[index], 'patient_history_id', this.selectedHistory.id)
+                this.$set(this.treatmentList[index], 'patient_id', this.selectedHistory.patient_id)
+
                 this.isEditingTreatmentSession = true
                 //this.isEditing()
             // }, 5000);
         },
-        handleDelete(index, rows) {
-            this.treatmentList.splice(index, 1);
-            if(this.addCount > 0)
-            -- this.addCount;
+        async handleDelete(index, rows) {
+            await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(() => {
+                this.$set(this.treatmentList[index], 'form_type', 'delete')
+                this.$set(this.treatmentList[index], 'patient_history_id', this.selectedHistory.id)
+                this.$set(this.treatmentList[index], 'patient_id', this.selectedHistory.patient_id)
+                this.saveRow(index, rows).then(()=>{
+                    if (this.request.status == 'success') {
+                        this.$message({
+                            type: 'success',
+                            message: 'Delete completed'
+                        });
+                        this.treatmentList.splice(index, 1);
+                        if(this.addCount > 0)
+                        -- this.addCount;
+                    } else {
+                        this.$notify({
+                            title: 'Error',
+                            message: this.request.message,
+                            type: 'error',
+                            duration: 0,
+                        });
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'Delete canceled'
+                });
+            });
         },
         handleCancel(index, rows) {
             if (rows?.form_type == 'add') {
@@ -543,6 +579,7 @@ export default {
                 this.addCount = 0
             } else {
                 //this.treatmentList[index].manage = false
+                this.treatmentList[index] = JSON.parse(JSON.stringify(this.old_value_edit_item))
                 this.$set(this.treatmentList[index], 'manage', false)
             }
             this.isEditingTreatmentSession = false
@@ -554,12 +591,14 @@ export default {
         isEditing() {
             this.isEditingTreatmentSession = this.treatmentList.some(d=>d.manage==true)
         },
-        saveRow(index, rows) {
+        async saveRow(index, rows) {
             //  api
-            this.manageTreatment(this.treatmentList[index]).then(()=>{
+            await this.manageTreatment(this.treatmentList[index]).then(()=>{
                 //this.$root.$emit('reload_patient_data')
                 this.treatmentList.forEach(d=>d.manage=false)
                 if (this.request.status == 'success') {
+                    this.isEditingTreatmentSession = false
+                    this.addCount = 0
                     this.$notify({
                         title: 'Success',
                         message: this.request.message,
@@ -597,7 +636,7 @@ export default {
                     patient_history_id: this.selectedHistory.id,
                     patient_id: this.selectedHistory.patient_id
                 };
-                this.treatmentList = [newRow,...this.treatmentList];
+                this.treatmentList = [...this.treatmentList, newRow];
                 ++ this.addCount;
 
                 this.isEditingTreatmentSession = true
