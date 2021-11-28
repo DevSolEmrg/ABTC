@@ -22,7 +22,7 @@
                         </div>
                         <div class="col-4 px-1">
                             <el-button-group style="float: right;">
-                                <el-button type="primary" size="mini"  >ADD</el-button>
+                                <el-button type="primary" size="mini" @click="selectedHistory={}; innerDrawer=true">ADD</el-button>
 
                             </el-button-group>
                         </div>
@@ -135,7 +135,7 @@
         </div>
 
         <el-drawer
-            :title="`DATE OF INCIDENT: ${getSelectedHistoryTitle()}`"
+            :title="`${getSelectedHistoryTitle()}`"
             :append-to-body="true"
             :visible.sync="innerDrawer"
             :size="`${size-1}%`"
@@ -230,7 +230,7 @@ export default {
             return calAge(this.selectedPatient.birth_date, date_of_incident_timestamp) || 'N/A'
         },
         getSelectedHistoryTitle() {
-            return this.selectedHistory ? this.selectedHistory?.date_of_incident : ""
+            return this.selectedHistory?.date_of_incident ? `DATE OF INCIDENT: ${this.selectedHistory?.date_of_incident}` : "NEW PATIENT EXPOSURE"
         }
     },
     created() {
