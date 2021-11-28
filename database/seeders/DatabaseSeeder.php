@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         \App\Models\User::factory(10)->create();
-        \App\Models\Patient::factory(123)->create();
-        \App\Models\PatientHistory::factory(1000)->create();
+        \App\Models\Patient::factory(53)->create();
+        \App\Models\PatientHistory::factory(200)->create();
         \App\Models\Vaccine::factory(17)->create();
         \App\Models\Personnel::factory(20)->create();
 
