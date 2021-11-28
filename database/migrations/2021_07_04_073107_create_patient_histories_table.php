@@ -22,7 +22,7 @@ class CreatePatientHistoriesTable extends Migration
             $table->text('place_of_physical_exam');
             $table->enum('type_of_animal', ['PD', 'PC']);
             $table->enum('type_of_exposure', ['B', 'NB']);
-            $table->enum('site_of_infection', ['R FOOT', 'L LEG', 'L ARM', 'L HAND', 'R LEG', 'BUTTOCKS', 'R HAND']);
+            $table->json('site_of_infection')->nullable();
             $table->boolean('is_washed')->default(true);
             $table->string('route');
             $table->enum('category', ['1', '2', '3']);

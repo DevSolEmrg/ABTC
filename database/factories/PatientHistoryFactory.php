@@ -30,7 +30,7 @@ class PatientHistoryFactory extends Factory
             'place_of_physical_exam' => $this->faker->address(),
             'type_of_animal' => $this->faker->randomElement(['PD', 'PC']),
             'type_of_exposure' => $this->faker->randomElement(['B', 'NB']),
-            'site_of_infection' => $this->faker->randomElement(['R FOOT', 'L LEG', 'L ARM', 'L HAND', 'R LEG', 'BUTTOCKS', 'R HAND']),
+            'site_of_infection' => array_rand(array_flip(['R FOOT', 'L LEG', 'L ARM', 'L HAND', 'R LEG', 'BUTTOCKS', 'R HAND']), rand(2,4)),
             'is_washed' => true,
             'route' => 'ID',
             'category' => $this->faker->randomElement(['1', '2', '3']),

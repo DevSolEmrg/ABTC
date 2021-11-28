@@ -9,6 +9,10 @@ class PatientHistory extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'site_of_infection' => 'array'
+    ];
+
     public function patient()
     {
         return $this->belongsTo(Patient::class);
