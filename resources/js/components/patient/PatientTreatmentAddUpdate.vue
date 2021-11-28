@@ -136,9 +136,9 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                        <el-form-item label="Animal Status" prop="bitting_animal_status">
-                            <el-select v-model="ruleForm.bitting_animal_status" placeholder="Select" style="width:100%" size="small" clearable>
-                                <el-option v-for="type in enumValues.bitting_animal_status" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                        <el-form-item label="Animal Status" prop="biting_animal_status">
+                            <el-select v-model="ruleForm.biting_animal_status" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.biting_animal_status" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -297,7 +297,7 @@ export default {
                 route: '',
                 category: '',
                 outcome: '',
-                bitting_animal_status: '',
+                biting_animal_status: '',
                 remarks: ''
             },
             rules: {
@@ -334,7 +334,7 @@ export default {
                 outcome: [
                     { required: true, message: 'Please select outcome', trigger: 'change' },
                 ],
-                bitting_animal_status: [
+                biting_animal_status: [
                     { required: true, message: 'Please select bitting animal status', trigger: 'change' },
                 ],
                 remarks: [
@@ -441,7 +441,7 @@ export default {
             console.log('has changes')
         },
         selected_patient(val) {
-            this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory?.treatment))
+            this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory?.treatment || []))
         }
         // treatmentList: {
         //    // 'handle1',
@@ -657,9 +657,11 @@ export default {
         var col_histories = this.patients.reduce((histories, row)=>{
             if (row.history.length) {
                 row.history.map(h=>h.site_of_infection).forEach(h=>{
-                    if (!histories.map(c=>c.code).includes(h)) {
-                        histories.push({code: h, desc: h})
-                    }
+                    h.forEach(element => {
+                        if (!histories.map(c=>c.code).includes(element)) {
+                            histories.push({code: element, desc: element})
+                        }
+                    });
                 })
             }
             return histories
@@ -667,18 +669,22 @@ export default {
         this.enumValues.site_of_infection_history = col_histories
 
         this.getVaccines()
-        this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory.treatment))
+        this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory.treatment || []))
         this.treatmentList.forEach(t=>{
             //this.$watch(() => t, this.handleChange, {deep: true});
             t.manage = false
             t.vaccine = JSON.parse(JSON.stringify(this.vaccines)).find(v=>v.id == t.vaccine_id)
         })
 
-        if (this.selectedData) {
-            Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
-            if (this.selectedData.form_type == 'edit') {
-                this.isEdit = true
-            }
+        //console.log("safasf", this.selectedData)
+
+        if (this.selectedHistory.id) {
+            var form_type = 'edit'
+            Object.assign(this.ruleForm ,{...JSON.parse(JSON.stringify(this.selectedHistory)), form_type})
+            this.isEdit = true
+            //if (this.selectedHistory.form_type == 'edit') {
+              //  this.isEdit = true
+            //}
         }
         window.onresize = function() { this.rezize() }.bind(this)
     },
