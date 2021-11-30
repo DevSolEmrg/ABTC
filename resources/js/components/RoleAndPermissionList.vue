@@ -57,8 +57,8 @@
             <span style="font-size:12px; color:grey">
                 Last Reload: {{ lastReload }}
                 <el-tooltip effect="light" content="Reload Data" placement="top" :enterable="false">
-                    <el-button  size="mini" circle style="border:none; background-color:rgba(0,0,0,0)" @click="reloadData">
-                        <i class="el-icon-refresh"/>
+                    <el-button  size="medium" circle style="border:none; background-color:rgba(0,0,0,0);padding:4px;color:red" @click="reloadData" :loading="loading_component">
+                        <i class="el-icon-refresh" v-if="!loading_component"/>
                     </el-button>
                 </el-tooltip>
             </span>
@@ -214,7 +214,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['request', 'roles']),
+        ...mapGetters(['request', 'roles', 'loading_component']),
         data() {
             return this.roles?.roles || []
         },
@@ -237,10 +237,12 @@ export default {
     },
     mounted() {
         this.loading = false
-        this.$store.commit('SET_LOADING_COMPONENT', false)
+        // this.$store.commit('SET_LOADING_COMPONENT', false)
     },
     beforeCreate() {
-        this.$store.dispatch("getRoles");
+        this.$store.dispatch("getRoles").then(()=>{
+            this.$store.commit('SET_LOADING_COMPONENT', false)
+        });
     }
 }
 </script>
