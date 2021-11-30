@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(8)->create();
         \App\Models\Patient::factory(53)->create();
         \App\Models\PatientHistory::factory(200)->create();
         \App\Models\Vaccine::factory(17)->create();
@@ -36,6 +36,14 @@ class DatabaseSeeder extends Seeder
         $default_user = \App\Models\User::create([
             'name' => 'John Doe Dee',
             'email' => 'johndoe@gmail.com',
+            'email_verified_at' => now(),
+            'password' => 'password',//'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => Str::random(10),
+        ]);
+
+        $default_user2 = \App\Models\User::create([
+            'name' => 'Alex Tier',
+            'email' => 'alex@gmail.com',
             'email_verified_at' => now(),
             'password' => 'password',//'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
@@ -105,6 +113,7 @@ class DatabaseSeeder extends Seeder
             }
         }
         $default_user->assignRole('super-admin');
+        $default_user2->assignRole('physician');
 
     }
 }
