@@ -230,7 +230,8 @@ export default {
             tableData: Array(23).fill(item),
             baseUrl: location.origin.concat('/'),
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            navExpandOpen: []
+            navExpandOpen: [],
+            auth_info: {}
         }
     },
     computed: {
@@ -312,13 +313,13 @@ export default {
             return true
         },
         buildUsernameFromEmail() {
-            return this.auth?.email?.split('@')[0]
+            return this.auth?.email?.split('@')[0] || this.auth_info.usernameFromEmail
         },
         userName() {
-            return this.auth?.name
+            return this.auth?.name || this.auth_info.username
         },
         userRole() {
-            return this.auth?.roles?.map(i=>i.name).join(', ') || ''
+            return this.auth?.roles?.map(i=>i.name).join(', ') || this.auth_info.userRole
         }
     },
     created() {
@@ -329,6 +330,9 @@ export default {
         if (this.$attrs.auth) {
             this.$store.commit('SET_AUTH', this.$attrs.auth)
             this.$store.commit('SET_ENUM', this.$attrs.enums)
+            this.auth_info.usernameFromEmail = this.auth?.email?.split('@')[0] || 'none'
+            this.auth_info.username = this.auth?.name || 'none'
+            this.auth_info.userRole = this.auth?.roles?.map(i=>i.name).join(', ') || 'none'
         }
         this.side_nav = window.innerWidth > 767 ? true : false;
 
