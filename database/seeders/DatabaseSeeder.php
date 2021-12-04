@@ -49,6 +49,10 @@ class DatabaseSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
+        $this->call([
+            ReferenceCategorySeeder::class
+        ]);
+
         $roles = [
             'super-admin',
             'physician',
