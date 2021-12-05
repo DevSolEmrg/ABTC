@@ -50,7 +50,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            ReferenceCategorySeeder::class
+            ReferenceCategorySeeder::class,
+            ReferenceSeeder::class
         ]);
 
         $roles = [
