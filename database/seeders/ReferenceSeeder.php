@@ -128,6 +128,7 @@ class ReferenceSeeder extends Seeder
      */
     public function run()
     {
+        //dynamic variable being use bellow
         $type_of_animal = $this->type_of_animal;
         $type_of_exposure = $this->type_of_exposure;
         $category = $this->category;
