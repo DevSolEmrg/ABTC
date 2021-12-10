@@ -95,7 +95,7 @@ class ReferenceSeeder extends Seeder
         ]
     ];
 
-    public $bitting_animal_status = [
+    public $biting_animal_status = [
         [
             'code' => 'ALIVE',
             'desc' => 'Alive'
@@ -110,16 +110,16 @@ class ReferenceSeeder extends Seeder
         ]
     ];
 
-    public $is_washed = [
-        [
-            'code' => '1',
-            'desc' => 'YES'
-        ],
-        [
-            'code' => '0',
-            'desc' => 'NO'
-        ]
-    ];
+    // public $is_washed = [
+    //     [
+    //         'code' => '1',
+    //         'desc' => 'YES'
+    //     ],
+    //     [
+    //         'code' => '0',
+    //         'desc' => 'NO'
+    //     ]
+    // ];
 
     /**
      * Run the database seeds.
@@ -135,7 +135,7 @@ class ReferenceSeeder extends Seeder
         $outcome = $this->outcome;
         $biting_animal_status = $this->biting_animal_status;
         $site_of_infection = $this->site_of_infection;
-        $is_washed = $this->is_washed;
+        // $is_washed = $this->is_washed;
 
         foreach(
             [
@@ -145,7 +145,7 @@ class ReferenceSeeder extends Seeder
                 'outcome',
                 'biting_animal_status',
                 'site_of_infection',
-                'is_washed'
+                // 'is_washed'
             ] as $variable_name
         ) {
             foreach(${$variable_name} as $key=>$value) {
