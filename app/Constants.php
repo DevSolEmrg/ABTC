@@ -105,16 +105,16 @@ class Constants {
     //     ]
     // ];
 
-    // public $is_washed = [
-    //     [
-    //         'code' => '1',
-    //         'desc' => 'YES'
-    //     ],
-    //     [
-    //         'code' => '0',
-    //         'desc' => 'NO'
-    //     ]
-    // ];
+    public $is_washed = [
+        [
+            'code' => '1',
+            'desc' => 'YES'
+        ],
+        [
+            'code' => '0',
+            'desc' => 'NO'
+        ]
+    ];
 
     public $type_of_animal;
     public $type_of_exposure;
@@ -122,7 +122,7 @@ class Constants {
     public $category;
     public $outcome;
     public $biting_animal_status;
-    public $is_washed;
+    // public $is_washed;
 
     public function __construct()
     {
@@ -132,7 +132,7 @@ class Constants {
         $this->category = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Category'); })->get()->toArray();
         $this->outcome = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Outcome'); })->get()->toArray();
         $this->biting_animal_status = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Biting Animal Status'); })->get()->toArray();
-        $this->is_washed = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Is Washed'); })->get()->toArray();
+        // $this->is_washed = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Is Washed'); })->get()->toArray();
     }
 
     public function enumValues()
