@@ -83,16 +83,16 @@
 
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                        <el-form-item label="Type of Animal" prop="type_of_animal">
-                            <el-select v-model="ruleForm.type_of_animal" placeholder="Select" style="width:100%" size="small" clearable>
-                                <el-option v-for="type in enumValues.type_of_animal" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                        <el-form-item label="Type of Animal" prop="type_of_animal_id">
+                            <el-select v-model="ruleForm.type_of_animal_id" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.type_of_animal" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                        <el-form-item label="Type of Expos." prop="type_of_exposure">
-                            <el-select v-model="ruleForm.type_of_exposure" placeholder="Select" style="width:100%" size="small" clearable>
-                                <el-option v-for="type in enumValues.type_of_exposure" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                        <el-form-item label="Type of Expos." prop="type_of_exposure_id">
+                            <el-select v-model="ruleForm.type_of_exposure_id" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.type_of_exposure" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -100,9 +100,9 @@
 
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                        <el-form-item label="Site of Infect." prop="site_of_infection">
-                            <el-select v-model="ruleForm.site_of_infection" multiple placeholder="Select one or more" style="width:100%" size="small" allow-create filterable default-first-option>
-                                <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                        <el-form-item label="Site of Infect." prop="site_of_infection_id">
+                            <el-select v-model="ruleForm.site_of_infection_id" multiple placeholder="Select one or more" style="width:100%" size="small" allow-create filterable default-first-option>
+                                <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -122,23 +122,23 @@
 
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                        <el-form-item label="Category" prop="category">
-                            <el-select v-model="ruleForm.category" placeholder="Select" style="width:100%" size="small" clearable>
-                                <el-option v-for="type in enumValues.category" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                        <el-form-item label="Category" prop="category_id">
+                            <el-select v-model="ruleForm.category_id" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.category" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                        <el-form-item label="Outcome" prop="outcome">
-                            <el-select v-model="ruleForm.outcome" placeholder="Select" style="width:100%" size="small" clearable>
-                                <el-option v-for="type in enumValues.outcome" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                        <el-form-item label="Outcome" prop="outcome_id">
+                            <el-select v-model="ruleForm.outcome_id" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.outcome" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                        <el-form-item label="Animal Status" prop="biting_animal_status">
-                            <el-select v-model="ruleForm.biting_animal_status" placeholder="Select" style="width:100%" size="small" clearable>
-                                <el-option v-for="type in enumValues.biting_animal_status" :key="type.code" :label="type.code" :value="type.code" :title="type.desc" />
+                        <el-form-item label="Animal Status" prop="biting_animal_status_id">
+                            <el-select v-model="ruleForm.biting_animal_status_id" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.biting_animal_status" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -290,14 +290,14 @@ export default {
                 place_of_incident: '',
                 date_of_physical_exam: '',
                 place_of_physical_exam: '',
-                type_of_animal: '',
-                type_of_exposure: '',
-                site_of_infection: [],
+                type_of_animal_id: '',
+                type_of_exposure_id: '',
+                site_of_infection_id: [],
                 is_washed: '',
                 route: '',
-                category: '',
-                outcome: '',
-                biting_animal_status: '',
+                category_id: '',
+                outcome_id: '',
+                biting_animal_status_id: '',
                 remarks: ''
             },
             rules: {
@@ -313,13 +313,13 @@ export default {
                 place_of_physical_exam: [
                     { required: true, message: 'Please input place of physical examination', trigger: 'change' }
                 ],
-                type_of_animal: [
+                type_of_animal_id: [
                     { required: true, message: 'Please select type of animal', trigger: 'change' },
                 ],
-                type_of_exposure: [
+                type_of_exposure_id: [
                     { required: true, message: 'Please select type of exposure', trigger: 'change' },
                 ],
-                site_of_infection: [
+                site_of_infection_id: [
                     { required: true, message: 'Please select site of infection', trigger: 'change' },
                 ],
                 is_washed: [
@@ -328,13 +328,13 @@ export default {
                 route: [
                     { required: true, message: 'Please input route', trigger: 'change' },
                 ],
-                category: [
+                category_id: [
                     { required: true, message: 'Please select category', trigger: 'change' },
                 ],
-                outcome: [
+                outcome_id: [
                     { required: true, message: 'Please select outcome', trigger: 'change' },
                 ],
-                biting_animal_status: [
+                biting_animal_status_id: [
                     { required: true, message: 'Please select bitting animal status', trigger: 'change' },
                 ],
                 remarks: [
@@ -654,19 +654,20 @@ export default {
     },
     created() {
         this.enumValues = JSON.parse(JSON.stringify(this.enum))
-        var col_histories = this.patients.reduce((histories, row)=>{
-            if (row.history.length) {
-                row.history.map(h=>h.site_of_infection).forEach(h=>{
-                    h.forEach(element => {
-                        if (!histories.map(c=>c.code).includes(element)) {
-                            histories.push({code: element, desc: element})
-                        }
-                    });
-                })
-            }
-            return histories
-        }, [])
-        this.enumValues.site_of_infection_history = col_histories
+        // var col_histories = this.patients.reduce((histories, row)=>{
+        //     if (row.history.length) {
+        //         row.history.map(h=>h.site_of_infection).forEach(h=>{
+        //             h.forEach(element => {
+        //                 if (!histories.map(c=>c.code).includes(element)) {
+        //                     histories.push({code: element, desc: element})
+        //                 }
+        //             });
+        //         })
+        //     }
+        //     return histories
+        // }, [])
+        // this.enumValues.site_of_infection_history = col_histories
+        this.enumValues.site_of_infection_history = this.enumValues.site_of_infection
 
         this.getVaccines()
         this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory.treatment || []))

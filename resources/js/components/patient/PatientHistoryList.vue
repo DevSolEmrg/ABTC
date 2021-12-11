@@ -29,7 +29,7 @@
                     </div>
                 </div>
 
-                <el-table :data="ListData" border :cell-style="moreDetailStyle">
+                <el-table :data="ListData" border :cell-style="moreDetailStyle" :row-class-name="tableRowClassName">
                     <el-table-column label="Age of Patient" width="120" align="center">
                         <template slot-scope="props">
                             {{ calculateAge(props.row.date_of_incident) }}
@@ -54,16 +54,16 @@
                             <el-row :gutter="10">
                                 <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                                     <!-- first -->
-                                    <p><strong>Date of Physical Examination:</strong> {{ props.row.date_of_physical_exam }}</p>
-                                    <p><strong>Place of Physical Examination:</strong> {{ props.row.place_of_physical_exam }}</p>
-                                    <p><strong>Type of Animal:</strong> {{ props.row.type_of_animal }}</p>
-                                    <p><strong>Type of Exposure:</strong> {{ props.row.type_of_exposure }}</p>
-                                    <p><strong>Site of Infection:</strong> {{ props.row.site_of_infection }}</p>
-                                    <p><strong>Is washed:</strong> {{ (props.row.is_washed ? 'Yes' : 'No') }}</p>
-                                    <p><strong>Route:</strong> {{ props.row.route }}</p>
-                                    <p><strong>Category:</strong> {{ props.row.category }}</p>
-                                    <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
-                                    <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p>
+                                    <p>Date of Physical Examination: <strong>{{ props.row.date_of_physical_exam }}</strong></p>
+                                    <p>Place of Physical Examination: <strong>{{ props.row.place_of_physical_exam }}</strong></p>
+                                    <p>Type of Animal <strong>{{ getValues('type_of_animal', props.row.type_of_animal_id) }}:</strong></p>
+                                    <p>Type of Exposure: <strong>{{ getValues('type_of_exposure', props.row.type_of_exposure_id) }}</strong></p>
+                                    <p>Site of Infection: <strong>{{ getValues('site_of_infection', props.row.site_of_infection_id) }}</strong></p>
+                                    <p>Is washed: <strong>{{ (props.row.is_washed ? 'Yes' : 'No') }}</strong></p>
+                                    <p>Route: <strong>{{ props.row.route }}</strong></p>
+                                    <p>Category: <strong>{{ getValues('category', props.row.category_id) }}</strong></p>
+                                    <p>Outcome: <strong>{{ getValues('outcome', props.row.outcome_id) }}</strong></p>
+                                    <p>Biting Animal Status: <strong>{{ getValues('biting_animal_status', props.row.biting_animal_status_id) }}</strong></p>
                                 </el-col>
                                 <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                                     <!-- second -->
@@ -190,7 +190,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selected_patient']),
+        ...mapGetters(['selected_patient', 'enum']),
         data() {
             // return JSON.parse(JSON.stringify(this.selectedPatient.history))
             return JSON.parse(JSON.stringify(this.selected_patient.history))
@@ -231,6 +231,21 @@ export default {
         },
         getSelectedHistoryTitle() {
             return this.selectedHistory?.date_of_incident ? `DATE OF INCIDENT: ${this.selectedHistory?.date_of_incident}` : "NEW PATIENT EXPOSURE"
+        },
+        getValues(columnKey, id) {
+            if (typeof id == "number") {
+                return this.enum[columnKey].find(c=>c.id == id)?.code || 'N/A'
+            } else {
+                return this.enum[columnKey].reduce((items, row) => {
+                    if (id.includes(row.id)) {
+                        items.push(row.code)
+                    }
+                    return items
+                }, []).join(', ')
+            }
+        },
+        tableRowClassName({row, rowIndex}) {
+            return 'expanded-table-row';
         }
     },
     created() {
