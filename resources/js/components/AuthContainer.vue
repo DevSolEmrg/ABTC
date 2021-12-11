@@ -95,17 +95,25 @@
 
                 <el-menu-item index="9">
                     <i class="el-icon-s-data"></i>
-                    <span>Reports</span>
+                    <span>Reports <span class="mdi mdi-alert-outline" style="color:#FEFF80" /> </span>
                 </el-menu-item>
 
                 <el-submenu index="user_setting">
                     <template slot="title">
-                        <i class="el-icon-setting"></i>
+                        <i class="el-icon-user-solid"></i>
                         <span>User Setting</span>
                     </template>
-                    <el-menu-item index="1-1" style="padding-left:53px">My Profile</el-menu-item>
+                    <el-menu-item index="1-1" style="padding-left:53px">My Profile <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
                     <el-menu-item index="User List" :route="{ name: 'User List' }" @click="handlePageLoading('User List', 'user_setting')" style="padding-left:53px">User Management</el-menu-item>
                     <el-menu-item index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List', 'user_setting')" style="padding-left:53px">Role & Permission</el-menu-item>
+                </el-submenu>
+
+                <el-submenu index="general_setting">
+                    <template slot="title">
+                        <i class="el-icon-setting"></i>
+                        <span>General Setting</span>
+                    </template>
+                    <el-menu-item index="references" style="padding-left:53px">References <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
                 </el-submenu>
 
 
