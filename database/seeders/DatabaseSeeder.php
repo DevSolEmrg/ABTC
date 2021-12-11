@@ -17,6 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([
+            ReferenceCategorySeeder::class,
+            ReferenceSeeder::class
+        ]);
+
         \App\Models\User::factory(8)->create();
         \App\Models\Patient::factory(53)->create();
         \App\Models\PatientHistory::factory(200)->create();
@@ -47,11 +52,6 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => 'password',//'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-        ]);
-
-        $this->call([
-            ReferenceCategorySeeder::class,
-            ReferenceSeeder::class
         ]);
 
         $roles = [
