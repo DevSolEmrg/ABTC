@@ -9,8 +9,13 @@
 
                 <div class="row">
                     <div class="col-5 px-1">
-                        <el-input v-model="search" size="mini" prefix-icon="el-icon-search" placeholder="Type to search" clearable>
-                            <template slot="append"> {{ search?`${ListData.length}/${data.length}`:data.length }} Record</template>
+                        <el-input v-model="search" size="mini" placeholder="Type to search">
+                            <!-- <template slot="append"> {{ search?`${ListData.length}/${data.length}`:data.length }} Record</template> -->
+                            <template slot="prepend"> {{ patients.total }} Record</template>
+                            <template slot="append">
+                                <el-button v-if="!!search" style="border-radius:0px 0px 0px 0px" class="reset-button" size="mini" @click="resetFunction()">RESET</el-button>
+                                <el-button style="border-radius:0px 3px 3px 0px" :class="!search?'':'search-button'" size="mini" @click="searchFunction()" :disabled="!search">SEARCH</el-button>
+                            </template>
                         </el-input>
                     </div>
                     <div class="col-7 px-1">
@@ -81,21 +86,29 @@
                     </template>
                 </el-table-column>
                 <template slot="empty" slot-scope="scope">
-                    {{ search ? `Your search for "${ search }" found no results.` : 'No Data'}}
+                    <!-- {{ search ? `Your search for "${ search }" found no results.` : 'No Data'}} -->
+                    {{ search ? `No Data Found` : 'No Data'}}
                 </template>
             </el-table>
 
             <div style="text-align: center; overflow-x:auto">
-                <el-pagination
+                <!-- <el-pagination
                     background
                     layout="prev, pager, next"
                     @current-change="handleCurrentChange"
                     :page-size="pageSize"
                     :total="total"
                     hide-on-single-page>
-                </el-pagination>
+                </el-pagination> -->
+                <PaginationComponent
+                    v-if="data.length"
+                    store="patients"
+                    collection="patients"
+                    state-action="getPatients"
+                    mutation="SET_CURRENT_PAGE_PATIENT"
+                    @input="$store.commit('SET_LOADING_COMPONENT', true)"
+                />
             </div>
-
 
         </el-card>
         <div style="text-align: left; overflow-x:auto">
@@ -180,9 +193,10 @@
 import { mapGetters, mapActions } from "vuex";
 import PatientAddUpdate from './patient/PatientAddUpdate'
 import PatientHistoryList from './patient/PatientHistoryList'
+import PaginationComponent from './helper/PaginationComponent'
 import { calAge } from '../constants'
 export default {
-    components: { PatientAddUpdate, PatientHistoryList },
+    components: { PatientAddUpdate, PatientHistoryList, PaginationComponent },
     data() {
         const item = {
             date: '2016-05-02',
@@ -192,8 +206,8 @@ export default {
         return {
             //data: Array(523).fill(item),
             //data: JSON.parse(JSON.stringify(this.$store.state.patients.patients)),
-            page: 1,
-	    	pageSize: 10,
+            // page: 1,
+	    	// pageSize: 10,
             loading: true,
             search: "",
 
@@ -201,7 +215,7 @@ export default {
             managePatientHistory: false,
             selectedPatient: [],
             selectedData: null,
-            lastReload: new Date().toLocaleString(),
+            //lastReload: new Date().toLocaleString(),
             dialogTitle: ''
         }
     },
@@ -254,9 +268,9 @@ export default {
                 });
             });
 		},
-        handleCurrentChange(val) {
-			this.page = val;
-		},
+        // handleCurrentChange(val) {
+		// 	this.page = val;
+		// },
         addPatient() {
             //this.managePatients({id: 2, data: ['data1']});
             this.selectedData = null
@@ -266,20 +280,36 @@ export default {
         calculateAge(date) { return calAge(date) || 'N/A'; },
         reduceFalseValue(prop) { return prop?.date_of_incident? prop?.date_of_incident : prop || 'N/A'; },
         reloadData() {
+            if (!!this.search) {
+                this.searchFunction()
+            } else {
+                this.$store.commit('SET_LOADING_COMPONENT', true)
+                this.$store.dispatch("getPatients").then(()=>{
+                    this.$nextTick(()=>{
+                        this.$store.commit('SET_LOADING_COMPONENT', false)
+                        //this.lastReload = new Date().toLocaleString()
+                    })
+                });
+            }
+        },
+        searchFunction() {
             this.$store.commit('SET_LOADING_COMPONENT', true)
-            this.$store.dispatch("getPatients").then(()=>{
+            this.$store.dispatch("getPatients", {search_param: this.search.toString().trim(), page_number: 1}).then(()=>{
                 this.$nextTick(()=>{
                     this.$store.commit('SET_LOADING_COMPONENT', false)
-                    this.lastReload = new Date().toLocaleString()
 
                 })
             });
+        },
+        resetFunction() {
+            this.search = ""
+            this.reloadData()
         }
     },
     computed: {
-        ...mapGetters(['patients', 'auth', 'request', 'loading_component']),
+        ...mapGetters(['patients', 'auth', 'request', 'loading_component', 'patients_last_reload']),
         data() {
-            return this.patients || []
+            return this.patients.data || []
         },
         // ListData() {
         //     if(this.search == null) return this.data;
@@ -287,21 +317,26 @@ export default {
         //     this.total = this.filtered.length;
         //     return this.filtered.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page);
         // }
-        searching() {
-            if (!this.search) {
-                this.total = this.data.length;
-                return this.data;
-            }
-            this.page = 1;
-            return this.data.filter(
-                data => data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
-        },
+        // searching() {
+            // if (!this.search) {
+            //     this.total = this.data.length;
+            //     return this.data;
+            // }
+            // this.page = 1;
+            // return this.data.filter(
+            //     data => data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
+            // return this.data
+        // },
         ListData() {
-            this.total = this.searching.length;
-            return this.searching.slice(
-                this.pageSize * this.page - this.pageSize,
-                this.pageSize * this.page
-            );
+            // this.total = this.searching.length;
+            // return this.searching.slice(
+            //     this.pageSize * this.page - this.pageSize,
+            //     this.pageSize * this.page
+            // );
+            return this.data
+        },
+        lastReload() {
+            return this.patients_last_reload
         }
     },
     mounted() {
@@ -324,5 +359,12 @@ export default {
 </script>
 
 <style scoped>
-
+    .search-button:hover {
+        background-color: #409EFF !important;
+        color: white;
+    }
+    .reset-button:hover {
+        background-color: #FFBD00 !important;
+        color: white;
+    }
 </style>

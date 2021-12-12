@@ -10,13 +10,16 @@ use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
-    public function getPatients()
+    public function getPatients(Request $request)
     {
         return Patient::with(['history' => function($q){
             $q->with(['treatment']);
         }, 'last_history' => function($q){
             $q->with(['treatment']);
-        }])->withCount('history')->orderBy('id', 'DESC')->get();
+        }])->withCount('history')
+        ->when(!!$request->search_param, function ($query) use ($request) {
+            return $query->where(DB::raw('concat(name," ",address," ",contact_number)'), 'LIKE', '%' . $request->search_param . '%');
+        })->orderBy('id', 'DESC')->paginate(10);
     }
 
     public function getSelectedPatient(Request $request)
