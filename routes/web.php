@@ -23,6 +23,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('check_auth', 'HomeController@checkAuth');
+    Route::post('patients', 'PatientController@getPatients');
     Route::post('manage_patients/{patient?}', 'PatientController@managePatients');
 
     Route::post('selected_patient', 'PatientController@getSelectedPatient');

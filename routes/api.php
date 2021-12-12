@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //Route::middleware(['auth:sanctum'])->group(function () {
     Route::group(['namespace' => 'App\Http\Controllers'], function () {
-        Route::get('patients', 'PatientController@getPatients');
-        Route::post('manage_patients/{patient?}', 'PatientController@managePatients');
+        // Route::get('patients', 'PatientController@getPatients');
+        // Route::post('manage_patients/{patient?}', 'PatientController@managePatients');
     });
 //});
