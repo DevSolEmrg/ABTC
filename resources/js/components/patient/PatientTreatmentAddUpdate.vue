@@ -101,7 +101,10 @@
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Site of Infect." prop="site_of_infection_id">
-                            <el-select v-model="ruleForm.site_of_infection_id" multiple placeholder="Select one or more" style="width:100%" size="small" allow-create filterable default-first-option>
+                            <!-- <el-select v-model="ruleForm.site_of_infection_id" multiple placeholder="Select one or more" style="width:100%" size="small" allow-create filterable default-first-option>
+                                <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
+                            </el-select> -->
+                            <el-select v-model="ruleForm.site_of_infection_id" multiple placeholder="Select one or more" style="width:100%" size="small" filterable>
                                 <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
                         </el-form-item>
@@ -681,7 +684,8 @@ export default {
 
         if (this.selectedHistory.id) {
             var form_type = 'edit'
-            Object.assign(this.ruleForm ,{...JSON.parse(JSON.stringify(this.selectedHistory)), form_type})
+            var is_washed = Number(this.selectedHistory.is_washed).toString()
+            Object.assign(this.ruleForm ,{...JSON.parse(JSON.stringify(this.selectedHistory)), form_type, is_washed})
             this.isEdit = true
             //if (this.selectedHistory.form_type == 'edit') {
               //  this.isEdit = true

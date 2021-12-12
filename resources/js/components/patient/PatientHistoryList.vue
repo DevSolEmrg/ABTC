@@ -56,10 +56,10 @@
                                     <!-- first -->
                                     <p>Date of Physical Examination: <strong>{{ props.row.date_of_physical_exam }}</strong></p>
                                     <p>Place of Physical Examination: <strong>{{ props.row.place_of_physical_exam }}</strong></p>
-                                    <p>Type of Animal <strong>{{ getValues('type_of_animal', props.row.type_of_animal_id) }}:</strong></p>
+                                    <p>Type of Animal: <strong>{{ getValues('type_of_animal', props.row.type_of_animal_id) }}</strong></p>
                                     <p>Type of Exposure: <strong>{{ getValues('type_of_exposure', props.row.type_of_exposure_id) }}</strong></p>
                                     <p>Site of Infection: <strong>{{ getValues('site_of_infection', props.row.site_of_infection_id) }}</strong></p>
-                                    <p>Is washed: <strong>{{ (props.row.is_washed ? 'Yes' : 'No') }}</strong></p>
+                                    <p>Is washed: <strong>{{ (Number(props.row.is_washed) ? 'Yes' : 'No') }}</strong></p>
                                     <p>Route: <strong>{{ props.row.route }}</strong></p>
                                     <p>Category: <strong>{{ getValues('category', props.row.category_id) }}</strong></p>
                                     <p>Outcome: <strong>{{ getValues('outcome', props.row.outcome_id) }}</strong></p>
