@@ -2,18 +2,21 @@ const state = {
     patients: [],
     selected_patient: [],
     //selected_history: []
+    patients_last_reload: new Date().toLocaleString()
 };
 
 const getters = {
     patients: state => state.patients,
     selected_patient: state => state.selected_patient,
+    patients_last_reload: state => state.patients_last_reload
 };
 
 const actions = {
-    async getPatients({ commit, dispatch }, form) {
-        await axios.get('/api/patients').then(response => {
-            console.log('get all patients response:', response)
+    async getPatients({ commit, dispatch, state }, form) {
+        await axios.post('patients?page=' + (form?.page_number || state.patients?.current_page || 1), form).then(response => {
             commit("FETCH_ALL_PATIENTS", response.data);
+            commit('SET_LOADING_COMPONENT', false)
+            commit('SET_PATIENTS_LAST_RELOAD')
         });
     },
     async getSelectedPatient({ commit }, form) {
@@ -68,6 +71,12 @@ const mutations = {
     // SET_AUTH_USER: (state, user) => {
     //     state.auth_user = user
     // },
+    SET_CURRENT_PAGE_PATIENT: (state, page) => {
+        state.patients = page
+    },
+    SET_PATIENTS_LAST_RELOAD: (state) => {
+        state.patients_last_reload = new Date().toLocaleString()
+    },
 };
 
 export default {
