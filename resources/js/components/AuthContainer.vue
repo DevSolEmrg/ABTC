@@ -80,18 +80,22 @@
                     <i class="el-icon-s-home"></i>
                     <span>Dashboard</span>
                 </el-menu-item>
-                <el-menu-item index="Patient List" :route="{ name: 'Patient List' }" @click="handlePageLoading('Patient List')">
+                <!-- <el-menu-item index="Patient List" :route="{ name: 'Patient List' }" @click="handlePageLoading('Patient List')">
                     <i class="el-icon-user-solid"></i>
                     <span>Patient</span>
+                </el-menu-item> -->
+                <el-menu-item index="Patient List" :route="{ name: 'Patient List' }" @click="handlePageLoading('Patient List')">
+                    <i class="el-icon-s-order"></i>
+                    <span>Patient</span>
                 </el-menu-item>
-                <el-menu-item index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')">
+                <!-- <el-menu-item index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')">
                     <i class="el-icon-s-custom"></i>
                     <span>Personnel</span>
                 </el-menu-item>
                 <el-menu-item index="Vaccine List" :route="{ name: 'Vaccine List' }" @click="handlePageLoading('Vaccine List')">
                     <i class="el-icon-s-order"></i>
                     <span>Vaccines</span>
-                </el-menu-item>
+                </el-menu-item> -->
 
                 <el-menu-item index="9">
                     <i class="el-icon-s-data"></i>
@@ -100,7 +104,7 @@
 
                 <el-submenu index="user_setting">
                     <template slot="title">
-                        <i class="el-icon-user-solid"></i>
+                        <i class="el-icon-s-custom"></i>
                         <span>User Setting</span>
                     </template>
                     <el-menu-item index="1-1" style="padding-left:53px">My Profile <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
@@ -110,9 +114,11 @@
 
                 <el-submenu index="general_setting">
                     <template slot="title">
-                        <i class="el-icon-setting"></i>
+                        <i class="el-icon-s-tools"></i>
                         <span>General Setting</span>
                     </template>
+                    <el-menu-item index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')" style="padding-left:53px"> Personnel </el-menu-item>
+                    <el-menu-item index="Vaccine List" :route="{ name: 'Vaccine List' }" @click="handlePageLoading('Vaccine List')" style="padding-left:53px"> Vaccines </el-menu-item>
                     <el-menu-item index="references" style="padding-left:53px">References <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
                 </el-submenu>
 
@@ -259,7 +265,8 @@ export default {
         checkIfHasExpandedNav(clicked_route = null, expandIndex = null) {
             this.navExpandOpen = []
             var expandOption = {
-                'user_setting' : ['User List', 'Role & Permission List']
+                'user_setting' : ['User List', 'Role & Permission List'],
+                'general_setting' : ['Personnel List', 'Vaccine List']
             }
             this.$nextTick(()=>{
                 Object.entries(expandOption).forEach(index=>{
