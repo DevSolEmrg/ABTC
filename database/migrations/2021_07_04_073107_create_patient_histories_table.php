@@ -31,17 +31,17 @@ class CreatePatientHistoriesTable extends Migration
             // $table->text('remarks');
             // $table->timestamps();
             $table->id();
-            $table->foreignId('patient_id')->constrained('patients');
+            $table->foreignId('patient_id')->nullable()->constrained('patients')->nullOnDelete();
             $table->dateTime('date_of_incident');
             $table->text('place_of_incident');
             $table->dateTime('date_of_physical_exam');
             $table->text('place_of_physical_exam');
 
-            $table->unsignedBigInteger('type_of_animal_id');
-            $table->foreign('type_of_animal_id')->references('id')->on('references');
+            $table->unsignedBigInteger('type_of_animal_id')->nullable();
+            $table->foreign('type_of_animal_id')->references('id')->on('references')->nullOnDelete();
 
-            $table->unsignedBigInteger('type_of_exposure_id');
-            $table->foreign('type_of_exposure_id')->references('id')->on('references');
+            $table->unsignedBigInteger('type_of_exposure_id')->nullable();
+            $table->foreign('type_of_exposure_id')->references('id')->on('references')->nullOnDelete();
 
             $table->json('site_of_infection_id')->nullable();
 
@@ -49,14 +49,14 @@ class CreatePatientHistoriesTable extends Migration
 
             $table->string('route');
 
-            $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('references');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreign('category_id')->references('id')->on('references')->nullOnDelete();
 
-            $table->unsignedBigInteger('outcome_id');
-            $table->foreign('outcome_id')->references('id')->on('references');
+            $table->unsignedBigInteger('outcome_id')->nullable();
+            $table->foreign('outcome_id')->references('id')->on('references')->nullOnDelete();
 
-            $table->unsignedBigInteger('biting_animal_status_id');
-            $table->foreign('biting_animal_status_id')->references('id')->on('references');
+            $table->unsignedBigInteger('biting_animal_status_id')->nullable();
+            $table->foreign('biting_animal_status_id')->references('id')->on('references')->nullOnDelete();
 
             $table->text('remarks');
             $table->timestamps();
