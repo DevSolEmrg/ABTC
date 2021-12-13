@@ -17,6 +17,14 @@ const actions = {
             commit("FETCH_ALL_PATIENTS", response.data);
             commit('SET_LOADING_COMPONENT', false)
             commit('SET_PATIENTS_LAST_RELOAD')
+
+            //on delete if no data on last page go to another page
+            if (!!state.patients?.current_page && !form?.page_number && (state.patients?.current_page > response.data?.last_page)) {
+                commit('SET_LOADING_COMPONENT', true)
+                commit('SET_CURRENT_PAGE_PATIENT', response.data?.last_page);
+                dispatch("getPatients")
+            }
+
         });
     },
     async getSelectedPatient({ commit }, form) {
@@ -72,7 +80,7 @@ const mutations = {
     //     state.auth_user = user
     // },
     SET_CURRENT_PAGE_PATIENT: (state, page) => {
-        state.patients = page
+        state.patients.current_page = page
     },
     SET_PATIENTS_LAST_RELOAD: (state) => {
         state.patients_last_reload = new Date().toLocaleString()
