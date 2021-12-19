@@ -486,6 +486,7 @@ export default {
                             if (!this.isEdit) this.resetForm('ruleForm')
 
                             //this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+                            //this.$emit('close')
                         })
                     } else {
                         this.$notify({
