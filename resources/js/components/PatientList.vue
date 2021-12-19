@@ -223,8 +223,9 @@ export default {
         ...mapActions(['getPatients', 'managePatients']),
         handleAddNewExposure(index, row) {
             //this.$store.commit('SET_SELECTED_HISTORY', row)
-            this.$store.commit('SET_SELECTED_PATIENT', row)
-            this.selectedPatient = row
+            var row_data = this.ListData?.find(d=>d.id==row.id)
+            this.$store.commit('SET_SELECTED_PATIENT', row_data)
+            this.selectedPatient = row_data
             this.managePatientHistory = true
         },
         handleView(index, row) {
@@ -333,7 +334,8 @@ export default {
             //     this.pageSize * this.page - this.pageSize,
             //     this.pageSize * this.page
             // );
-            return this.data
+            //return this.data
+            return this.patients?.data || []
         },
         lastReload() {
             return this.patients_last_reload
