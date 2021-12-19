@@ -29,6 +29,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::post('selected_patient', 'PatientController@getSelectedPatient');
 
     Route::post('manage_treatment/{treatment?}', 'PatientController@manageTreatment');
+    Route::post('manage_patient_history/{patient_history?}', 'PatientController@managePatientHistory');
 
     Route::get('vaccines', 'VaccineController@getVaccines');
     Route::post('manage_vaccines/{vaccine?}', 'VaccineController@manageVaccines');

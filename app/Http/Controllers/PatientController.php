@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PatientHistoryPostRequest;
 use Illuminate\Http\Request;
-use App\Models\{Patient, Treatment};
+use App\Models\{Patient, PatientHistory, Treatment};
 //use Carbon\Carbon;
 use App\Http\Requests\PatientPostRequest;
 use Illuminate\Support\Facades\DB;
@@ -59,6 +60,49 @@ class PatientController extends Controller
         DB::commit();
         return $data;
         //dd("patient", $request->validated(), $request->all(), $request->birth_date);
+    }
+
+    public function managePatientHistory(PatientHistory $patient_history, PatientHistoryPostRequest $request)
+    {
+        DB::beginTransaction();
+        $data = 'Success';
+        try {
+            switch ($request->form_type) {
+                case 'add':
+                    $patient_history->create($request->validated());
+                    // dd($patient_history, $request->all());
+                    // $treatment = new Treatment();
+                    // $treatment->patient_history_id = $request->patient_history_id;
+                    // $treatment->designated_day = $request->designated_day;
+                    // $treatment->date = $request->date;
+                    // $treatment->time = $request->time;
+                    // $treatment->vaccine_id = $request->vaccine_id;
+                    // $treatment->save();
+                    break;
+                case 'edit':
+                    $patient_history->update($request->validated());
+                    // dd($patient_history, $request->all());
+                    // //$treatment->update($request->validated());
+                    // $treatment = Treatment::find($request->id);
+                    // $treatment->patient_history_id = $request->patient_history_id;
+                    // $treatment->designated_day = $request->designated_day;
+                    // $treatment->date = $request->date;
+                    // $treatment->time = $request->time;
+                    // $treatment->vaccine_id = $request->vaccine_id;
+                    // $treatment->save();
+                    break;
+                case 'delete':
+                    // //$treatment->delete();
+                    // $treatment = Treatment::find($request->id);
+                    // $treatment->delete();
+                    break;
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(response()->json('Failed'.$th->getMessage(), 500));
+        }
+        DB::commit();
+        return $data;
     }
 
     public function manageTreatment(Treatment $treatment, Request $request)

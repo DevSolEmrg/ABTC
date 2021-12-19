@@ -185,7 +185,7 @@ export default {
     },
     watch: {
         selected_patient (val) {
-            var current_history_id = JSON.parse(JSON.stringify(this.selectedHistory?.id))
+            var current_history_id = JSON.parse(JSON.stringify(this.selectedHistory?.id || null))
             this.selectedHistory = val.history.find(h=>h.id==current_history_id)
         }
     },

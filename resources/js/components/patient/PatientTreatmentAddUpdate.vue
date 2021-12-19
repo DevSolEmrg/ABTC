@@ -466,7 +466,7 @@ export default {
         // },
     },
     methods: {
-        ...mapActions(['manageVaccines', 'getVaccines', 'manageTreatment']),
+        ...mapActions(['manageVaccines', 'getVaccines', 'manageTreatment', 'managePatientHistory']),
         closeDialog() {
             this.$emit('close-dialog', false)
         },
@@ -474,7 +474,7 @@ export default {
             this.$refs[formName].validate((valid) => {
             if (valid) {
                 let form = JSON.parse(JSON.stringify(this.ruleForm))
-                this.manageVaccines(form).then(()=>{
+                this.managePatientHistory(form).then(()=>{
                     if (this.request.status == 'success') {
                         this.$notify({
                             title: 'Success',
@@ -485,7 +485,7 @@ export default {
                         this.$nextTick(()=>{
                             if (!this.isEdit) this.resetForm('ruleForm')
 
-                            this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+                            //this.$refs.name.$el.getElementsByTagName('input')[0].focus();
                         })
                     } else {
                         this.$notify({
@@ -685,11 +685,15 @@ export default {
         if (this.selectedHistory.id) {
             var form_type = 'edit'
             var is_washed = Number(this.selectedHistory.is_washed).toString()
-            Object.assign(this.ruleForm ,{...JSON.parse(JSON.stringify(this.selectedHistory)), form_type, is_washed})
+            var date_of_incident = new Date(this.selectedHistory.date_of_incident)
+            var date_of_physical_exam = new Date(this.selectedHistory.date_of_physical_exam)
+            Object.assign(this.ruleForm ,{...JSON.parse(JSON.stringify(this.selectedHistory)), form_type, is_washed, date_of_incident, date_of_physical_exam})
             this.isEdit = true
             //if (this.selectedHistory.form_type == 'edit') {
               //  this.isEdit = true
             //}
+        } else {
+            this.ruleForm.patient_id = JSON.parse(JSON.stringify(this.selectedPatient.id))
         }
         window.onresize = function() { this.rezize() }.bind(this)
     },

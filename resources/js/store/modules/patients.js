@@ -54,6 +54,15 @@ const actions = {
             }).catch(error=>{
                 commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the treatment session!' })
             });
+    },
+    async managePatientHistory({ commit, dispatch }, form) {
+        await axios.post(`manage_patient_history/${form.id ?? ""}`, form)
+            .then(response => {
+                commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Patient history has been successfully saved!' })
+                dispatch('getSelectedPatient', {id: form.patient_id})
+            }).catch(error=>{
+                commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the patient history!' })
+            });
     }
 };
 
@@ -62,12 +71,12 @@ const mutations = {
         state.patients = patients
     },
     UPDATE_PATIENT: (state, param) => {
-        const PatientIndex = state.patients.findIndex((patient) => patient.id == param.id)
+        const PatientIndex = state.patients.data.findIndex((patient) => patient.id == param.id)
         if (PatientIndex != -1) {
-          state.patients[PatientIndex] = param.data
-          var data = state.patients
-          state.patients = []
-          state.patients = data
+          state.patients.data[PatientIndex] = param.data
+          var data = state.patients.data
+          state.patients.data = []
+          state.patients.data = data
         }
     },
     SET_SELECTED_PATIENT: (state, data) => {

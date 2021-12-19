@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,6 +49,16 @@ class PatientHistory extends Model
     public function treatment()
     {
         return $this->hasMany(Treatment::class);
+    }
+
+    public function setDateOfIncidentAttribute($date)
+    {
+        $this->attributes['date_of_incident'] =  Carbon::parse($date)->timezone('Asia/Manila')->format('Y-m-d H:i:s');
+    }
+
+    public function setDateOfPhysicalExamAttribute($date)
+    {
+        $this->attributes['date_of_physical_exam'] =  Carbon::parse($date)->timezone('Asia/Manila')->format('Y-m-d H:i:s');
     }
 
     // public function getTypeOfAnimalAttribute()
