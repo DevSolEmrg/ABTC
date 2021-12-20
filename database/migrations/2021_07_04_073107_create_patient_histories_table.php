@@ -31,17 +31,17 @@ class CreatePatientHistoriesTable extends Migration
             // $table->text('remarks');
             // $table->timestamps();
             $table->id();
-            $table->foreignId('patient_id')->nullable()->constrained('patients')->nullOnDelete();
+            $table->foreignId('patient_id')->nullable()->constrained('patients')->cascadeOnDelete();
             $table->dateTime('date_of_incident');
             $table->text('place_of_incident');
             $table->dateTime('date_of_physical_exam');
             $table->text('place_of_physical_exam');
 
             $table->unsignedBigInteger('type_of_animal_id')->nullable();
-            $table->foreign('type_of_animal_id')->references('id')->on('references')->nullOnDelete();
+            $table->foreign('type_of_animal_id')->references('id')->on('references')->cascadeOnDelete();
 
             $table->unsignedBigInteger('type_of_exposure_id')->nullable();
-            $table->foreign('type_of_exposure_id')->references('id')->on('references')->nullOnDelete();
+            $table->foreign('type_of_exposure_id')->references('id')->on('references')->cascadeOnDelete();
 
             $table->json('site_of_infection_id')->nullable();
 
@@ -50,13 +50,13 @@ class CreatePatientHistoriesTable extends Migration
             $table->string('route');
 
             $table->unsignedBigInteger('category_id')->nullable();
-            $table->foreign('category_id')->references('id')->on('references')->nullOnDelete();
+            $table->foreign('category_id')->references('id')->on('references')->cascadeOnDelete();
 
             $table->unsignedBigInteger('outcome_id')->nullable();
-            $table->foreign('outcome_id')->references('id')->on('references')->nullOnDelete();
+            $table->foreign('outcome_id')->references('id')->on('references')->cascadeOnDelete();
 
             $table->unsignedBigInteger('biting_animal_status_id')->nullable();
-            $table->foreign('biting_animal_status_id')->references('id')->on('references')->nullOnDelete();
+            $table->foreign('biting_animal_status_id')->references('id')->on('references')->cascadeOnDelete();
 
             $table->text('remarks');
             $table->timestamps();
