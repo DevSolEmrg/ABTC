@@ -23,12 +23,13 @@
   </div> -->
   <div class="text item">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-        <el-tabs type="border-card" class="mb-3">
+        <el-tabs class="mb-3" :stretch="true">
             <el-tab-pane label="Patient Exposure">
                 <!-- <el-row :gutter="10">
                     <el-col :xs="12" :sm="12" :md="16" :lg="16" :xl="16"><div class="grid-content bg-purple"></div></el-col>
                     <el-col :xs="12" :sm="12" :md="16" :lg="16" :xl="16"><div class="grid-content bg-purple-light"></div></el-col>
                 </el-row> -->
+                <span slot="label"><i class="mdi mdi-history"></i> Patient Exposure</span>
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Date of Incident" required>
@@ -155,7 +156,8 @@
                     <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
                 </el-form-item>
             </el-tab-pane>
-            <el-tab-pane label="Patient Treatment Session">
+            <el-tab-pane label="Patient Treatment Session" v-if="Object.entries(selectedHistory).length">
+                <span slot="label"><i class="mdi mdi-calendar-check"></i> Patient Treatment Session</span>
                 <el-form-item align="right">
                     <el-button v-if="!!isEditingTreatmentSession || addCount > 0" type="primary" size="small" disabled>Add New</el-button>
                     <el-button v-else type="primary" size="small" @click="addRow()">Add New</el-button>
@@ -474,7 +476,7 @@ export default {
             this.$refs[formName].validate((valid) => {
             if (valid) {
                 let form = JSON.parse(JSON.stringify(this.ruleForm))
-                this.managePatientHistory(form).then(()=>{
+                this.managePatientHistory(form).then((res)=>{
                     if (this.request.status == 'success') {
                         this.$notify({
                             title: 'Success',
@@ -483,7 +485,11 @@ export default {
                             duration: 6000,
                         });
                         this.$nextTick(()=>{
-                            if (!this.isEdit) this.resetForm('ruleForm')
+                            //if (!this.isEdit) this.resetForm('ruleForm')
+
+                            if (!this.isEdit) {
+                                this.$emit('new-history', res?.data?.id)
+                            }
 
                             //this.$refs.name.$el.getElementsByTagName('input')[0].focus();
                             //this.$emit('close')

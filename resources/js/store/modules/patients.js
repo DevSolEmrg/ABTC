@@ -56,13 +56,17 @@ const actions = {
             });
     },
     async managePatientHistory({ commit, dispatch }, form) {
-        await axios.post(`manage_patient_history/${form.id ?? ""}`, form)
+        return await new Promise((resolve, reject) => {
+            axios.post(`manage_patient_history/${form.id ?? ""}`, form)
             .then(response => {
-                commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Patient history has been successfully saved!' })
+                commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Patient history has been successfully saved changes!' })
                 dispatch('getSelectedPatient', {id: form.patient_id})
+                resolve(response)
             }).catch(error=>{
                 commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the patient history!' })
+                reject(error?.response)
             });
+        })
     }
 };
 

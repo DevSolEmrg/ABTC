@@ -69,37 +69,18 @@ class PatientController extends Controller
         try {
             switch ($request->form_type) {
                 case 'add':
-                    $patient_history->create($request->validated());
-                    // dd($patient_history, $request->all());
-                    // $treatment = new Treatment();
-                    // $treatment->patient_history_id = $request->patient_history_id;
-                    // $treatment->designated_day = $request->designated_day;
-                    // $treatment->date = $request->date;
-                    // $treatment->time = $request->time;
-                    // $treatment->vaccine_id = $request->vaccine_id;
-                    // $treatment->save();
+                    $data = $patient_history->create($request->validated());
                     break;
                 case 'edit':
-                    $patient_history->update($request->validated());
-                    // dd($patient_history, $request->all());
-                    // //$treatment->update($request->validated());
-                    // $treatment = Treatment::find($request->id);
-                    // $treatment->patient_history_id = $request->patient_history_id;
-                    // $treatment->designated_day = $request->designated_day;
-                    // $treatment->date = $request->date;
-                    // $treatment->time = $request->time;
-                    // $treatment->vaccine_id = $request->vaccine_id;
-                    // $treatment->save();
+                    $data = $patient_history->update($request->validated());
                     break;
                 case 'delete':
-                    // //$treatment->delete();
-                    // $treatment = Treatment::find($request->id);
-                    // $treatment->delete();
+                    $data = $patient_history->delete();
                     break;
             }
         } catch (\Throwable $th) {
             DB::rollBack();
-            abort(response()->json('Failed'.$th->getMessage(), 500));
+            abort(response()->json('Failed', 500));
         }
         DB::commit();
         return $data;

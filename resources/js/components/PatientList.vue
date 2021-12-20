@@ -307,8 +307,13 @@ export default {
             this.reloadData()
         }
     },
+    watch: {
+        selected_patient(val) {
+            this.reloadData()
+        }
+    },
     computed: {
-        ...mapGetters(['patients', 'auth', 'request', 'loading_component', 'patients_last_reload']),
+        ...mapGetters(['patients', 'auth', 'request', 'loading_component', 'patients_last_reload', 'selected_patient']),
         data() {
             return this.patients.data || []
         },

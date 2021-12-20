@@ -99,7 +99,7 @@
                                     <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="selectedHistory=scope.row; innerDrawer=true"></el-button>
                                 </el-tooltip>
                                 <el-tooltip class="item" effect="light" content="Delete" placement="top" :enterable="false">
-                                    <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="selectedHistory=scope.row;"></el-button>
+                                    <el-button type="danger" size="mini" icon="mdi mdi-delete" circle plain @click="handleDelete(scope.row)"></el-button>
                                 </el-tooltip>
                             </el-button-group>
                         </template>
@@ -140,13 +140,13 @@
             :visible.sync="innerDrawer"
             :size="`${size-1}%`"
         >
-            <PatientTreatmentAddUpdate v-if="innerDrawer" :selected-patient="selectedPatient" :selected-history="selectedHistory" @close="innerDrawer=false" />
+            <PatientTreatmentAddUpdate v-if="innerDrawer" :selected-patient="selectedPatient" :selected-history="selectedHistory" @new-history="getSelectedHistory($event)" @close="innerDrawer=false" />
         </el-drawer>
     </el-drawer>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { drawerSize, calAge } from '../../constants'
 import PatientTreatmentAddUpdate from './PatientTreatmentAddUpdate'
 export default {
@@ -181,16 +181,23 @@ export default {
             search: "",
             lastReload: new Date().toLocaleString(),
             selectedHistory: null,
+            new_history: null
         }
     },
     watch: {
         selected_patient (val) {
-            var current_history_id = JSON.parse(JSON.stringify(this.selectedHistory?.id || null))
-            this.selectedHistory = val.history.find(h=>h.id==current_history_id)
+            if (this.new_history) {
+                var current_history_id = JSON.parse(JSON.stringify(this.new_history || null))
+                this.selectedHistory = val.history.find(h=>h.id==current_history_id)
+                if (this.selectedHistory) this.new_history = null;
+            } else {
+                var current_history_id = JSON.parse(JSON.stringify(this.selectedHistory?.id || null))
+                this.selectedHistory = val.history.find(h=>h.id==current_history_id)
+            }
         }
     },
     computed: {
-        ...mapGetters(['selected_patient', 'enum']),
+        ...mapGetters(['selected_patient', 'enum', 'request']),
         data() {
             // return JSON.parse(JSON.stringify(this.selectedPatient.history))
             return JSON.parse(JSON.stringify(this.selected_patient.history))
@@ -213,6 +220,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['managePatientHistory']),
         closeDrawer() {
             this.$emit('close', false)
         },
@@ -246,6 +254,29 @@ export default {
         },
         tableRowClassName({row, rowIndex}) {
             return 'expanded-table-row';
+        },
+        getSelectedHistory(id) {
+            this.new_history = id
+        },
+        handleDelete(row) {
+            console.log('delete', row)
+            var form_type = "delete"
+            var rowData = {...row, form_type}
+            this.managePatientHistory(rowData).then((res)=>{
+                this.$notify({
+                    title: 'Success',
+                    message: this.request.message,
+                    type: 'success',
+                    duration: 6000,
+                });
+            }).catch(()=>{
+                this.$notify({
+                    title: 'Error',
+                    message: this.request.message,
+                    type: 'error',
+                    duration: 0,
+                });
+            })
         }
     },
     created() {
