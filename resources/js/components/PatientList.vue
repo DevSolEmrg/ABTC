@@ -9,7 +9,7 @@
 
                 <div class="row">
                     <div class="col-5 px-1">
-                        <el-input v-model="search" size="mini" placeholder="Type to search">
+                        <el-input v-model="search" size="mini" placeholder="Type to search" @keyup.enter.native="!!search?searchFunction():resetFunction()">
                             <!-- <template slot="append"> {{ search?`${ListData.length}/${data.length}`:data.length }} Record</template> -->
                             <template slot="prepend"> {{ patients.total }} Record</template>
                             <template slot="append">
