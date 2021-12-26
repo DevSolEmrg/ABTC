@@ -1,6 +1,6 @@
 <template>
     <el-drawer
-        :title="`PATIENT: ${selectedPatient.name.toUpperCase()}`"
+        :title="`${selectedPatient.name.toUpperCase() || ''}`"
         :visible.sync="visible"
         direction="rtl"
         :size="`${size}%`"
@@ -238,7 +238,7 @@ export default {
             return calAge(this.selectedPatient.birth_date, date_of_incident_timestamp) || 'N/A'
         },
         getSelectedHistoryTitle() {
-            return this.selectedHistory?.date_of_incident ? `DATE OF INCIDENT: ${this.selectedHistory?.date_of_incident}` : "NEW PATIENT EXPOSURE"
+            return this.selectedPatient.name.toUpperCase() + " - " + (this.selectedHistory?.date_of_incident ? this.selectedHistory?.date_of_incident : "NEW EXPOSURE")
         },
         getValues(columnKey, id) {
             if (typeof id == "number") {
@@ -258,25 +258,35 @@ export default {
         getSelectedHistory(id) {
             this.new_history = id
         },
-        handleDelete(row) {
-            console.log('delete', row)
-            var form_type = "delete"
-            var rowData = {...row, form_type}
-            this.managePatientHistory(rowData).then((res)=>{
-                this.$notify({
-                    title: 'Success',
-                    message: this.request.message,
-                    type: 'success',
-                    duration: 6000,
+        async handleDelete(row) {
+            await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(() => {
+                var form_type = "delete"
+                var rowData = {...row, form_type}
+                this.managePatientHistory(rowData).then((res)=>{
+                    this.$notify({
+                        title: 'Success',
+                        message: this.request.message,
+                        type: 'success',
+                        duration: 6000,
+                    });
+                }).catch(()=>{
+                    this.$notify({
+                        title: 'Error',
+                        message: this.request.message,
+                        type: 'error',
+                        duration: 0,
+                    });
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'Delete canceled'
                 });
-            }).catch(()=>{
-                this.$notify({
-                    title: 'Error',
-                    message: this.request.message,
-                    type: 'error',
-                    duration: 0,
-                });
-            })
+            });
         }
     },
     created() {
@@ -285,6 +295,14 @@ export default {
     mounted() {
         this.rezize()
         this.gridData = JSON.parse(JSON.stringify(this.selectedPatient.history))
+
+        if (this.selected_patient?.new_expo) {
+            this.selectedHistory={};
+            this.$nextTick(()=>{
+                this.innerDrawer=true
+            })
+
+        }
     }
 }
 </script>
