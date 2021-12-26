@@ -56,6 +56,21 @@ import { dialogSize, buildDate } from '../../constants'
 export default {
     props: ['dialogVisible', 'selectedData', 'dialogTitle'],
     data() {
+        var validateName = (rule, value, callback) => {
+            if (!value.toString().trim()) {
+                callback(new Error('Please input patient name'));
+            } else if (!(/^[a-z0-9,. ]+$/i.test(value))) {
+                callback(new Error('Name can contain only " [a-z,A-Z,0-9,. ] " characters.'));
+            } else if (!value.match(/[^,]+,[^,]+/g)) {
+                callback(new Error('Must be a correct name format "LastName, FirstName MiddleName"'));
+            } else {
+                if (value.split(',')[1][0] != " " || value.split(',')[1][1] == " ") {
+                    callback(new Error('Must contain 1 space after the comma on LastName'));
+                } else {
+                    callback();
+                }
+            }
+        };
         return {
             size: 30,
             ruleForm: {
@@ -69,7 +84,7 @@ export default {
             },
             rules: {
                 name: [
-                    { required: true, message: 'Please input patient name', trigger: 'change' },
+                    { validator: validateName, required: true, trigger: 'change' },
                 ],
                 gender: [
                     { required: true, message: 'Please select patient gender', trigger: 'change' }
