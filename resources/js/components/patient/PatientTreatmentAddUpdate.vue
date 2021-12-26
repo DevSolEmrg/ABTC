@@ -105,7 +105,7 @@
                             <!-- <el-select v-model="ruleForm.site_of_infection_id" multiple placeholder="Select one or more" style="width:100%" size="small" allow-create filterable default-first-option>
                                 <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select> -->
-                            <el-select v-model="ruleForm.site_of_infection_id" multiple placeholder="Select one or more" style="width:100%" size="small" filterable>
+                            <el-select v-model="ruleForm.site_of_infection_id" multiple placeholder="Select one or more" style="width:100%" size="small" filterable clearable>
                                 <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
                         </el-form-item>
