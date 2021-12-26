@@ -74,7 +74,7 @@
                                 <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="handleAddNewExposure(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="View" placement="top" :enterable="false">
-                                <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain></el-button>
+                                <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain @click="handleView(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="Edit" placement="top" :enterable="false">
                                 <el-button type="success" size="mini" icon="mdi mdi-lead-pencil" circle plain @click="handleEdit(scope.$index, scope.row)"></el-button>
@@ -224,11 +224,17 @@ export default {
         handleAddNewExposure(index, row) {
             //this.$store.commit('SET_SELECTED_HISTORY', row)
             var row_data = this.ListData?.find(d=>d.id==row.id)
-            this.$store.commit('SET_SELECTED_PATIENT', row_data)
+            var new_expo = true
+            this.$store.commit('SET_SELECTED_PATIENT', {...row_data, new_expo})
             this.selectedPatient = row_data
             this.managePatientHistory = true
         },
         handleView(index, row) {
+            var row_data = this.ListData?.find(d=>d.id==row.id)
+            var new_expo = false
+            this.$store.commit('SET_SELECTED_PATIENT', {...row_data, new_expo})
+            this.selectedPatient = row_data
+            this.managePatientHistory = true
         },
         handleEdit(index, row) {
             //console.log(index, row)
