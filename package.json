@@ -29,6 +29,7 @@
         "@mdi/font": "^5.9.55",
         "element-ui": "^2.15.2",
         "es6-promise": "^4.2.8",
+        "exceljs": "^4.3.0",
         "vue-router": "^3.5.1",
         "vuex": "^3.6.2",
         "vuex-persistedstate": "^4.0.0-beta.3"
