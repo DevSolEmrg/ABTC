@@ -13,6 +13,10 @@
                 <el-input v-model="ruleForm.name" ref="name" clearable></el-input>
             </el-form-item>
 
+            <el-form-item label="Description">
+                <el-input type="textarea" rows="3" style="width:100%" v-model="ruleForm.description" :clearable="true"></el-input>
+            </el-form-item>
+
             <el-form-item label="Permissions" prop="selected_permission">
                 <el-collapse>
                     <el-collapse-item :name="i+1" v-for="(permit, i) in permission_category" :key="permit.category_name">
@@ -21,6 +25,7 @@
                                 v-model="permit.selected"
                                 :active-color="permit.color"
                                 @change="hasChangeSelected(i)"
+                                @click.stop.native=""
                             />
                             &nbsp;&nbsp; <span :style="`color:${permit.has_selected?permit.color:'#DCDFE6'}; font-weight:bold`">{{ permit.category_name }} &nbsp; ({{ permit.count }})</span>
                         </template>
@@ -59,12 +64,16 @@ export default {
             ruleForm: {
                 form_type: 'add',
                 name: '',
+                description: '',
                 selected_permission: []
             },
             rules: {
                 name: [
                     { required: true, message: 'Please input role name', trigger: 'change' },
                 ],
+                // description: [
+                //     { required: true, message: 'Please input role description', trigger: 'change' },
+                // ],
                 selected_permission: [
                     { required: true, message: 'Please select role permission', trigger: 'change' }
                 ],

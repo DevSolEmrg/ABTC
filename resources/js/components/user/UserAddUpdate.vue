@@ -41,6 +41,7 @@
                         :key="item.id"
                         :label="item.name"
                         :value="item.name"
+                        :title="item.description"
                     >
                     </el-option>
                 </el-select>

@@ -32,7 +32,9 @@
                 <el-table-column label="Role" align="center" min-width="120">
                     <template slot-scope="scope">
                         <div v-if="scope.row.roles.length == 0">N/A</div>
-                        <el-tag v-for="role in scope.row.roles" :key="role.id" size="small" style="margin:1px;">{{ role.name }}</el-tag>
+                        <el-popover v-for="role in scope.row.roles" :key="role.id" :content="role.description" placement="top-start" :title="role.name" width="350" trigger="hover">
+                            <el-tag slot="reference" size="small" style="margin:1px;">{{ role.name }}</el-tag>
+                        </el-popover>
                     </template>
                 </el-table-column>
                 <el-table-column label="Permissions" min-width="350">

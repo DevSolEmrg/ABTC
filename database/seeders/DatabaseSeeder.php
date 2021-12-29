@@ -95,7 +95,7 @@ class DatabaseSeeder extends Seeder
         }
 
         foreach($roles as $role_key=>$role) {
-            $role = Role::create(['name' => $role]);
+            $role = Role::create(['name' => $role, 'description' => $this->random_words(rand(3,7), rand(3,10))]);
 
             if ($role_key == 0) {
                 foreach($permissions as $key=>$value) {
@@ -121,4 +121,28 @@ class DatabaseSeeder extends Seeder
         $default_user2->assignRole('physician');
 
     }
+
+    private function random_words($words = 1, $length = 6)
+    {
+        $string = '';
+        for ($o=1; $o <= $words; $o++)
+        {
+            $vowels = array("a","e","i","o","u");
+            $consonants = array(
+                'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm',
+                'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
+            );
+
+            $word = '';
+            for ($i = 1; $i <= $length; $i++)
+            {
+                $word .= $consonants[rand(0,19)];
+                $word .= $vowels[rand(0,4)];
+            }
+            $string .= mb_substr($word, 0, $length);
+            $string .= " ";
+        }
+        return mb_substr($string, 0, -1);
+    }
+
 }

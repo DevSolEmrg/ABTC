@@ -34,7 +34,7 @@ class RoleController extends Controller
         try {
             switch ($request->form_type) {
                 case 'add':
-                    $role = $role->create(['name' => $request->name]);
+                    $role = $role->create(['name' => $request->name, 'description' => $request->description]);
                     foreach ($request->selected_permission as $permit) {
                         $permission = Permission::findByName($permit);
                         if ($permission) {
@@ -56,6 +56,7 @@ class RoleController extends Controller
                             $role->givePermissionTo($permit);
                         }
                     }
+                    $role->update(['name' => $request->name, 'description' => $request->description]);
                     break;
                 case 'delete':
                     $users = User::with('roles')->whereHas('roles', function($q) use($request) { $q->where('name', $request->name); })->get();

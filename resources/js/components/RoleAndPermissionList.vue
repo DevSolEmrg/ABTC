@@ -19,6 +19,7 @@
 
             <el-table  v-loading="loading" :data="ListData" border>
                 <el-table-column prop="name" label="Role" width="200" />
+                <el-table-column prop="description" label="Description" width="250" />
                 <el-table-column label="Permissions" >
                     <template slot-scope="scope">
                         <el-tag size="small" style="margin:1px; color:white" :color="generateColor(permission)" v-for="permission in scope.row.permissions" :key="permission.id">{{ permission.name }}</el-tag>
@@ -122,6 +123,7 @@ export default {
             this.selectedData = {
                 id: row.id,
                 name: row.name,
+                description: row.description,
                 permission_category: permission_category,
                 current_permission: current_permission
             }
