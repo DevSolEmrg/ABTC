@@ -33,7 +33,7 @@
                     <template slot-scope="scope">
                         <div v-if="scope.row.roles.length == 0">N/A</div>
                         <el-popover v-for="role in scope.row.roles" :key="role.id" :content="role.description" placement="top-start" :title="role.name" width="350" trigger="hover">
-                            <el-tag slot="reference" size="small" style="margin:1px;">{{ role.name }}</el-tag>
+                            <el-tag slot="reference" size="small" style="margin:1px;" class="mdi mdi-account-key">&nbsp;{{ role.name }}</el-tag>
                         </el-popover>
                     </template>
                 </el-table-column>
