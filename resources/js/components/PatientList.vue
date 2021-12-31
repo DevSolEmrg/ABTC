@@ -23,15 +23,15 @@
                             <!-- <el-button type="primary" size="mini"   plain>EXCEL</el-button> -->
                             <!-- <el-button type="primary" size="mini" circle><i class="el-icon-refresh"/></el-button> -->
                             <el-button type="primary" size="mini" @click="addPatient">ADD</el-button>
-                            <el-dropdown>
+                            <el-dropdown @command="handleCommand">
                                 <el-button type="primary"  size="mini"   >
                                     EXCEL<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item><i class="mdi mdi-cloud-upload"></i> Import</el-dropdown-item>
-                                    <el-dropdown-item><i class="mdi mdi-cloud-download"></i> Export</el-dropdown-item>
+                                    <el-dropdown-item command="import"><i class="mdi mdi-cloud-upload"></i> Import</el-dropdown-item>
+                                    <el-dropdown-item command="export"><i class="mdi mdi-cloud-download"></i> Export</el-dropdown-item>
                                 </el-dropdown-menu>
-                        </el-dropdown>
+                            </el-dropdown>
                         </el-button-group>
                     </div>
                 </div>
@@ -46,8 +46,8 @@
                     <template slot-scope="scope"> {{ calculateAge(scope.row.birth_date) }} </template>
                 </el-table-column>
                 <el-table-column prop="address" label="Address" min-width="300" />
-                <el-table-column prop="contact_number" label="Contact #" width="110" />
-                <el-table-column label="#Exposure" width="100">
+                <el-table-column prop="contact_number" label="Contact" width="110" />
+                <el-table-column label="Expos." width="70">
                     <template slot-scope="scope"> {{ reduceFalseValue(scope.row.history_count) }} </template>
                 </el-table-column>
                 <el-table-column label="Last Exposure" width="155" align="center">
@@ -73,7 +73,7 @@
                             <el-tooltip class="item" effect="light" content="Add New Exposure" placement="top" :enterable="false">
                                 <el-button type="primary" size="mini" icon="mdi mdi-plus-thick" circle plain @click="handleAddNewExposure(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
-                            <el-tooltip class="item" effect="light" content="View" placement="top" :enterable="false">
+                            <el-tooltip class="item" effect="light" content="View History" placement="top" :enterable="false">
                                 <el-button type="primary" size="mini" icon="mdi mdi-more" circle plain @click="handleView(scope.$index, scope.row)"></el-button>
                             </el-tooltip>
                             <el-tooltip class="item" effect="light" content="Edit" placement="top" :enterable="false">
@@ -185,6 +185,9 @@
             </span>
         </el-dialog> -->
     </el-col>
+    <el-col :span="24">
+        <ImportPatient v-if="import_patient" :dialog-visible="import_patient" @close="import_patient=false" />
+    </el-col>
 </el-row>
 
 </template>
@@ -195,8 +198,9 @@ import PatientAddUpdate from './patient/PatientAddUpdate'
 import PatientHistoryList from './patient/PatientHistoryList'
 import PaginationComponent from './helper/PaginationComponent'
 import { calAge } from '../constants'
+import ImportPatient from './patient/ImportPatient'
 export default {
-    components: { PatientAddUpdate, PatientHistoryList, PaginationComponent },
+    components: { PatientAddUpdate, PatientHistoryList, PaginationComponent, ImportPatient },
     data() {
         const item = {
             date: '2016-05-02',
@@ -216,7 +220,8 @@ export default {
             selectedPatient: [],
             selectedData: null,
             //lastReload: new Date().toLocaleString(),
-            dialogTitle: ''
+            dialogTitle: '',
+            import_patient: false
         }
     },
     methods: {
@@ -311,6 +316,13 @@ export default {
         resetFunction() {
             this.search = ""
             this.reloadData()
+        },
+        handleCommand(command) {
+            if (command == 'import') {
+                this.import_patient = true
+            } else {
+
+            }
         }
     },
     watch: {

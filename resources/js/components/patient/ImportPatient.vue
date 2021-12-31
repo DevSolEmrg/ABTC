@@ -1,0 +1,604 @@
+<template>
+    <el-dialog
+        title="Import Patient List"
+        :visible.sync="dialog_visible"
+        fullscreen
+        :before-close="handleClose"
+    >
+        <!-- <span>This is a message</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+        </span> -->
+        <el-row :gutter="24">
+            <el-col :span="24">
+                <el-upload
+                    class="upload-demo"
+                    ref="upload"
+                    action="#"
+                    :auto-upload="false"
+                    :on-change="upload"
+                    :limit="1"
+                    :on-exceed="handleExceed"
+                    :on-remove="handleRemove"
+                    :before-remove="beforeRemove"
+                >
+                    <el-button slot="trigger" size="small" icon="el-icon-paperclip" title="Note: You can upload one excel file with several worksheets; to cancel/delete the current chosen file, hover over the filename and click the 'X' button on the right side of the filename.">Browse excel file to import data...</el-button>
+                    <el-popover content="Make sure you select correct excel format .xlsx/.csv, click here to download excel template." placement="top-start" title="Required Excel Format" width="350" trigger="hover">
+                        <el-button slot="reference" size="small" type="info" plain icon="mdi mdi-file-excel-outline"></el-button>
+                    </el-popover>
+                    <el-popover content="The uploaded record will be placed in a queue; while waiting for the data to upload, you can move to any page. Please wait for the message to see if the data was successfully uploaded." placement="top-start" title="Upload Note" width="350" trigger="hover">
+                        <el-button slot="reference" style="margin-left: 10px;" size="small" type="primary" @click="submitUpload" icon="el-icon-upload" :disabled="!excel_data.length">Upload to Server/Database</el-button>
+                    </el-popover>
+                    <div class="el-upload__tip" slot="tip">.xlsx/.csv file</div>
+
+                    <el-input align="right" v-model="search" size="small" prefix-icon="el-icon-search" :placeholder="`Search on worksheet name: ${tab}`" clearable style="width:400px;margin-bottom:15px; float:right">
+                            <!-- <template slot="append"> {{ search?`${ListData.length}/${item.content.length}`:item.content.length }} Record</template> -->
+                        </el-input>
+
+                </el-upload>
+            </el-col>
+            <!-- <el-col
+                :span="24"
+                v-show="
+                    is_preview &&
+                        excel_data.length > 0 &&
+                        excel_table_headers.length > 0
+                "
+            >
+                <v-card>
+                    <v-tabs
+                        v-model="tab"
+                        background-color="primary"
+                        dark
+                    >
+                        <v-tab
+                            v-for="item in excel_data"
+                            :key="item.tab"
+                        >
+                            {{ item.tab }}
+                        </v-tab>
+                    </v-tabs>
+                    <v-tabs-items v-model="tab">
+                        <v-tab-item
+                            v-for="item in excel_data"
+                            :key="item.id"
+                        >
+                            <v-card flat>
+                                <v-data-table
+                                    :headers="
+                                        excel_table_headers
+                                    "
+                                    :items="item.content"
+                                    class="elevation-1"
+                                >
+                                    <template
+                                        v-slot:[`header.Office_Name`]="{
+                                            header
+                                        }"
+                                    >
+                                        {{
+                                            header.text.toUpperCase()
+                                        }}
+                                    </template>
+                                </v-data-table>
+                            </v-card>
+                        </v-tab-item>
+                    </v-tabs-items>
+                </v-card>
+            </el-col> -->
+
+            <el-col
+                :span="24"
+                v-show="!is_preview && excel_data.length > 0"
+            >
+                <!-- <v-alert
+                    dense
+                    outlined
+                    type="error"
+                    style="border: 1px solid rgba(0,0,0,0) !important;"
+                >
+                    ERROR FOUND, Please see error log bellow
+                </v-alert> -->
+                <!-- <ul>
+                    <dl>
+                        <dt>CONTENT</dt>
+                        <ol>
+                            <li
+                                v-for="error in excel_error[0]"
+                                :key="error.id"
+                            >
+                                <strong>{{
+                                    error.value
+                                }}</strong>
+                                {{ error.message }}
+                                <strong
+                                    >[{{
+                                        error.cell_position
+                                    }}]</strong
+                                >
+                            </li>
+                        </ol>
+                    </dl>
+                </ul> -->
+            </el-col>
+            <el-col :span="24" v-if="excel_data.length">
+                <el-tabs v-model="tab" type="border-card" :closable="excel_data.length>1" @tab-remove="removeTab">
+                    <el-tab-pane
+                        v-for="(item, index) in excel_data"
+                        :key="item.id"
+                        :label="item.tab+'('+item.content.length+')'"
+                        :name="item.tab"
+                    >
+                        <!-- {{item.content}} -->
+                        <!-- <el-input v-model="search" size="mini" prefix-icon="el-icon-search" placeholder="Type to search" clearable style="width:400px;margin-bottom:15px">
+                            <template slot="append"> {{ search?`${ListData.length}/${item.content.length}`:item.content.length }} Record</template>
+                        </el-input> -->
+                        <el-table :data="ListData" border :header-cell-style="{ background: 'rgba(0,0,0,0.04)' }">
+                            <el-table-column prop="number" label="No." width="50" />
+                            <el-table-column prop="date" label="Date" width="100" />
+                            <el-table-column prop="name" label="Name" width="200" />
+                            <el-table-column prop="address" label="Address" width="300" />
+                            <el-table-column prop="age" label="Age" width="48" />
+                            <el-table-column prop="gender" label="Gender" width="75" />
+                            <el-table-column prop="date_of_inci" label="Date of Inci" width="100" />
+                            <el-table-column prop="place_of_inci" label="Place of Inci" width="300" />
+                            <el-table-column prop="type_of_animal" label="Type of animal" />
+                            <el-table-column prop="type_of_exposure" label="Type of Exposure" />
+                            <el-table-column prop="site_of_infection" label="Site of Infection" />
+                            <el-table-column prop="category" label="Category" />
+                            <el-table-column prop="is_washing" label="Is washing" />
+                            <el-table-column prop="rig_date" label="Rig Date" width="100" />
+                            <el-table-column prop="route" label="Route" />
+                            <el-table-column prop="d_one" label="D0" width="100" />
+                            <el-table-column prop="d_tree" label="D3" width="100" />
+                            <el-table-column prop="d_seven" label="D7" width="100" />
+                            <el-table-column prop="d_fourteen" label="D14" width="100" />
+                            <el-table-column prop="d_twenty_eight" label="D28" width="100" />
+                            <el-table-column prop="brand_name" label="Brand Name" />
+                            <el-table-column prop="outcome" label="Outcome" />
+                            <el-table-column prop="animal_status" label="Animal Status" />
+                            <el-table-column prop="remarks" label="Remarks" />
+
+                            <!-- number: dataCol[2],
+                                                    date: dataCol[4],
+                                                    name: dataCol[5],
+                                                    address: dataCol[6],
+                                                    age: dataCol[7],
+                                                    gender: dataCol[8],
+                                                    date_of_inci: dataCol[9],
+                                                    place_of_inci: dataCol[10],
+                                                    type_of_animal: dataCol[11],
+                                                    type_of_exposure: dataCol[12],
+                                                    site_of_infection: dataCol[13],
+                                                    category: dataCol[14],
+                                                    is_washing: dataCol[15],
+                                                    rig_date: dataCol[16],
+                                                    route: dataCol[17],
+                                                    d_one: dataCol[18],
+                                                    d_tree: dataCol[19],
+                                                    d_seven: dataCol[20],
+                                                    d_fourteen: dataCol[21],
+                                                    d_twenty_eight: dataCol[22],
+                                                    brand_name: dataCol[23],
+                                                    outcome: dataCol[24],
+                                                    animal_status: dataCol[25],
+                                                    remarks: dataCol[26], -->
+                        </el-table>
+
+                        <div style="text-align: center; overflow-x:auto">
+                            <el-pagination
+                                background
+                                layout="prev, pager, next"
+                                @current-change="handleCurrentChange"
+                                :page-size="pageSize"
+                                :total="total"
+                                hide-on-single-page>
+                            </el-pagination>
+                        </div>
+
+                    </el-tab-pane>
+                </el-tabs>
+            </el-col>
+        </el-row>
+    </el-dialog>
+</template>
+
+<script>
+import { buildDate } from './../../constants'
+export default {
+    props: ['dialogVisible'],
+    data() {
+        return {
+            page: 1,
+	    	pageSize: 10,
+            loading: true,
+            search: "",
+
+            //dialogVisible: false
+            valid: false,
+            btnloading: false,
+            excel_data: [],
+            excel_error: [[]],
+            // tab: null,
+            tab: '',
+            excel_table_headers: [],
+            is_preview: false,
+            offices: [],
+            // data = [{
+            //     created_at: '',
+            //     name: '',
+            //     address: '',
+            //     age: '',
+            //     gender: '',
+            //     history: [{
+            //         date: '',
+            //         place: '',
+            //         type_of_animal: '',
+            //         type_of_exposure: '',
+            //         site_infect: '',
+            //         category: '',
+            //         washing: '',
+            //         rig_date: '',
+            //         route: '',
+            //         outcome: '',
+            //         biting_animal_stat:'',
+            //         remarks: '',
+            //         vaccine: {
+            //             d0: '',
+            //             d3: '',
+            //             d7: '',
+            //             d14: '',
+            //             d28: '',
+            //             vaccine: ''
+            //         }
+            //     }]
+            // }],
+            dialog_visible: false,
+            baseURL: location.origin.concat('/'),
+
+            editableTabsValue: '2',
+            editableTabs: [{
+            title: 'Tab 1',
+            name: '1',
+            content: 'Tab 1 content'
+            }, {
+            title: 'Tab 2',
+            name: '2',
+            content: 'Tab 2 content'
+            }],
+            tabIndex: 2
+        };
+    },
+    computed: {
+        searching() {
+            var tabIndex = this.excel_data.findIndex(s=>s.tab==this.tab)
+            var data = this.excel_data[tabIndex].content
+            if (!this.search) {
+                this.total = data.length;
+                return data;
+            }
+            this.page = 1;
+            return data.filter(
+                data => data.name.toLowerCase().includes(this.search.toLowerCase()) || data.address.toLowerCase().includes(this.search.toLowerCase()));
+        },
+        ListData() {
+            this.total = this.searching.length;
+            return this.searching.slice(
+                this.pageSize * this.page - this.pageSize,
+                this.pageSize * this.page
+            );
+        }
+    },
+    mounted() {
+        this.dialog_visible = JSON.parse(JSON.stringify(this.dialogVisible))
+    },
+    methods: {
+        handleCurrentChange(val) {
+			this.page = val;
+		},
+        handleTabsEdit(targetName, action) {
+        if (action === 'add') {
+          let newTabName = ++this.tabIndex + '';
+          this.editableTabs.push({
+            title: 'New Tab',
+            name: newTabName,
+            content: 'New Tab content'
+          });
+          this.editableTabsValue = newTabName;
+        }
+        if (action === 'remove') {
+          let tabs = this.editableTabs;
+          let activeName = this.editableTabsValue;
+          if (activeName === targetName) {
+            tabs.forEach((tab, index) => {
+              if (tab.name === targetName) {
+                let nextTab = tabs[index + 1] || tabs[index - 1];
+                if (nextTab) {
+                  activeName = nextTab.name;
+                }
+              }
+            });
+          }
+
+          this.editableTabsValue = activeName;
+          this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+        }
+      },
+       handleRemove(file, fileList) {
+        console.log(file, fileList);
+        this.excel_data = []
+         this.excel_error = [[]];
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`Remove ${ file.name }/Reselect other file ? this action will not effect on the database only in the interface.`);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`The limit is 1, you selected ${files.length} files this time, add up to ${files.length + fileList.length} totally, Please clear the recent uploaded file and browse again`);
+      },
+      removeTab(targetName) {
+          alert(targetName)
+          if (this.excel_data.length > 1) {
+                let tabs = this.excel_data;
+                let activeName = this.tab;
+                if (activeName === targetName) {
+                tabs.forEach((tab, index) => {
+                    if (tab.tab === targetName) {
+                    let nextTab = tabs[index + 1] || tabs[index - 1];
+                    if (nextTab) {
+                        activeName = nextTab.tab;
+                    }
+                    }
+                });
+                }
+
+                this.tab = activeName;
+                this.excel_data = tabs.filter(tab => tab.tab !== targetName);
+
+                this.excel_error[0] = this.excel_error[0].filter(err=>err.tab!=targetName)
+
+          }
+
+        // let tabs = this.editableTabs;
+        // let activeName = this.editableTabsValue;
+        // if (activeName === targetName) {
+        //   tabs.forEach((tab, index) => {
+        //     if (tab.name === targetName) {
+        //       let nextTab = tabs[index + 1] || tabs[index - 1];
+        //       if (nextTab) {
+        //         activeName = nextTab.name;
+        //       }
+        //     }
+        //   });
+        // }
+
+        // this.editableTabsValue = activeName;
+        // this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+      },
+        handleClose(done) {
+            this.$confirm('Are you sure to close this dialog ?')
+            .then(_ => {
+                done();
+                this.$emit('close')
+            })
+            .catch(_ => {});
+        },
+        submitUpload() {
+            //this.$refs.upload.submit();
+            console.log()
+        },
+        upload(file, fileList) {
+            // console.log(file.raw, file.raw.name, file.raw.name.split(".").pop().toLowerCase())
+            try {
+                var fileExtension = file.raw.name.split(".").pop().toLowerCase();
+                if (fileExtension == "xlsx") {
+                    this.importPatient(file.raw);
+                } else {
+                    this.$notify({
+                        title: 'Error',
+                        message: 'To avoid error required file extension "xlsx"',
+                        type: 'error',
+                        duration: 0,
+                    });
+                }
+            } catch (error) {
+                this.excel_data = [];
+                this.excel_error = [[]];
+                this.valid = false;
+            }
+        },
+        async importPatient(file) {
+            // console.log(file)
+            const Excel = await require("exceljs");
+
+            this.excel_table_headers = [];
+            this.excel_table_headers.push(
+                // { text: "Office Name", align: "start", value: "Office_Name" },
+                // { text: "Office Code", value: "Office_Code" },
+                // { text: "Address", value: "Address" },
+                // { text: "Contact Number", value: "Contact_Number" },
+                // { text: "Email Address", value: "Email_Address" },
+
+                { text: "No.", align: "start", value: "number" },
+                { text: "Date", value: "date" },
+                { text: "Name", value: "name" },
+                { text: "Address", value: "address" },
+                { text: "Age", value: "age" },
+                { text: "Gender", value: "gender" },
+                { text: "Date of Inci", value: "date_of_inci" },
+                { text: "Place of Inci", value: "place_of_inci" },
+                { text: "Type of Animal", value: "type_of_animal" },
+                { text: "Type of Exposure", value: "type_of_exposure" },
+                { text: "Site of Infection", value: "site_of_infection" },
+                { text: "Category", value: "category" },
+                { text: "Is Washing", value: "is_washing" },
+                { text: "Rig. Date", value: "rig_date" },
+                { text: "Route", value: "route" },
+                { text: "D0", value: "d_one" },
+                { text: "D3", value: "d_tree" },
+                { text: "D7", value: "d_seven" },
+                { text: "D14", value: "d_fourteen" },
+                { text: "D28", value: "d_twenty_eight" },
+                { text: "Brand Namme", value: "brand_name" },
+                { text: "Outcome", value: "outcome" },
+                { text: "Animal Status", value: "animal_status" },
+                { text: "Remarks", value: "remarks" },
+            );
+            // var offices = this.$store.state.offices.offices;
+            //this.offices = [];
+            // offices.forEach(office => {
+            //     this.offices.push(office.name.trim().toLowerCase().replace(/\s/g, ""));
+            // });
+            var offices = []
+            this.excel_data = [];
+            this.excel_error = [[]];
+            const wb = new Excel.Workbook();
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = function() {
+                const buffer = reader.result;
+                wb.xlsx.load(buffer).then(
+                    function(workbook) {
+                        workbook.eachSheet(
+                            function(sheet, id) {
+                                // var sheetIndex = id - 1;
+                                var sheetIndex = workbook.worksheets.findIndex(s=>s.id==id)
+                                // console.log('sheet', id, sheetIndex, workbook.worksheets, workbook.worksheets[sheetIndex])
+                                this.excel_data.push({
+                                    id: sheetIndex,
+                                    tab: workbook.worksheets[sheetIndex].name.toUpperCase(),
+                                    content: []
+                                });
+                                sheet.eachRow({ includeEmpty: true },
+                                    function(row, rowNumber) {
+                                        var rowIndex = rowNumber - 1;
+                                        // console.log('row', row)
+                                        if (rowIndex > 7) {
+                                            var dataCol = row.values;
+                                            if (!!dataCol[3] || !!dataCol[4] || !!dataCol[5]) {
+                                                this.excel_data[sheetIndex].content.push({
+                                                    // Office_Name: dataCol[1] == undefined ? null : dataCol[1],
+                                                    // Office_Code: dataCol[2] == undefined ? null : dataCol[2],
+                                                    // Address: dataCol[3] == undefined ? null : dataCol[3],
+                                                    // Contact_Number: dataCol[4] == undefined ? null : dataCol[4],
+                                                    // Email_Address: dataCol[5] instanceof Object ? dataCol[5] == undefined ? null : dataCol[5].text : dataCol[5] == undefined ? null : dataCol[5],
+
+                                                    number: dataCol[2],
+                                                    date: this.falsableDate(dataCol[4]),
+                                                    name: dataCol[5],
+                                                    address: dataCol[6],
+                                                    age: dataCol[7],
+                                                    gender: dataCol[8],
+                                                    date_of_inci: this.falsableDate(dataCol[9]),
+                                                    place_of_inci: dataCol[10],
+                                                    type_of_animal: dataCol[11],
+                                                    type_of_exposure: dataCol[12],
+                                                    site_of_infection: dataCol[13],
+                                                    category: dataCol[14],
+                                                    is_washing: dataCol[15],
+                                                    rig_date: this.falsableDate(dataCol[16]),
+                                                    route: dataCol[17],
+                                                    d_one: this.falsableDate(dataCol[18]),
+                                                    d_tree: this.falsableDate(dataCol[19]),
+                                                    d_seven: this.falsableDate(dataCol[20]),
+                                                    d_fourteen: this.falsableDate(dataCol[21]),
+                                                    d_twenty_eight: this.falsableDate(dataCol[22]),
+                                                    brand_name: dataCol[23],
+                                                    outcome: dataCol[24],
+                                                    animal_status: dataCol[25],
+                                                    remarks: dataCol[26],
+
+                                                });
+                                            }
+                                        }
+                                        row.eachCell({ includeEmpty: true },
+                                            function(cell, colNumber) {
+                                                var colIndex = colNumber - 1;
+                                                if (rowIndex > 0 && colIndex < 25) {
+                                                    if (cell.value != null && cell.value.toString().trim() !== "") {
+                                                        if (colIndex == 0 && offices.includes(cell.value.trim().toLowerCase().replace(/\s/g,""))) {
+                                                            this.excel_error[0].push({
+                                                                id: this.randomKey(),
+                                                                value: cell.value,
+                                                                message: "already exist in the database",
+                                                                cell_position: this.cellPosition(sheetIndex, colIndex, rowIndex),
+                                                                tab: workbook.worksheets[sheetIndex].name.toUpperCase()
+                                                            });
+                                                        }
+                                                    } else {
+                                                        if (cell.value == null || cell.value.trim == "") {
+                                                            this.excel_error[0].push({
+                                                                id: this.randomKey(),
+                                                                value: "",
+                                                                message: "This cell is required ",
+                                                                cell_position: this.cellPosition(sheetIndex, colIndex, rowIndex),
+                                                                tab: workbook.worksheets[sheetIndex].name.toUpperCase()
+                                                            });
+                                                        }
+                                                    }
+                                                }
+                                            }.bind(this)
+                                        );
+                                        // row.eachCell({ includeEmpty: true },
+                                        //     function(cell, colNumber) {
+                                        //         var colIndex = colNumber - 1;
+                                        //         if (rowIndex > 0 && colIndex < 3) {
+                                        //             if (cell.value != null && cell.value.trim() !== "") {
+                                        //                 if (colIndex == 0 && offices.includes(cell.value.trim().toLowerCase().replace(/\s/g,""))) {
+                                        //                     this.excel_error[0].push({
+                                        //                         id: this.randomKey(),
+                                        //                         value: cell.value,
+                                        //                         message: "already exist in the database",
+                                        //                         cell_position: this.cellPosition(sheetIndex, colIndex, rowIndex)
+                                        //                     });
+                                        //                 }
+                                        //             } else {
+                                        //                 if (cell.value == null || cell.value.trim == "") {
+                                        //                     this.excel_error[0].push({
+                                        //                         id: this.randomKey(),
+                                        //                         value: "",
+                                        //                         message: "This cell is required ",
+                                        //                         cell_position: this.cellPosition(sheetIndex, colIndex, rowIndex)
+                                        //                     });
+                                        //                 }
+                                        //             }
+                                        //         }
+                                        //     }.bind(this)
+                                        // );
+                                    }.bind(this)
+                                );
+                            }.bind(this)
+                        );
+                        if (this.excel_error[0].length < 1) {
+                            this.is_preview = true;
+                            this.valid = true;
+                        } else {
+                            this.is_preview = false;
+                            this.valid = false;
+                        }
+                        this.tab = this.excel_data[0].tab
+                    }.bind(this)
+                );
+            }.bind(this);
+        },
+        randomKey() {
+            return Math.random().toString(36).substring(7);
+        },
+        cellPosition(sheet_index, column_index, row_index) {
+            return ("ws#" + (sheet_index + 1) + " " + (column_index + 1 + 9).toString(36).toUpperCase() + (row_index + 1));
+        },
+        falsableDate(date) {
+            try {
+                //return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? new Date(date)?.toLocaleString().split(',')[0] : null
+                return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? buildDate(new Date(date)?.toLocaleString().split(',')[0]) : null
+            } catch (error) {
+                return null
+            }
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>
