@@ -7,6 +7,7 @@
         :close-on-press-escape="false"
         :destroy-on-close="true"
         :before-close="closeDialog"
+        v-el-drag-dialog
     >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
             <el-form-item label="Name" prop="name">
@@ -56,7 +57,9 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { dialogSize } from '../../constants'
+import elDragDialog from './../../directive/el-drag-dialog'
 export default {
+    directives: { elDragDialog },
     props: ['dialogVisible', 'selectedData', 'dialogTitle'],
     data() {
         return {
