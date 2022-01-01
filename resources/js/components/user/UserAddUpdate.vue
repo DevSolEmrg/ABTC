@@ -60,6 +60,16 @@
                 <el-input id="real-password1" type="password" v-model="ruleForm.password_confirmation" clearable autocomplete="off"></el-input>
             </el-form-item>
 
+            <el-form-item v-if="ruleForm.roles_col.length" label="Permissions">
+                <el-collapse v-model="activeNames">
+                    <el-collapse-item v-for="role in ruleForm.roles_col" :key="role.id" :title="role.name" :name="role.id">
+                        <div>
+                            <el-tag v-for="permit in role.permissions" :key="permit.id" size="small" :color="generateColor(permit)" style="margin:1px; color:white">{{ permit.name }}</el-tag>
+                        </div>
+                    </el-collapse-item>
+                </el-collapse>
+            </el-form-item>
+
             <el-form-item align="right">
                 <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
                 <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
@@ -70,7 +80,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { dialogSize, buildDate } from '../../constants'
+import { dialogSize, buildDate, permission_color } from '../../constants'
 import elDragDialog from './../../directive/el-drag-dialog'
 export default {
     directives: { elDragDialog },
@@ -131,7 +141,8 @@ export default {
                 email: '',
                 password: '',
                 password_confirmation: '',
-                role: []
+                role: [],
+                roles_col: []
             },
             rules: {
                 name: [
@@ -152,7 +163,16 @@ export default {
             },
             isEdit: false,
             exist_email: [],
-            edit_exist_email: ''
+            edit_exist_email: '',
+            activeNames: []
+        }
+    },
+    watch: {
+        'ruleForm.role'(val) {
+            this.ruleForm.roles_col = val.reduce((roles,role_name)=>{
+                roles.push(this.roles.roles.find(r=>r.name == role_name))
+                return roles
+            },[])
         }
     },
     computed: {
@@ -214,6 +234,9 @@ export default {
                 return (personnel.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
         },
+        generateColor(permission) {
+            return permission_color[permission?.name?.split('-')[1]] || '#725F72'
+        },
     },
     created() {
         if (this.selectedData) {
@@ -221,6 +244,7 @@ export default {
             if (this.selectedData.form_type == 'edit') {
                 if (this.selectedData.roles.length) {
                     this.ruleForm.role = this.selectedData.roles.map(r=>r.name)
+                    this.ruleForm.roles_col = JSON.parse(JSON.stringify(this.ruleForm.roles))
                 }
                 this.edit_exist_email = this.selectedData.email
                 this.isEdit = true
