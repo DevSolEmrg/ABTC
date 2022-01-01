@@ -641,10 +641,9 @@ export default {
                 let newRow  = {
                     form_type: 'add',
                     manage: true,
-                    state:"California",
-                    zip: "CA 90036",
                     patient_history_id: this.selectedHistory.id,
-                    patient_id: this.selectedHistory.patient_id
+                    patient_id: this.selectedHistory.patient_id,
+                    vaccine_id: this.treatmentList?.length > 0 ? this.treatmentList[0].vaccine_id : null
                 };
                 this.treatmentList = [...this.treatmentList, newRow];
                 ++ this.addCount;
