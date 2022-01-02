@@ -12,7 +12,7 @@
                     <div class="col-7 px-1">
                         <el-button-group style="float: right;">
                             <el-button type="primary" size="mini" @click="addVaccine">ADD</el-button>
-                            <el-dropdown>
+                            <!-- <el-dropdown>
                                 <el-button type="primary"  size="mini"   >
                                     EXCEL<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
@@ -20,7 +20,7 @@
                                     <el-dropdown-item><i class="mdi mdi-cloud-upload"></i> Import</el-dropdown-item>
                                     <el-dropdown-item><i class="mdi mdi-cloud-download"></i> Export</el-dropdown-item>
                                 </el-dropdown-menu>
-                        </el-dropdown>
+                        </el-dropdown> -->
                         </el-button-group>
                     </div>
                 </div>
