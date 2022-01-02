@@ -13,7 +13,7 @@ class PatientController extends Controller
 {
     public function getPatients(Request $request)
     {
-        return Patient::with(['history' => function($q){
+        $patient = Patient::with(['history' => function($q){
             $q->with(['treatment']);
         }, 'last_history' => function($q){
             $q->with(['treatment']);
@@ -21,6 +21,17 @@ class PatientController extends Controller
         ->when(!!$request->search_param, function ($query) use ($request) {
             return $query->where(DB::raw('concat(name," ",address," ",contact_number)'), 'LIKE', '%' . $request->search_param . '%');
         })->orderBy('id', 'DESC')->paginate(10);
+
+        return $this->unsetKey(
+            $patient,
+            ['links', 'first_page_url', 'last_page_url', 'next_page_url', 'path', 'prev_page_url']
+        );
+    }
+
+    public function unsetKey($collection, $to_exclude = []) {
+        $data = $collection->toArray();
+        foreach ($to_exclude as $key) unset($data[$key]);
+        return $data;
     }
 
     public function getSelectedPatient(Request $request)
