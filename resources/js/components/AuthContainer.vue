@@ -119,7 +119,7 @@
                     </template>
                     <el-menu-item index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')" style="padding-left:53px"> Personnel </el-menu-item>
                     <el-menu-item index="Vaccine List" :route="{ name: 'Vaccine List' }" @click="handlePageLoading('Vaccine List')" style="padding-left:53px"> Vaccine </el-menu-item>
-                    <el-menu-item index="references" style="padding-left:53px">Reference <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
+                    <el-menu-item index="references" style="padding-left:53px">App Instance <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
                 </el-submenu>
 
 
