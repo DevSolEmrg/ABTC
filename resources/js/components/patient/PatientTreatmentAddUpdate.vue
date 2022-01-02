@@ -156,8 +156,8 @@
                     <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
                 </el-form-item>
             </el-tab-pane>
-            <el-tab-pane label="Patient Treatment Session" v-if="Object.entries(selectedHistory).length">
-                <span slot="label"><i class="mdi mdi-calendar-check"></i> Patient Treatment Session</span>
+            <el-tab-pane label="Patient Session" v-if="Object.entries(selectedHistory).length">
+                <span slot="label"><i class="mdi mdi-calendar-check"></i> Patient Session</span>
                 <el-form-item align="right">
                     <el-button v-if="!!isEditingTreatmentSession || addCount > 0" type="primary" size="small" disabled>Add New</el-button>
                     <el-button v-else type="primary" size="small" @click="addRow()">Add New</el-button>
@@ -182,7 +182,7 @@
                             />
                         </template>
                     </el-table-column>
-                    <el-table-column prop="date" label="Date of Apperance" width="243">
+                    <el-table-column prop="date" label="Date of Apperance (Y-m-d)" width="243">
                         <template slot-scope="scope">
                             <span v-if="!scope.row.manage || !isEditingTreatmentSession">{{ scope.row.date }}</span>
                             <el-date-picker
@@ -605,8 +605,9 @@ export default {
             //  api
             await this.manageTreatment(this.treatmentList[index]).then(()=>{
                 //this.$root.$emit('reload_patient_data')
-                this.treatmentList.forEach(d=>d.manage=false)
+                // this.treatmentList.forEach(d=>d.manage=false)
                 if (this.request.status == 'success') {
+                    this.treatmentList.forEach(d=>d.manage=false)
                     this.isEditingTreatmentSession = false
                     this.addCount = 0
                     this.$notify({
@@ -638,12 +639,17 @@ export default {
         addRow(){
             if (this.addCount < 1) {
                 this.treatmentList.forEach(d=>d.manage=false)
+                var day = ['D0', 'D3', 'D7', 'D14', 'D28'];
+                var time = new Date().toTimeString().split(" ")[0].split(':');
                 let newRow  = {
                     form_type: 'add',
                     manage: true,
                     patient_history_id: this.selectedHistory.id,
                     patient_id: this.selectedHistory.patient_id,
-                    vaccine_id: this.treatmentList?.length > 0 ? this.treatmentList[0].vaccine_id : null
+                    vaccine_id: this.treatmentList?.length > 0 ? this.treatmentList[0].vaccine_id : null,
+                    date: buildDate(new Date()),
+                    time: time[0] + ':' + (time[1][0] + '0') || '12:00',
+                    designated_day: day[this.treatmentList?.length] || null,
                 };
                 this.treatmentList = [...this.treatmentList, newRow];
                 ++ this.addCount;
