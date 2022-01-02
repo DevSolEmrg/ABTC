@@ -100,6 +100,7 @@
                     :total="total"
                     hide-on-single-page>
                 </el-pagination> -->
+                <span v-if="data.length" size="mini" style="float:left;margin-top:5px;padding-left:10px; font-size:13px; color:#409EFF">Row {{ patients.from + '-' + patients.to + ' of ' + patients.total }}</span>
                 <PaginationComponent
                     v-if="data.length"
                     store="patients"

@@ -1,7 +1,7 @@
 <template>
     <el-pagination
         background
-        layout="prev, pager, next"
+        layout="sizes, prev, pager, next, jumper"
         @current-change="getVal"
         :page-size="itemPerPage"
         :total="recordTotal"
