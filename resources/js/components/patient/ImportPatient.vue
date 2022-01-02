@@ -135,7 +135,7 @@
                             <template slot="append"> {{ search?`${ListData.length}/${item.content.length}`:item.content.length }} Record</template>
                         </el-input> -->
                         <el-table :data="ListData" border :header-cell-style="{ background: 'rgba(0,0,0,0.04)' }">
-                            <el-table-column prop="number" label="No." width="50" />
+                            <!-- <el-table-column prop="number" label="No." width="50" />
                             <el-table-column prop="date" label="Date" width="100" />
                             <el-table-column prop="name" label="Name" width="200" />
                             <el-table-column prop="address" label="Address" width="300" />
@@ -147,7 +147,7 @@
                             <el-table-column prop="type_of_exposure" label="Type of Exposure" />
                             <el-table-column prop="site_of_infection" label="Site of Infection" />
                             <el-table-column prop="category" label="Category" />
-                            <el-table-column prop="is_washing" label="Is washing" />
+                            <el-table-column prop="is_washing" label="Washed?" />
                             <el-table-column prop="rig_date" label="Rig Date" width="100" />
                             <el-table-column prop="route" label="Route" />
                             <el-table-column prop="d_one" label="D0" width="100" />
@@ -158,7 +158,32 @@
                             <el-table-column prop="brand_name" label="Brand Name" />
                             <el-table-column prop="outcome" label="Outcome" />
                             <el-table-column prop="animal_status" label="Animal Status" />
-                            <el-table-column prop="remarks" label="Remarks" />
+                            <el-table-column prop="remarks" label="Remarks" /> -->
+
+                            <el-table-column prop="number" :label="excel_table_headers[0].text" width="50" />
+                            <el-table-column prop="date" :label="excel_table_headers[1].text" width="100" />
+                            <el-table-column prop="name" :label="excel_table_headers[2].text" width="200" />
+                            <el-table-column prop="address" :label="excel_table_headers[3].text" width="300" />
+                            <el-table-column prop="age" :label="excel_table_headers[4].text" width="48" />
+                            <el-table-column prop="gender" :label="excel_table_headers[5].text" width="75" />
+                            <el-table-column prop="date_of_inci" :label="excel_table_headers[6].text" width="100" />
+                            <el-table-column prop="place_of_inci" :label="excel_table_headers[7].text" width="300" />
+                            <el-table-column prop="type_of_animal" :label="excel_table_headers[8].text" />
+                            <el-table-column prop="type_of_exposure" :label="excel_table_headers[9].text" />
+                            <el-table-column prop="site_of_infection" :label="excel_table_headers[10].text" />
+                            <el-table-column prop="category" :label="excel_table_headers[11].text" />
+                            <el-table-column prop="is_washing" :label="excel_table_headers[12].text" />
+                            <el-table-column prop="rig_date" :label="excel_table_headers[13].text" width="100" />
+                            <el-table-column prop="route" :label="excel_table_headers[14].text" />
+                            <el-table-column prop="d_one" :label="excel_table_headers[15].text" width="100" />
+                            <el-table-column prop="d_tree" :label="excel_table_headers[16].text" width="100" />
+                            <el-table-column prop="d_seven" :label="excel_table_headers[17].text" width="100" />
+                            <el-table-column prop="d_fourteen" :label="excel_table_headers[18].text" width="100" />
+                            <el-table-column prop="d_twenty_eight" :label="excel_table_headers[19].text" width="100" />
+                            <el-table-column prop="brand_name" :label="excel_table_headers[20].text" />
+                            <el-table-column prop="outcome" :label="excel_table_headers[21].text" />
+                            <el-table-column prop="animal_status" :label="excel_table_headers[22].text" />
+                            <el-table-column prop="remarks" :label="excel_table_headers[23].text" />
 
                             <!-- number: dataCol[2],
                                                     date: dataCol[4],
@@ -211,7 +236,7 @@ export default {
     data() {
         return {
             page: 1,
-	    	pageSize: 10,
+	    	pageSize: 5,
             loading: true,
             search: "",
 
@@ -337,7 +362,7 @@ export default {
         this.$message.warning(`The limit is 1, you selected ${files.length} files this time, add up to ${files.length + fileList.length} totally, Please clear the recent uploaded file and browse again`);
       },
       removeTab(targetName) {
-          alert(targetName)
+          alert('Are you sure you want to remove worksheet name: ' + targetName)
           if (this.excel_data.length > 1) {
                 let tabs = this.excel_data;
                 let activeName = this.tab;
@@ -431,7 +456,7 @@ export default {
                 { text: "Type of Exposure", value: "type_of_exposure" },
                 { text: "Site of Infection", value: "site_of_infection" },
                 { text: "Category", value: "category" },
-                { text: "Is Washing", value: "is_washing" },
+                { text: "Washed?", value: "is_washing" },
                 { text: "Rig. Date", value: "rig_date" },
                 { text: "Route", value: "route" },
                 { text: "D0", value: "d_one" },
@@ -473,8 +498,35 @@ export default {
                                     function(row, rowNumber) {
                                         var rowIndex = rowNumber - 1;
                                         // console.log('row', row)
+                                        var dataCol = row.values;
+                                        if (rowIndex == 7) {
+                                            this.excel_table_headers[0].text = dataCol[2]
+                                            this.excel_table_headers[1].text = dataCol[4]
+                                            this.excel_table_headers[2].text = dataCol[5]
+                                            this.excel_table_headers[3].text = dataCol[6]
+                                            this.excel_table_headers[4].text = dataCol[7]
+                                            this.excel_table_headers[5].text = dataCol[8]
+                                            this.excel_table_headers[6].text = dataCol[9]
+                                            this.excel_table_headers[7].text = dataCol[10]
+                                            this.excel_table_headers[8].text = dataCol[11]
+                                            this.excel_table_headers[9].text = dataCol[12]
+                                            this.excel_table_headers[10].text = dataCol[13]
+                                            this.excel_table_headers[11].text = dataCol[14]
+                                            this.excel_table_headers[12].text = dataCol[15]
+                                            this.excel_table_headers[13].text = dataCol[16]
+                                            this.excel_table_headers[14].text = dataCol[17]
+                                            this.excel_table_headers[15].text = dataCol[18]
+                                            this.excel_table_headers[16].text = dataCol[19]
+                                            this.excel_table_headers[17].text = dataCol[20]
+                                            this.excel_table_headers[18].text = dataCol[21]
+                                            this.excel_table_headers[19].text = dataCol[22]
+                                            this.excel_table_headers[20].text = dataCol[23]
+                                            this.excel_table_headers[21].text = dataCol[24]
+                                            this.excel_table_headers[22].text = dataCol[29]
+                                            this.excel_table_headers[23].text = dataCol[35]
+                                        }
                                         if (rowIndex > 7) {
-                                            var dataCol = row.values;
+                                            // var dataCol = row.values;
                                             if (!!dataCol[3] || !!dataCol[4] || !!dataCol[5]) {
                                                 this.excel_data[sheetIndex].content.push({
                                                     // Office_Name: dataCol[1] == undefined ? null : dataCol[1],
@@ -505,8 +557,8 @@ export default {
                                                     d_twenty_eight: this.falsableDate(dataCol[22]),
                                                     brand_name: dataCol[23],
                                                     outcome: dataCol[24],
-                                                    animal_status: dataCol[25],
-                                                    remarks: dataCol[26],
+                                                    animal_status: dataCol[29],
+                                                    remarks: dataCol[35],
 
                                                 });
                                             }
