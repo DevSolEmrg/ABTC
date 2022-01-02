@@ -63,6 +63,12 @@
             <el-form-item v-if="ruleForm.roles_col.length" label="Permissions">
                 <el-collapse v-model="activeNames">
                     <el-collapse-item v-for="role in ruleForm.roles_col" :key="role.id" :title="role.name" :name="role.id">
+                        <template slot="title">
+                            <span>{{ role.name }}</span> &nbsp;&nbsp;
+                            <el-popover :content="role.description" placement="top-start" :title="role.name" width="350" trigger="hover">
+                                <i class="el-icon-question" slot="reference"></i>
+                            </el-popover>
+                        </template>
                         <div>
                             <el-tag v-for="permit in role.permissions" :key="permit.id" size="small" :color="generateColor(permit)" style="margin:1px; color:white">{{ permit.name }}</el-tag>
                         </div>
