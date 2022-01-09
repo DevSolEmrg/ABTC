@@ -29,7 +29,8 @@
             </el-form-item>
             <el-form-item label="Birth Date">
                 <el-form-item prop="birth_date">
-                    <el-date-picker type="date" :picker-options="pickerOptionShortcut" placeholder="Pick a date" v-model="ruleForm.birth_date" style="width: 100%;" timezone="UTC"></el-date-picker>
+                    <el-date-picker type="date" :picker-options="pickerOptionShortcut" placeholder="Pick a date" v-model="ruleForm.birth_date" style="width: 75%;" timezone="UTC"></el-date-picker>
+                    <el-input type="text" style="width:20%" placeholder="Age" :value="pAge" disabled />
                 </el-form-item>
             </el-form-item>
             <el-form-item label="Address" prop="address">
@@ -53,7 +54,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { dialogSize, buildDate } from '../../constants'
+import { dialogSize, buildDate, calAge } from '../../constants'
 import elDragDialog from './../../directive/el-drag-dialog'
 export default {
     directives: { elDragDialog },
@@ -203,7 +204,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['request'])
+        ...mapGetters(['request']),
+        pAge () {
+            return !!this.ruleForm.birth_date ? calAge(this.ruleForm.birth_date) || null : null
+        }
     },
     methods: {
         ...mapActions(['managePatients']),
