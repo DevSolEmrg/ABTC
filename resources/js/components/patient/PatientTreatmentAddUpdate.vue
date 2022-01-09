@@ -529,14 +529,10 @@ export default {
         ...mapGetters(['request', 'enum', 'patients', 'vaccines', 'selected_patient']),
         // treatmentSessionChanges() {
         //     var s = this.treatmentList
-        //     console.log('has changes')
         //     return s
         // }
     },
     watch: {
-        treatmentList(val) {
-            console.log('has changes')
-        },
         selected_patient(val) {
             this.treatmentList = JSON.parse(JSON.stringify(this.selectedHistory?.treatment || []))
         }
@@ -624,7 +620,6 @@ export default {
         handleEdit(index, rows) {
             this.old_value_edit_item = JSON.parse(JSON.stringify(rows))
 
-            console.log("edit", index, rows)
             // this.$nextTick(()=>{
             //     this.treatmentList[index].manage = true
             // })
@@ -785,7 +780,6 @@ export default {
             t.vaccine = JSON.parse(JSON.stringify(this.vaccines)).find(v=>v.id == t.vaccine_id)
         })
 
-        //console.log("safasf", this.selectedData)
 
         if (this.selectedHistory.id) {
             var form_type = 'edit'

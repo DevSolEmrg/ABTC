@@ -7,7 +7,6 @@ window._ = require('lodash');
  */
 
 try {
-    //console.log('safertwwetewtewtew', location.href);
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
 

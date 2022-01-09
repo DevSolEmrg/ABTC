@@ -246,10 +246,8 @@ export default {
 
                         });
                     }
-                    console.log('ok na')
                 })
             } else {
-                console.log('error submit!!');
                 return false;
             }
             });

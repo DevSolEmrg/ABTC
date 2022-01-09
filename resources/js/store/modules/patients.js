@@ -30,7 +30,6 @@ const actions = {
     async getSelectedPatient({ commit }, form) {
         await axios.post('selected_patient/', form).then(response => {
             commit("UPDATE_PATIENT", {id: form.id, data: response.data});
-            console.log("pateint:", response.data)
             commit("SET_SELECTED_PATIENT", response.data);
         });
     },
@@ -38,7 +37,6 @@ const actions = {
         await axios.post(`manage_patients/${form.id ?? ""}`, form)
             .then(response => {
                 commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Patient record has been successfully saved!' })
-                //console.log('manage patients response:', response)
                 dispatch("getPatients");
             }).catch(error=>{
                 commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the patient record!' })
@@ -49,7 +47,6 @@ const actions = {
             .then(response => {
                 commit('SET_REQUEST_RESPONSE', { status: 'success', message: 'Treatment seesion has been successfully saved!' })
                 dispatch('getSelectedPatient', {id: form.patient_id})
-                //console.log('manage patients response:', response)
                 // dispatch("getPatients");
             }).catch(error=>{
                 commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the treatment session!' })

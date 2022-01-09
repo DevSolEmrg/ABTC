@@ -351,7 +351,6 @@ export default {
         }
       },
        handleRemove(file, fileList) {
-        console.log(file, fileList);
         this.excel_data = []
          this.excel_error = [[]];
       },
@@ -410,7 +409,6 @@ export default {
         },
         submitUpload() {
             //this.$refs.upload.submit();
-            console.log()
         },
         upload(file, fileList) {
             // console.log(file.raw, file.raw.name, file.raw.name.split(".").pop().toLowerCase())
@@ -433,7 +431,6 @@ export default {
             }
         },
         async importPatient(file) {
-            // console.log(file)
             const Excel = await require("exceljs");
 
             this.excel_table_headers = [];

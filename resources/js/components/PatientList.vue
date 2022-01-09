@@ -243,14 +243,12 @@ export default {
             this.managePatientHistory = true
         },
         handleEdit(index, row) {
-            //console.log(index, row)
             this.selectedData = row
             this.selectedData.form_type = 'edit'
             this.dialogTitle = 'Edit Patient Info.'
             this.managePatientDialog = true
         },
         async handleDelete(index, row) {
-            console.log(row)
             await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
@@ -376,7 +374,6 @@ export default {
         this.loading = false
         //this.getPatients();
         //this.data = this.patients
-        //console.log(this.$store.state.patients.patients)
         // this.$store.commit('SET_LOADING_COMPONENT', false)
         // this.$root.$on('reload_patient_data', () => {
         //     this.reloadData()

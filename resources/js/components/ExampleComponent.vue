@@ -22,7 +22,6 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
             this.$store.commit('SET_LOADING_COMPONENT', false)
         }
     }

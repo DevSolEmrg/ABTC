@@ -9,7 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     <!--<script>
-        console.log('hh', location.origin, location.href)
         location.assign('http://127.0.0.1:8000/home')
     </script>-->
 
