@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -28,15 +28,27 @@ class DatabaseSeeder extends Seeder
         \App\Models\Vaccine::factory(17)->create();
         \App\Models\Personnel::factory(20)->create();
 
-        foreach(\App\Models\PatientHistory::get() as $history) {
-            foreach (['D0', 'D3', 'D7', 'D14', 'D28', 'ERIG'] as $value) {
-                \App\Models\Treatment::factory()->create([
-                    'patient_history_id' => $history->id,
-                    'designated_day' => $value
-                ]);
+        DB::table('patient_histories')->orderBy('created_at')->chunk(70, function($histories)
+        {
+            foreach ($histories as $history)
+            {
+                foreach (['D0', 'D3', 'D7', 'D14', 'D28', 'ERIG'] as $value) {
+                    \App\Models\Treatment::factory()->create([
+                        'patient_history_id' => $history->id,
+                        'designated_day' => $value
+                    ]);
+                }
             }
+        });
 
-        }
+        // foreach(\App\Models\PatientHistory::get() as $history) {
+        //     foreach (['D0', 'D3', 'D7', 'D14', 'D28', 'ERIG'] as $value) {
+        //         \App\Models\Treatment::factory()->create([
+        //             'patient_history_id' => $history->id,
+        //             'designated_day' => $value
+        //         ]);
+        //     }
+        // }
 
         $default_user = \App\Models\User::create([
             'name' => 'John Doe Dee',
