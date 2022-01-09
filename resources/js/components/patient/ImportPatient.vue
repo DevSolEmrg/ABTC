@@ -160,30 +160,30 @@
                             <el-table-column prop="animal_status" label="Animal Status" />
                             <el-table-column prop="remarks" label="Remarks" /> -->
 
-                            <el-table-column prop="number" :label="excel_table_headers[0].text" width="50" />
-                            <el-table-column prop="date" :label="excel_table_headers[1].text" width="100" />
-                            <el-table-column prop="name" :label="excel_table_headers[2].text" width="200" />
-                            <el-table-column prop="address" :label="excel_table_headers[3].text" width="300" />
-                            <el-table-column prop="age" :label="excel_table_headers[4].text" width="48" />
-                            <el-table-column prop="gender" :label="excel_table_headers[5].text" width="75" />
-                            <el-table-column prop="date_of_inci" :label="excel_table_headers[6].text" width="100" />
-                            <el-table-column prop="place_of_inci" :label="excel_table_headers[7].text" width="300" />
-                            <el-table-column prop="type_of_animal" :label="excel_table_headers[8].text" />
-                            <el-table-column prop="type_of_exposure" :label="excel_table_headers[9].text" />
-                            <el-table-column prop="site_of_infection" :label="excel_table_headers[10].text" />
-                            <el-table-column prop="category" :label="excel_table_headers[11].text" />
-                            <el-table-column prop="is_washing" :label="excel_table_headers[12].text" />
-                            <el-table-column prop="rig_date" :label="excel_table_headers[13].text" width="100" />
-                            <el-table-column prop="route" :label="excel_table_headers[14].text" />
-                            <el-table-column prop="d_one" :label="excel_table_headers[15].text" width="100" />
-                            <el-table-column prop="d_tree" :label="excel_table_headers[16].text" width="100" />
-                            <el-table-column prop="d_seven" :label="excel_table_headers[17].text" width="100" />
-                            <el-table-column prop="d_fourteen" :label="excel_table_headers[18].text" width="100" />
-                            <el-table-column prop="d_twenty_eight" :label="excel_table_headers[19].text" width="100" />
-                            <el-table-column prop="brand_name" :label="excel_table_headers[20].text" />
-                            <el-table-column prop="outcome" :label="excel_table_headers[21].text" />
-                            <el-table-column prop="animal_status" :label="excel_table_headers[22].text" />
-                            <el-table-column prop="remarks" :label="excel_table_headers[23].text" />
+                            <el-table-column prop="number" label="NO." width="50" fixed="left" />
+                            <el-table-column prop="date" label="DATE" width="100" fixed="left" />
+                            <el-table-column prop="name" label="NAME OF PATIENT" width="200" fixed="left" />
+                            <el-table-column prop="address" label="ADDRESS" width="275" />
+                            <el-table-column prop="age" label="AGE" width="55" />
+                            <el-table-column prop="gender" label="SEX" width="75" />
+                            <el-table-column prop="date_of_inci" label="DATE" width="100" />
+                            <el-table-column prop="place_of_inci" label="PLACE (WHERE BITING OCCURRED)" width="275" />
+                            <el-table-column prop="type_of_animal" label="TYPE OF ANIMAL" />
+                            <el-table-column prop="type_of_exposure" label="TYPE (B/NB)" />
+                            <el-table-column prop="site_of_infection" label="SITE (BODY PARTS)" />
+                            <el-table-column prop="category" label="CATEGORY (1,2 AND 3)" />
+                            <el-table-column prop="is_washing" label="WASHING OF BITE (Y/N)" />
+                            <el-table-column prop="rig_date" label="RIG DATE GIVEN" width="100" />
+                            <el-table-column prop="route" label="ROUTE" />
+                            <el-table-column prop="d_one" label="D0" width="100" />
+                            <el-table-column prop="d_tree" label="D3" width="100" />
+                            <el-table-column prop="d_seven" label="D7" width="100" />
+                            <el-table-column prop="d_fourteen" label="D14" width="100" />
+                            <el-table-column prop="d_twenty_eight" label="D28" width="100" />
+                            <el-table-column prop="brand_name" label="BRAND NAME" width="100" />
+                            <el-table-column prop="outcome" label="OUTCOME (C/Inc/N/D)" width="120" />
+                            <el-table-column prop="animal_status" label="BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost)" width="150" />
+                            <el-table-column prop="remarks" label="REMARKS" width="200" />
 
                             <!-- number: dataCol[2],
                                                     date: dataCol[4],
