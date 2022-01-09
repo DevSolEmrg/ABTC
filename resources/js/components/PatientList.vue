@@ -43,7 +43,7 @@
                 <el-table-column prop="civil_status" label="Civil Status" width="100" />
                 <el-table-column prop="birth_date" label="Birth Date" width="100" />
                 <el-table-column label="Age" width="48">
-                    <template slot-scope="scope"> {{ calculateAge(scope.row.birth_date) }} </template>
+                    <template slot-scope="scope"> {{ calculateAge(scope.row) }} </template>
                 </el-table-column>
                 <el-table-column prop="address" label="Address" min-width="300" />
                 <el-table-column prop="contact_number" label="Contact" width="110" />
@@ -290,7 +290,14 @@ export default {
             this.dialogTitle = 'Add Patient'
             this.managePatientDialog = true
         },
-        calculateAge(date) { return !!date ? calAge(date) : 'N/A'; },
+        calculateAge(row) {
+            //return !!row.birth_date ? calAge(row.birth_date) : 'N/A';
+            if (!!row.birth_date) {
+                return calAge(row.birth_date) || 'N/A';
+            } else {
+                return row.history.length ? Math.max(...row.history.map(d=>d.age_of_patient)) || 'N/A' : 'N/A';
+            }
+        },
         reduceFalseValue(prop) { return prop?.date_of_incident? prop?.date_of_incident : prop || 'N/A'; },
         reloadData() {
             if (!!this.search) {
