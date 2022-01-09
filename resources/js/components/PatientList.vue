@@ -290,7 +290,7 @@ export default {
             this.dialogTitle = 'Add Patient'
             this.managePatientDialog = true
         },
-        calculateAge(date) { return calAge(date) || 'N/A'; },
+        calculateAge(date) { return !!date ? calAge(date) : 'N/A'; },
         reduceFalseValue(prop) { return prop?.date_of_incident? prop?.date_of_incident : prop || 'N/A'; },
         reloadData() {
             if (!!this.search) {
