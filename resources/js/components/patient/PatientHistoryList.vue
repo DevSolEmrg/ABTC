@@ -32,7 +32,7 @@
                 <el-table :data="ListData" border :cell-style="moreDetailStyle" :row-class-name="tableRowClassName">
                     <el-table-column label="Age of Patient" width="120" align="center">
                         <template slot-scope="props">
-                            {{ ( !!selectedPatient.birth_date ? calculateAge(props.row.date_of_incident) : (props.row.age_of_patient || 'N/A') ) }}
+                            {{ ( !props.row.age_of_patient ? (!!selectedPatient.birth_date ? calculateAge(props.row.date_of_incident) : 'N/A') : (props.row.age_of_patient || 'N/A') ) }}
                         </template>
                     </el-table-column>
                     <el-table-column property="date_of_incident" label="Date of Incident" width="155"></el-table-column>
