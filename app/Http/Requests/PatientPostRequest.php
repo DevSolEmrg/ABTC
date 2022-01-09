@@ -26,10 +26,10 @@ class PatientPostRequest extends FormRequest
         return [
             'name' => 'required|string',
             'gender' => 'required|string',
-            'civil_status' => 'required|string',
-            'birth_date' => 'required|date',
+            'civil_status' => 'nullable|string',
+            'birth_date' => 'nullable|date',
             'address' => 'required|string',
-            'contact_number' => 'required',
+            'contact_number' => 'nullable|string',
         ];
     }
 }

@@ -93,16 +93,19 @@ export default {
                     { required: true, message: 'Please select patient gender', trigger: 'change' }
                 ],
                 civil_status: [
-                    { required: true, message: 'Please select patient civil status', trigger: 'change' }
+                    // { required: true, message: 'Please select patient civil status', trigger: 'change' }
+                    { required: false }
                 ],
                 birth_date: [
-                    { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
+                    // { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
+                    { required: false }
                 ],
                 address: [
                     { required: true, message: 'Please input patient address', trigger: 'change' }
                 ],
                 contact_number: [
-                    { required: true, message: 'Please input patient contact number', trigger: 'change' },
+                    // { required: true, message: 'Please input patient contact number', trigger: 'change' },
+                    { required: false }
                 ],
             },
             pickerOptions: {

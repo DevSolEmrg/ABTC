@@ -17,10 +17,10 @@ class CreatePatientsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('gender');
-            $table->string('civil_status');
-            $table->date('birth_date');
+            $table->string('civil_status')->nullable();
+            $table->date('birth_date')->nullable();
             $table->text('address');
-            $table->string('contact_number');
+            $table->string('contact_number')->nullable();
             $table->timestamps();
         });
     }
