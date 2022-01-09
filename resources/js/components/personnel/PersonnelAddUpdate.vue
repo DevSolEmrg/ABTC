@@ -145,6 +145,10 @@ export default {
         window.onresize = function() { this.rezize() }.bind(this)
     },
     mounted() {
+        this.$nextTick(()=>{
+            this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+        })
+
         this.rezize()
     }
 }

@@ -262,6 +262,10 @@ export default {
         this.getRoles()
     },
     mounted() {
+        this.$nextTick(()=>{
+            this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+        })
+
         this.rezize()
         this.exist_email = this.all_user.map(u=>u.email)
     }
