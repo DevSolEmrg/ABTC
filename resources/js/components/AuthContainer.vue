@@ -287,32 +287,24 @@ export default {
         },
         toggleSideNav() {
             this.side_nav = !this.side_nav
-            console.log(this.side_nav)
         },handleOpen(key, keyPath) {
-            console.log(key, keyPath);
         },
         handleClose(key, keyPath) {
-            console.log(key, keyPath);
         },
         logout(command) {
             if (command == 'logout') {
-                //console.log('logout: ', command)
                 axios.post('logout').then(response => {
                     if (response.status === 302 || 401) {
-                        console.log('logouted')
                         this.$store.commit("UNSET_AUTH")
                         //location.reload()
 
                         axios.get('check_auth').then((response) => {
-                            //console.log("succes:::",response)
                         }).catch(async(error) => {
-                            //console.log("error:::",error)
                             history.pushState(null, document.title, location.href);
                             location.replace(location.origin.concat('/login'))
                         });
                     }
                     else {
-                        //console.log('failed')
                         // throw error and go to catch block
                     }
                 }).catch(error => {
@@ -320,7 +312,6 @@ export default {
                         location.replace(location.origin.concat('/login'))
                 });
             } else {
-                console.log('profile: ', command)
             }
 
         },
