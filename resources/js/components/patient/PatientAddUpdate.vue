@@ -11,7 +11,7 @@
     >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
             <el-form-item label="Name" prop="name">
-                <el-input v-model="ruleForm.name" ref="name" clearable></el-input>
+                <el-input v-model="ruleForm.name" ref="name" placeholder="Dela Cruz, Juan M." clearable></el-input>
             </el-form-item>
             <el-form-item label="Gender" prop="gender">
                 <el-select v-model="ruleForm.gender" placeholder="Select" clearable>
@@ -27,9 +27,9 @@
                     <el-option label="Widowed" value="Widowed"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="Birth Date" required>
+            <el-form-item label="Birth Date">
                 <el-form-item prop="birth_date">
-                    <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.birth_date" style="width: 100%;" :picker-options="pickerOptions" timezone="UTC"></el-date-picker>
+                    <el-date-picker type="date" :picker-options="pickerOptionShortcut" placeholder="Pick a date" v-model="ruleForm.birth_date" style="width: 100%;" timezone="UTC"></el-date-picker>
                 </el-form-item>
             </el-form-item>
             <el-form-item label="Address" prop="address">
@@ -80,7 +80,7 @@ export default {
                 form_type: 'add',
                 name: '',
                 gender: '',
-                civil_status: '',
+                civil_status: 'Single',
                 birth_date: '',
                 address: '',
                 contact_number: '',
@@ -108,12 +108,98 @@ export default {
                     { required: false }
                 ],
             },
-            pickerOptions: {
+            // pickerOptions: {
+            //     disabledDate(time) {
+            //         return time.getTime() > Date.now();
+            //     }
+            // },
+            isEdit: false,
+            pickerOptionShortcut: {
+                shortcuts: [
+                    {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*5)))).toLocaleDateString("en-CA").substr(0,4) + " ~5 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*5));
+                            // picker.$emit('pick', date);
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*10)))).toLocaleDateString("en-CA").substr(0,4) + " ~10 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*10));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*15)))).toLocaleDateString("en-CA").substr(0,4) + " ~15 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*15));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*20)))).toLocaleDateString("en-CA").substr(0,4) + " ~20 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*20));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*25)))).toLocaleDateString("en-CA").substr(0,4) + " ~25 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*25));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*30)))).toLocaleDateString("en-CA").substr(0,4) + " ~30 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*30));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*40)))).toLocaleDateString("en-CA").substr(0,4) + " ~40 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*40));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*50)))).toLocaleDateString("en-CA").substr(0,4) + " ~50 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*50));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*60)))).toLocaleDateString("en-CA").substr(0,4) + " ~60 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*60));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*70)))).toLocaleDateString("en-CA").substr(0,4) + " ~70 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*70));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }, {
+                        text: new Date((new Date().setTime(new Date().getTime() - 3600 * 1000 * 24 * (365*80)))).toLocaleDateString("en-CA").substr(0,4) + " ~80 yrs",
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * (365*80));
+                            picker.$emit('pick', new Date(date.getFullYear() + "-01-01"));
+                        }
+                    }
+                ],
                 disabledDate(time) {
                     return time.getTime() > Date.now();
                 }
             },
-            isEdit: false
         }
     },
     computed: {
@@ -179,13 +265,17 @@ export default {
         if (this.selectedData) {
             Object.assign(this.ruleForm ,JSON.parse(JSON.stringify(this.selectedData)))
             if (this.selectedData.form_type == 'edit') {
-                this.ruleForm.birth_date = new Date(this.selectedData.birth_date)
+                this.ruleForm.birth_date = !!this.selectedData.birth_date ? new Date(this.selectedData.birth_date) : ""
                 this.isEdit = true
             }
         }
         window.onresize = function() { this.rezize() }.bind(this)
     },
     mounted() {
+        this.$nextTick(()=>{
+            this.$refs.name.$el.getElementsByTagName('input')[0].focus();
+        })
+
         this.rezize()
     }
 }
