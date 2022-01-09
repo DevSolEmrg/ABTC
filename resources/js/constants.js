@@ -20,7 +20,7 @@ export function dialogSize(size) {
 
 export function buildDate(param_date) {
     let date = new Date(param_date).toLocaleDateString().split('/'), /*yr*/ yr = date[2], /*mon*/ mon = date[0] < 10 ? `0${date[0]}` : date[0], /*day*/ day = date[1] < 10 ? `0${date[1]}` : date[1]
-    return `${yr}-${mon}-${day}`
+    return !!param_date ? `${yr}-${mon}-${day}` : ""
 }
 
 export function calAge(dateString, now = Date.now()) {
