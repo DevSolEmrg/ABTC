@@ -30,7 +30,7 @@
             <el-form-item label="Birth Date">
                 <el-form-item prop="birth_date">
                     <el-date-picker type="date" :picker-options="pickerOptionShortcut" placeholder="Pick a date" v-model="ruleForm.birth_date" style="width: 75%;" timezone="UTC"></el-date-picker>
-                    <el-input type="text" style="width:20%" placeholder="Age" :value="pAge" disabled />
+                    <el-input type="text" style="width:23%" placeholder="Age" :value="pAge" disabled />
                 </el-form-item>
             </el-form-item>
             <el-form-item label="Address" prop="address">
