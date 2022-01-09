@@ -32,6 +32,9 @@ class CreatePatientHistoriesTable extends Migration
             // $table->timestamps();
             $table->id();
             $table->foreignId('patient_id')->nullable()->constrained('patients')->cascadeOnDelete();
+            $table->integer('registration_number')->nullable();
+            $table->dateTime('registration_date')->nullable();
+            $table->integer('age_of_patient')->nullable();
             $table->dateTime('date_of_incident');
             $table->text('place_of_incident');
             $table->dateTime('date_of_physical_exam');
@@ -47,6 +50,7 @@ class CreatePatientHistoriesTable extends Migration
 
             $table->boolean('is_washed')->default(true);
 
+            $table->dateTime('rig_date_given')->nullable();
             $table->string('route');
 
             $table->unsignedBigInteger('category_id')->nullable();
@@ -58,7 +62,10 @@ class CreatePatientHistoriesTable extends Migration
             $table->unsignedBigInteger('biting_animal_status_id')->nullable();
             $table->foreign('biting_animal_status_id')->references('id')->on('references')->cascadeOnDelete();
 
-            $table->text('remarks');
+            $table->longText('doctors_order')->nullable();
+            $table->longText('nurses_notes')->nullable();
+
+            $table->longText('remarks')->nullable();
             $table->timestamps();
         });
     }

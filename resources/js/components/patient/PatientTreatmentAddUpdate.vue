@@ -30,6 +30,38 @@
                     <el-col :xs="12" :sm="12" :md="16" :lg="16" :xl="16"><div class="grid-content bg-purple-light"></div></el-col>
                 </el-row> -->
                 <span slot="label"><i class="mdi mdi-history"></i> Patient Exposure</span>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Reg. Date">
+                            <el-form-item prop="registration_date">
+                                <el-date-picker
+                                    style="width:100%"
+                                    size="small"
+                                    v-model="ruleForm.registration_date"
+                                    :picker-options="pickerOptionShortcut"
+                                    timezone="UTC"
+                                    type="datetime"
+                                    placeholder="Pick a date and time"
+                                    default-time="12:00:00"
+                                />
+                            </el-form-item>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                        <el-form-item label="Reg. Number" prop="registration_number">
+                            <!-- <el-input-number v-model="ruleForm.registration_number" size="small" style="width:100%"></el-input-number> -->
+                            <el-input placeholder="#" v-model="ruleForm.registration_number" clearable type="number" :min="1" size="small" style="width:100%"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                        <el-form-item label="Age of Patient" prop="age_of_patient">
+                            <!-- <el-input-number v-model="ruleForm.age_of_patient" size="small" style="width:100%"></el-input-number> -->
+                            <el-input placeholder="#" v-model="ruleForm.age_of_patient" clearable type="number" :min="1" size="small" style="width:100%"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Date of Incident" required>
@@ -110,14 +142,36 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Washed ?" prop="is_washed">
                             <el-select v-model="ruleForm.is_washed" placeholder="Select" style="width:100%" size="small" clearable>
                                 <el-option v-for="type in enumValues.is_washed" :key="type.code" :label="type.desc" :value="type.code" :title="type.desc" />
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                    <!-- <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                        <el-form-item label="Route" prop="route">
+                            <el-input v-model="ruleForm.route" style="width:100%" size="small" clearable></el-input>
+                        </el-form-item>
+                    </el-col> -->
+                </el-row>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Rig Date Given" prop="rig_date_given">
+                            <el-date-picker
+                                style="width:100%"
+                                size="small"
+                                v-model="ruleForm.rig_date_given"
+                                :picker-options="pickerOptionShortcut"
+                                timezone="UTC"
+                                type="datetime"
+                                placeholder="Pick a date and time"
+                                default-time="12:00:00"
+                            />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                         <el-form-item label="Route" prop="route">
                             <el-input v-model="ruleForm.route" style="width:100%" size="small" clearable></el-input>
                         </el-form-item>
@@ -148,9 +202,23 @@
                     </el-col>
                 </el-row>
 
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Dr's Order" prop="doctors_order">
+                            <el-input type="textarea" rows="4" v-model="ruleForm.doctors_order" size="small" :clearable="true"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                        <el-form-item label="Nurse's Notes" prop="nurses_notes">
+                            <el-input type="textarea" rows="4" v-model="ruleForm.nurses_notes" size="small" :clearable="true"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
                 <el-form-item label="Remarks" prop="remarks">
                     <el-input type="textarea" rows="4" v-model="ruleForm.remarks" size="small" :clearable="true"></el-input>
                 </el-form-item>
+
                 <el-form-item align="right">
                     <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
                     <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
@@ -291,6 +359,9 @@ export default {
             size: 30,
             ruleForm: {
                 form_type: 'add',
+                registration_number: '',
+                registration_date: '',
+                age_of_patient: '',
                 date_of_incident: '',
                 place_of_incident: '',
                 date_of_physical_exam: '',
@@ -299,13 +370,25 @@ export default {
                 type_of_exposure_id: '',
                 site_of_infection_id: [],
                 is_washed: '',
+                rig_date_given: '',
                 route: '',
                 category_id: '',
                 outcome_id: '',
                 biting_animal_status_id: '',
+                doctors_order: '',
+                nurses_notes: '',
                 remarks: ''
             },
             rules: {
+                registration_number: [
+                    { required: false }
+                ],
+                registration_date: [
+                    { required: false }
+                ],
+                age_of_patient: [
+                    { required: false }
+                ],
                 date_of_incident: [
                     { type: 'date', required: true, message: 'Please pick a date of incident', trigger: 'change' }
                 ],
@@ -330,6 +413,9 @@ export default {
                 is_washed: [
                     { required: true, message: 'Please select if infected area washed or not', trigger: 'change' },
                 ],
+                rig_date_given: [
+                    { required: false }
+                ],
                 route: [
                     { required: true, message: 'Please input route', trigger: 'change' },
                 ],
@@ -341,6 +427,12 @@ export default {
                 ],
                 biting_animal_status_id: [
                     { required: true, message: 'Please select bitting animal status', trigger: 'change' },
+                ],
+                doctors_order: [
+                    { required: false }
+                ],
+                nurses_notes: [
+                    { required: false }
                 ],
                 remarks: [
                     { required: true, message: 'Please input remarks', trigger: 'change' }
@@ -475,7 +567,8 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
             if (valid) {
-                let form = JSON.parse(JSON.stringify(this.ruleForm))
+                //let form = JSON.parse(JSON.stringify(this.ruleForm))
+                let form = this.ruleForm
                 this.managePatientHistory(form).then((res)=>{
                     if (this.request.status == 'success') {
                         this.$notify({
@@ -699,13 +792,18 @@ export default {
             var is_washed = Number(this.selectedHistory.is_washed).toString()
             var date_of_incident = new Date(this.selectedHistory.date_of_incident)
             var date_of_physical_exam = new Date(this.selectedHistory.date_of_physical_exam)
-            Object.assign(this.ruleForm ,{...JSON.parse(JSON.stringify(this.selectedHistory)), form_type, is_washed, date_of_incident, date_of_physical_exam})
+
+            var age_of_patient = !!this.selectedHistory.age_of_patient ? JSON.parse(JSON.stringify(this.selectedHistory.age_of_patient)) : undefined
+            var registration_number = !!this.selectedHistory.registration_number ? JSON.parse(JSON.stringify(this.selectedHistory.registration_number)) : undefined
+
+            Object.assign(this.ruleForm ,{...JSON.parse(JSON.stringify(this.selectedHistory)), form_type, is_washed, date_of_incident, date_of_physical_exam, age_of_patient, registration_number})
             this.isEdit = true
             //if (this.selectedHistory.form_type == 'edit') {
               //  this.isEdit = true
             //}
         } else {
             this.ruleForm.patient_id = JSON.parse(JSON.stringify(this.selectedPatient.id))
+            this.ruleForm.registration_date = new Date()
         }
         window.onresize = function() { this.rezize() }.bind(this)
     },

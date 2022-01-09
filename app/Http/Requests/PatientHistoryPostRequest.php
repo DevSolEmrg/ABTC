@@ -25,6 +25,9 @@ class PatientHistoryPostRequest extends FormRequest
     {
         return [
             'patient_id' => 'required|exists:App\Models\Patient,id',
+            'registration_number' => 'nullable',
+            'registration_date' => 'nullable|string',
+            'age_of_patient' => 'nullable',
             'date_of_incident' => 'string',
             'place_of_incident' => 'string',
             'date_of_physical_exam' => 'string',
@@ -33,11 +36,14 @@ class PatientHistoryPostRequest extends FormRequest
             'type_of_exposure_id' => 'required|exists:App\Models\Reference,id',
             'site_of_infection_id' => 'required|array',
             'is_washed' => 'boolean',
+            'rig_date_given' => 'nullable|string',
             'route' => 'string',
             'category_id' => 'required|exists:App\Models\Reference,id',
             'outcome_id' => 'required|exists:App\Models\Reference,id',
             'biting_animal_status_id' => 'required|exists:App\Models\Reference,id',
-            'remarks' => 'string'
+            'doctors_order' => 'nullable|string',
+            'nurses_notes' => 'nullable|string',
+            'remarks' => 'nullable|string'
         ];
     }
 }

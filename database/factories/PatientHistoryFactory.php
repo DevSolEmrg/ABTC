@@ -38,6 +38,9 @@ class PatientHistoryFactory extends Factory
             // 'biting_animal_status' => $this->faker->randomElement(['ALIVE', 'DEAD', 'LOST']),
             // 'remarks' => $this->faker->text()
             'patient_id' => Patient::inRandomOrder()->first()->id,
+            'registration_number' => null,
+            'registration_date' => now()->timezone('Asia/Manila'),
+            'age_of_patient' => null,
             'date_of_incident' => $this->faker->dateTime(now()),
             'place_of_incident' => $this->faker->address(),
             'date_of_physical_exam' => $this->faker->dateTime(now()),
@@ -46,11 +49,14 @@ class PatientHistoryFactory extends Factory
             'type_of_exposure_id' => array_rand(array_flip(collect((new \App\Constants())->type_of_exposure)->pluck('id')->toArray()), 1),
             'site_of_infection_id' => array_rand(array_flip(collect((new \App\Constants())->site_of_infection)->pluck('id')->toArray()), rand(2,4)),
             'is_washed' => true,
+            'rig_date_given' => null,
             'route' => 'ID',
             'category_id' => array_rand(array_flip(collect((new \App\Constants())->category)->pluck('id')->toArray()), 1),
             'outcome_id' => array_rand(array_flip(collect((new \App\Constants())->outcome)->pluck('id')->toArray()), 1),
             'biting_animal_status_id' => array_rand(array_flip(collect((new \App\Constants())->biting_animal_status)->pluck('id')->toArray()), 1),
-            'remarks' => $this->faker->text()
+            'doctors_order' => $this->faker->text(),
+            'nurses_notes' => $this->faker->text(),
+            'remarks' => $this->faker->text(),
         ];
         info("gg", $g);
         return $g;

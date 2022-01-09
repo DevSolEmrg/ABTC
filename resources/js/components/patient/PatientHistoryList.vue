@@ -32,12 +32,16 @@
                 <el-table :data="ListData" border :cell-style="moreDetailStyle" :row-class-name="tableRowClassName">
                     <el-table-column label="Age of Patient" width="120" align="center">
                         <template slot-scope="props">
-                            {{ calculateAge(props.row.date_of_incident) }}
+                            {{ ( !!selectedPatient.birth_date ? calculateAge(props.row.date_of_incident) : (props.row.age_of_patient || 'N/A') ) }}
                         </template>
                     </el-table-column>
                     <el-table-column property="date_of_incident" label="Date of Incident" width="155"></el-table-column>
-                    <el-table-column property="place_of_incident" label="Place of Incident" min-width="300"></el-table-column>
-                    <el-table-column property="remarks" label="Remarks" min-width="300"></el-table-column>
+                    <el-table-column property="place_of_incident" label="Place of Incident" min-width="200"></el-table-column>
+
+                    <el-table-column property="doctors_order" label="Dr's Order" min-width="200"></el-table-column>
+                    <el-table-column property="nurses_notes" label="Nurse's Notes" min-width="200"></el-table-column>
+
+                    <el-table-column property="remarks" label="Remarks" min-width="200"></el-table-column>
 
                     <el-table-column type="expand" label="View More" width="100">
                         <template slot-scope="props">
@@ -54,12 +58,18 @@
                             <el-row :gutter="10">
                                 <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                                     <!-- first -->
+                                    <p>Registration Date: <strong>{{ props.row.registration_date }}</strong></p>
+                                    <p>Registration Number: <strong>{{ props.row.registration_number }}</strong></p>
+
                                     <p>Date of Physical Examination: <strong>{{ props.row.date_of_physical_exam }}</strong></p>
                                     <p>Place of Physical Examination: <strong>{{ props.row.place_of_physical_exam }}</strong></p>
                                     <p>Type of Animal: <strong>{{ getValues('type_of_animal', props.row.type_of_animal_id) }}</strong></p>
                                     <p>Type of Exposure: <strong>{{ getValues('type_of_exposure', props.row.type_of_exposure_id) }}</strong></p>
                                     <p>Site of Infection: <strong>{{ getValues('site_of_infection', props.row.site_of_infection_id) }}</strong></p>
                                     <p>Is washed: <strong>{{ (Number(props.row.is_washed) ? 'Yes' : 'No') }}</strong></p>
+
+                                    <p>Rig. Date Given: <strong>{{ props.row.rig_date_given }}</strong></p>
+
                                     <p>Route: <strong>{{ props.row.route }}</strong></p>
                                     <p>Category: <strong>{{ getValues('category', props.row.category_id) }}</strong></p>
                                     <p>Outcome: <strong>{{ getValues('outcome', props.row.outcome_id) }}</strong></p>

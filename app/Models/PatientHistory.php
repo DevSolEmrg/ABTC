@@ -12,6 +12,9 @@ class PatientHistory extends Model
 
     protected $fillable = [
         'patient_id',
+        'registration_number',
+        'registration_date',
+        'age_of_patient',
         'date_of_incident',
         'place_of_incident',
         'date_of_physical_exam',
@@ -20,10 +23,13 @@ class PatientHistory extends Model
         'type_of_exposure_id',
         'site_of_infection_id',
         'is_washed',
+        'rig_date_given',
         'route',
         'category_id',
         'outcome_id',
         'biting_animal_status_id',
+        'doctors_order',
+        'nurses_notes',
         'remarks'
     ];
 
@@ -60,6 +66,36 @@ class PatientHistory extends Model
     {
         $this->attributes['date_of_physical_exam'] =  Carbon::parse($date)->timezone('Asia/Manila')->format('Y-m-d H:i:s');
     }
+
+    public function setRegistrationDateAttribute($date)
+    {
+        $this->attributes['registration_date'] =  !!$date ? Carbon::parse($date)->timezone('Asia/Manila')->format('Y-m-d H:i:s') : null;
+    }
+
+    public function setRigDateGivenAttribute($date)
+    {
+        $this->attributes['rig_date_given'] =  !!$date ? Carbon::parse($date)->timezone('Asia/Manila')->format('Y-m-d H:i:s') : null;
+    }
+
+    // public function setRegistrationNumberAttribute($value)
+    // {
+    //     $this->attributes['registration_number'] =  !!$value ? $value : null;
+    // }
+
+    // public function setAgeOfPatientAttribute($value)
+    // {
+    //     $this->attributes['age_of_patient'] =  !!$value ? $value : null;
+    // }
+
+    // public function setDoctorsOrderAttribute($value)
+    // {
+    //     $this->attributes['doctors_order'] =  !!$value ? $value : null;
+    // }
+
+    // public function setNursesNotesAttribute($value)
+    // {
+    //     $this->attributes['nurses_notes'] =  !!$value ? $value : null;
+    // }
 
     // public function getTypeOfAnimalAttribute()
     // {
