@@ -14,7 +14,7 @@
                 <el-input v-model="ruleForm.name" ref="name" clearable></el-input>
             </el-form-item>
 
-            <el-form-item label="Description">
+            <el-form-item label="Description" prop="description">
                 <el-input type="textarea" rows="3" style="width:100%" v-model="ruleForm.description" :clearable="true"></el-input>
             </el-form-item>
 
@@ -77,6 +77,9 @@ export default {
                 // description: [
                 //     { required: true, message: 'Please input role description', trigger: 'change' },
                 // ],
+                description: [
+                    { required: false }
+                ],
                 selected_permission: [
                     { required: true, message: 'Please select role permission', trigger: 'change' }
                 ],
