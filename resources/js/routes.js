@@ -59,6 +59,12 @@ const routes = new VueRouter({
                     name: 'User List',
                     beforeEnter: authenticated,
                 },
+                {
+                    path: 'app_instance',
+                    component: () => import(/* webpackChunkName: "user_list" */ './components/AppInstance'),
+                    name: 'App Instance',
+                    beforeEnter: authenticated,
+                },
             ]
         }
     ]
