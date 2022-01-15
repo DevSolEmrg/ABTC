@@ -119,7 +119,7 @@
                     </template>
                     <el-menu-item index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')" style="padding-left:53px"> Personnel </el-menu-item>
                     <el-menu-item index="Vaccine List" :route="{ name: 'Vaccine List' }" @click="handlePageLoading('Vaccine List')" style="padding-left:53px"> Vaccine </el-menu-item>
-                    <el-menu-item index="references" style="padding-left:53px">App Instance <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
+                    <el-menu-item index="App Instance" :route="{ name: 'App Instance' }" @click="handlePageLoading('App Instance')" style="padding-left:53px">App Instance <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
                 </el-submenu>
 
 
@@ -266,7 +266,7 @@ export default {
             this.navExpandOpen = []
             var expandOption = {
                 'user_setting' : ['User List', 'Role & Permission List'],
-                'general_setting' : ['Personnel List', 'Vaccine List']
+                'general_setting' : ['Personnel List', 'Vaccine List', 'App Instance']
             }
             this.$nextTick(()=>{
                 Object.entries(expandOption).forEach(index=>{
