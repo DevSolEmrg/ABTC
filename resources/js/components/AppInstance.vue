@@ -25,7 +25,9 @@
 
                             <el-table-column align="center" width="79" fixed="right">
                                 <template slot="header" slot-scope="scope">
-                                    <el-button type="primary" size="mini">Add</el-button>
+                                    <el-tooltip class="item" effect="light" content="Add Option" placement="top" :enterable="false">
+                                        <el-button type="primary" size="mini">Add</el-button>
+                                    </el-tooltip>
                                 </template>
                                 <template slot-scope="scope">
                                     <el-button-group>
