@@ -108,7 +108,8 @@ export default {
         };
         var validatePass2 = (rule, value, callback) => {
             if (value === '') {
-                callback(new Error('Please input the password again'));
+                // callback(new Error('Please input the password again'));
+                callback(new Error('Please input to confirm password'));
             } else if (value !== this.ruleForm.password) {
                 callback(new Error('Two inputs don\'t match!'));
             } else {
