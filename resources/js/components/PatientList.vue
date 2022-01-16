@@ -293,7 +293,7 @@ export default {
             if (!!row.birth_date) {
                 return calAge(row.birth_date) || 'N/A';
             } else {
-                return row.history.length ? Math.max(...row.history.map(d=>d.age_of_patient)) || 'N/A' : 'N/A';
+                return row.history.length ? '~' + Math.max(...row.history.map(d=>d.age_of_patient)) || 'N/A' : 'N/A';
             }
         },
         reduceFalseValue(prop) { return prop?.date_of_incident? prop?.date_of_incident : prop || 'N/A'; },
