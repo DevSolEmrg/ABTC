@@ -23,7 +23,7 @@
                                 min-width="180"
                             ></el-table-column>
 
-                            <el-table-column align="center" width="79" fixed="right">
+                            <el-table-column v-if="item[0] != 'is_washed'" align="center" width="79" fixed="right">
                                 <template slot="header" slot-scope="scope">
                                     <el-tooltip class="item" effect="light" content="Add Option" placement="top" :enterable="false">
                                         <el-button type="primary" size="mini">Add</el-button>
