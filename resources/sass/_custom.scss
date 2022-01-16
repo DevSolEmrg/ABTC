@@ -106,3 +106,6 @@
 .app-instance-collapse div .is-active {
     background: linear-gradient(to left, green 0%,rgba(255,255,255,0) 94%);
 }
+.app-instance-collapse .el-collapse-item__content {
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.02) 0%,rgba(255,255,255,0) 94%);
+}
