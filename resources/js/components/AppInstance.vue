@@ -1,14 +1,16 @@
 <template>
     <el-row :gutter="24">
         <el-col :span="24">
-            <el-collapse v-model="activeNames" @change="handleChange" style="border-left:1px solid green; background-color:white; padding-left:10px;" accordion>
-                <el-collapse-item v-for="item in Object.entries(this.enum)" :key="item[0]" :title="readableName(item)" :name="item[0]">
-                    <div style="border-left:1px solid green">
+            <el-collapse v-model="activeCategory" @change="handleChange" style="border-left:1px solid green; background-color:white; padding-left:10px;" accordion>
+                <el-collapse-item v-for="item in Object.entries(this.enum)" :key="item[0]" :title="readableName(item)" :name="item[0]" class="app-instance-collapse">
+                    <!-- <div style="border-right:1px solid green"> -->
+                    <div>
                         <el-table
                             :data="item[1]"
                             border
                             style="width: 100%"
                             size="mini"
+                            :header-cell-style="{ background: 'rgba(0,0,0,0)' }"
                         >
                             <el-table-column
                                 prop="code"
@@ -50,8 +52,7 @@ import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
-            search: '',
-            activeNames: ""
+            activeCategory: ""
         }
     },
     computed: {

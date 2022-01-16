@@ -101,3 +101,8 @@
 .el-table .expanded-table-row.expanded {
     background: #F5F7FA !important;
 }
+
+//App instance collapse active item style
+.app-instance-collapse div .is-active {
+    background: linear-gradient(to left, green 0%,rgba(255,255,255,0) 94%);
+}
