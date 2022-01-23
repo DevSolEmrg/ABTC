@@ -27,6 +27,9 @@
                     <el-popover content="Make sure you select correct excel format .xlsx/.csv, click here to download excel template." placement="top-start" title="Required Excel Format" width="350" trigger="hover">
                         <el-button slot="reference" size="small" type="info" plain icon="mdi mdi-file-excel-outline"></el-button>
                     </el-popover>
+                    <!-- <el-popover content="Make sure you select correct excel format .xlsx/.csv, click here to download excel template." placement="top-start" title="Data reader config." width="350" trigger="hover"> -->
+                        <el-button size="small" type="info" plain icon="mdi mdi-cog" @click="importConfig=!importConfig"></el-button>
+                    <!-- </el-popover> -->
                     <el-popover content="The uploaded record will be placed in a queue; while waiting for the data to upload, you can move to any page. Please wait for the message to see if the data was successfully uploaded." placement="top-start" title="Upload Note" width="350" trigger="hover">
                         <el-button slot="reference" style="margin-left: 10px;" size="small" type="primary" @click="submitUpload" icon="el-icon-upload" :disabled="!excel_data.length">Upload to Server/Database</el-button>
                     </el-popover>
@@ -37,6 +40,42 @@
                         </el-input>
 
                 </el-upload>
+            </el-col>
+            <el-col :span="24" v-if="importConfig">
+                <el-collapse value="1" accordion style="margin-bottom:10px">
+                    <el-collapse-item title="Data Reader Configuration" name="1">
+                        <div>Start reading data on row 7?</div>
+                        <div>
+                            Column
+                            <br>
+                            <br>
+                            NO. = 2 <br>
+                            DATE = 4 <br>
+                            NAME OF PATIENT = 5 <br>
+                            ADDRESS = 6 <br>
+                            AGE = 7 <br>
+                            SEX = 8 <br>
+                            DATE = 9 <br>
+                            PLACE (WHERE BITING OCCURRED) = 10 <br>
+                            TYPE OF ANIMAL = 11 <br>
+                            TYPE (B/NB) = 12 <br>
+                            SITE (BODY PARTS) = 13 <br>
+                            CATEGORY (1,2 AND 3) = 14 <br>
+                            WASHING OF BITE (Y/N) = 15 <br>
+                            RIG DATE GIVEN = 16 <br>
+                            ROUTE = 17 <br>
+                            D0 = 18 <br>
+                            D3 = 19 <br>
+                            D7 = 20 <br>
+                            D14 = 21 <br>
+                            D28 = 22 <br>
+                            BRAND NAME = 23 <br>
+                            OUTCOME (C/Inc/N/D) = 24 <br>
+                            BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost) = 29 <br>
+                            REMARKS = 35
+                        </div>
+                    </el-collapse-item>
+                </el-collapse>
             </el-col>
             <!-- <el-col
                 :span="24"
@@ -292,7 +331,9 @@ export default {
             name: '2',
             content: 'Tab 2 content'
             }],
-            tabIndex: 2
+            tabIndex: 2,
+
+            importConfig: false
         };
     },
     computed: {
