@@ -57,7 +57,19 @@
                     <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
                         <el-form-item label="Age of Patient" prop="age_of_patient">
                             <!-- <el-input-number v-model="ruleForm.age_of_patient" size="small" style="width:100%"></el-input-number> -->
-                            <el-input placeholder="#" v-model="ruleForm.age_of_patient" clearable type="number" :min="1" size="small" style="width:100%"></el-input>
+                            <el-input
+                                placeholder="#"
+                                v-model="ruleForm.age_of_patient"
+                                clearable
+                                type="number"
+                                :min="1"
+                                :max="120"
+                                maxlength="3"
+                                onkeypress="return event.charCode >= 48 && event.charCode != 101"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                size="small"
+                                style="width:100%"
+                            ></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
