@@ -10,6 +10,37 @@
         v-el-drag-dialog
     >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+            <!-- <el-form-item label="Activity time">
+                <el-col :span="11">
+                    <el-date-picker type="date" placeholder="Pick a date" style="width: 100%;"></el-date-picker>
+                </el-col>
+                <el-col :span="11">
+                    <el-time-picker placeholder="Pick a time" style="width: 100%;"></el-time-picker>
+                </el-col>
+            </el-form-item>
+            <el-row>
+                <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+                    <el-form-item label="Category" prop="category_id">
+                        <el-select v-model="ruleForm.category_id" placeholder="Select" style="width:100%" size="small" clearable>
+                            <el-option v-for="type in enumValues.category" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+                    <el-form-item label="Outcome" prop="outcome_id">
+                        <el-select v-model="ruleForm.outcome_id" placeholder="Select" style="width:100%" size="small" clearable>
+                            <el-option v-for="type in enumValues.outcome" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+                    <el-form-item label="Animal Status" prop="biting_animal_status_id">
+                        <el-select v-model="ruleForm.biting_animal_status_id" placeholder="Select" style="width:100%" size="small" clearable>
+                            <el-option v-for="type in enumValues.biting_animal_status" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row> -->
             <el-form-item label="Name" prop="name">
                 <el-input v-model="ruleForm.name" ref="name" placeholder="Dela Cruz, Juan M." clearable></el-input>
             </el-form-item>
@@ -80,7 +111,7 @@ export default {
             ruleForm: {
                 form_type: 'add',
                 name: '',
-                gender: '',
+                gender: 'Male',
                 civil_status: 'Single',
                 birth_date: '',
                 address: '',
