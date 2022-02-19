@@ -10,39 +10,21 @@
         v-el-drag-dialog
     >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-            <!-- <el-form-item label="Activity time">
-                <el-col :span="11">
-                    <el-date-picker type="date" placeholder="Pick a date" style="width: 100%;"></el-date-picker>
-                </el-col>
-                <el-col :span="11">
-                    <el-time-picker placeholder="Pick a time" style="width: 100%;"></el-time-picker>
-                </el-col>
+            <el-form-item label="Name" required>
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="9" :lg="9" :xl="9">
+                        <el-input ref="name" v-model="name.last" placeholder="Dela Cruz" clearable title="Last Name"></el-input>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="9" :lg="9" :xl="9">
+                        <el-input v-model="name.first" placeholder="Juan" clearable title="First Name"></el-input>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+                        <el-input v-model="name.middle" placeholder="M." clearable title="Middle Name"></el-input>
+                    </el-col>
+                </el-row>
             </el-form-item>
-            <el-row>
-                <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                    <el-form-item label="Category" prop="category_id">
-                        <el-select v-model="ruleForm.category_id" placeholder="Select" style="width:100%" size="small" clearable>
-                            <el-option v-for="type in enumValues.category" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                    <el-form-item label="Outcome" prop="outcome_id">
-                        <el-select v-model="ruleForm.outcome_id" placeholder="Select" style="width:100%" size="small" clearable>
-                            <el-option v-for="type in enumValues.outcome" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                    <el-form-item label="Animal Status" prop="biting_animal_status_id">
-                        <el-select v-model="ruleForm.biting_animal_status_id" placeholder="Select" style="width:100%" size="small" clearable>
-                            <el-option v-for="type in enumValues.biting_animal_status" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row> -->
-            <el-form-item label="Name" prop="name">
-                <el-input v-model="ruleForm.name" ref="name" placeholder="Dela Cruz, Juan M." clearable></el-input>
+            <el-form-item label="Full Name" prop="name">
+                <el-input v-model="ruleForm.name" placeholder="Dela Cruz, Juan M." clearable disabled></el-input>
             </el-form-item>
             <el-form-item label="Gender" prop="gender">
                 <el-select v-model="ruleForm.gender" placeholder="Select" clearable>
@@ -108,6 +90,11 @@ export default {
         };
         return {
             size: 30,
+            name: {
+                last: '',
+                first: '',
+                middle: '',
+            },
             ruleForm: {
                 form_type: 'add',
                 name: '',
@@ -234,6 +221,20 @@ export default {
             },
         }
     },
+    watch: {
+        'name.last'(val) {
+            var name = `${val.toString().trim()}, ${this.name.first.toString().trim()} ${this.name.middle.toString().trim()}`
+            this.ruleForm.name = name.toString().trim() == "," ? '' : name.toString().trim()
+        },
+        'name.first'(val) {
+            var name = `${this.name.last.toString().trim()}, ${val.toString().trim()} ${this.name.middle.toString().trim()}`
+            this.ruleForm.name = name.toString().trim() == "," ? '' : name.toString().trim()
+        },
+        'name.middle'(val) {
+            var name = `${this.name.last.toString().trim()}, ${this.name.first.toString().trim()} ${val.toString().trim()}`
+            this.ruleForm.name = name.toString().trim() == "," ? '' : name.toString().trim()
+        }
+    },
     computed: {
         ...mapGetters(['request']),
         pAge () {
@@ -263,7 +264,14 @@ export default {
 
                         this.$nextTick(()=>{
 
-                            if (!this.isEdit) this.resetForm('ruleForm')
+                            if (!this.isEdit) {
+                                this.name = {
+                                    last: '',
+                                    first: '',
+                                    middle: '',
+                                }
+                                this.resetForm('ruleForm')
+                            }
 
                             this.$refs.name.$el.getElementsByTagName('input')[0].focus();
                         })
