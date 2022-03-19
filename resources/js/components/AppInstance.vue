@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import InstanceAddUpdate from './instance/InstanceAddUpdate'
 export default {
     components: { InstanceAddUpdate },
@@ -69,7 +69,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['loading_component', 'enum'])
+        ...mapGetters(['loading_component', 'enum', 'request'])
     },
     beforeCreate() {
         this.$store.commit('SET_LOADING_COMPONENT', false)
@@ -79,14 +79,9 @@ export default {
         // console.log(this.enum, category)
     },
     methods: {
+        ...mapActions(['manageInstance']),
         handleChange(val) {
             // console.log(val);
-        },
-        handleEdit(index, row) {
-            // console.log(index, row);
-        },
-        handleDelete(index, row) {
-            // console.log(index, row);
         },
         readableName(item) {
             function capitalize(wrd) {
@@ -102,19 +97,47 @@ export default {
 
         addInstance(item) {
             this.categoryId = item[1][0]?.category?.id
-            console.log(this.categoryId, item)
             this.selectedData = null
             this.dialogTitle = `Add ${this.readableName(item)}`
             this.manageInstanceDialog = true
         },
         handleEdit(index, row) {
             this.categoryId = row?.category?.id
-            console.log(row)
             this.selectedData = row
             this.selectedData.form_type = 'edit'
             this.dialogTitle = `Edit ${row?.category?.name} Info.`
             this.manageInstanceDialog = true
         },
+        async handleDelete(index, row) {
+            await this.$confirm('This will permanently delete the record. Continue?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(() => {
+                var form = JSON.parse(JSON.stringify(row))
+                form.form_type = "delete"
+                this.manageInstance(form).then(()=>{
+                    if (this.request?.status == 'success') {
+                        this.$message({
+                            type: 'success',
+                            message: 'Delete completed'
+                        });
+                    } else {
+                        this.$notify({
+                            title: 'Error',
+                            message: this.request.message,
+                            type: 'error',
+                            duration: 0,
+                        });
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'Delete canceled'
+                });
+            });
+		},
     }
 }
 </script>

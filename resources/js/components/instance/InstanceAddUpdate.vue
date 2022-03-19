@@ -9,13 +9,12 @@
         :before-close="closeDialog"
         v-el-drag-dialog
     >
-    category id : {{ categoryId }}
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
             <el-form-item label="Code" prop="code">
                 <el-input v-model="ruleForm.code" ref="name" clearable></el-input>
             </el-form-item>
             <el-form-item label="Description" prop="desc">
-                <el-input type="textarea" rows="6" v-model="ruleForm.desc" :clearable="true"></el-input>
+                <el-input type="textarea" rows="3" v-model="ruleForm.desc" :clearable="true"></el-input>
             </el-form-item>
             <el-form-item align="right">
                 <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
@@ -37,6 +36,7 @@ export default {
             size: 30,
             ruleForm: {
                 form_type: 'add',
+                reference_category_id: null,
                 code: '',
                 desc: ''
             },
@@ -55,7 +55,7 @@ export default {
         ...mapGetters(['request'])
     },
     methods: {
-        ...mapActions(['manageVaccines']),
+        ...mapActions(['manageInstance']),
         closeDialog() {
             this.$emit('close-dialog', false)
         },
@@ -63,7 +63,7 @@ export default {
             this.$refs[formName].validate((valid) => {
             if (valid) {
                 let form = JSON.parse(JSON.stringify(this.ruleForm))
-                this.manageVaccines(form).then(()=>{
+                this.manageInstance(form).then(()=>{
                     if (this.request.status == 'success') {
                         this.$notify({
                             title: 'Success',
@@ -103,6 +103,8 @@ export default {
             if (this.selectedData.form_type == 'edit') {
                 this.isEdit = true
             }
+        } else {
+            this.ruleForm.reference_category_id = this.categoryId
         }
         window.onresize = function() { this.rezize() }.bind(this)
     },

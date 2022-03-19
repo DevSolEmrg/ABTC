@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReferencePostRequest;
+use App\Models\Reference;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -33,4 +36,34 @@ class HomeController extends Controller
     {
         return auth()->user();
     }
+
+    public function getInstances()
+    {
+        return json_encode((new \App\Constants)->enumValues());
+    }
+
+    public function manageInstance(Reference $reference, ReferencePostRequest $request)
+    {
+        DB::beginTransaction();
+        $data = 'Success';
+        try {
+            switch ($request->form_type) {
+                case 'add':
+                    $reference->create($request->validated());
+                    break;
+                case 'edit':
+                    $reference->update($request->validated());
+                    break;
+                case 'delete':
+                    $reference->delete();
+                    break;
+            }
+        } catch (\Throwable $th) {
+            DB ::rollBack();
+            abort(response()->json('Failed', 500));
+        }
+        DB::commit();
+        return $data;
+    }
+
 }
