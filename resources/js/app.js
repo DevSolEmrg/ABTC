@@ -12,10 +12,12 @@ import locale from 'element-ui/lib/locale/lang/en'
 import routes from './routes';
 import 'es6-promise/auto';
 import store from './store';
+import ListOfPermission from './directive/permission/can';
 
 window.Vue = require('vue').default;
 
 Vue.use(ElementUI, { locale });
+Vue.directive('can', ListOfPermission)
 
 /**
  * The following block of code may be used to automatically register your
