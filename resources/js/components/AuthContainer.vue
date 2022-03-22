@@ -330,8 +330,6 @@ export default {
     },
     created() {
         this.checkIfHasExpandedNav()
-    },
-    mounted() {
         this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
         if (this.$attrs.auth) {
             this.$store.commit('SET_AUTH', this.$attrs.auth)
@@ -340,6 +338,16 @@ export default {
             this.auth_info.username = this.auth?.name || 'none'
             this.auth_info.userRole = this.auth?.roles?.map(i=>i.name).join(', ') || 'none'
         }
+    },
+    mounted() {
+        // this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
+        // if (this.$attrs.auth) {
+        //     this.$store.commit('SET_AUTH', this.$attrs.auth)
+        //     this.$store.commit('SET_ENUM', this.$attrs.enums)
+        //     this.auth_info.usernameFromEmail = this.auth?.email?.split('@')[0] || 'none'
+        //     this.auth_info.username = this.auth?.name || 'none'
+        //     this.auth_info.userRole = this.auth?.roles?.map(i=>i.name).join(', ') || 'none'
+        // }
         this.side_nav = window.innerWidth > 767 ? true : false;
 
         window.onresize = function() {
