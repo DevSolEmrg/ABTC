@@ -12,6 +12,11 @@
                             size="mini"
                             :header-cell-style="{ background: 'rgba(0,0,0,0)' }"
                         >
+                            <el-table-column label="No." align="center" width="50">
+                                <template slot-scope="scope">
+                                    {{ scope.$index + 1 }}.
+                                </template>
+                            </el-table-column>
                             <el-table-column
                                 prop="code"
                                 label="Code"
