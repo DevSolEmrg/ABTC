@@ -1,11 +1,21 @@
 import Vue from "vue";
 import store from './../store'
 
-// Vue.prototype.$appName = "myName";
-// Vue.prototype.$assetsResolution = document.body.clientWidth * devicePixelRatio <= 1920 && document.body.clientHeight * devicePixelRatio <= 1080 ? 1080: 2160
-Vue.prototype.$can = function(permissions=null) {
+// Vue.prototype.$appName = "nameHere";
+Vue.prototype.$can = function(param='') {
     if (Object.entries(store?.getters?.auth || [])?.length) {
-        return store?.getters?.auth.name
+        var permit = store?.getters?.auth?.roles?.reduce((permits, role)=>{
+            role?.permissions?.forEach(p => {
+                if (!permits?.includes(p?.name)) {
+                    if (!permits?.includes(p?.name?.split('-')[1])) {
+                        permits?.push(p?.name?.split('-')[1])
+                    }
+                    permits?.push(p?.name)
+                }
+            });
+            return permits
+        }, [])
+        return typeof param == 'string' ? permit?.includes(param) : param?.some(p=>permit?.includes(p))
     }
-    return 'N/A'
+    return false
 }

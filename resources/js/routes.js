@@ -34,36 +34,42 @@ const routes = new VueRouter({
                     component: () => import(/* webpackChunkName: "patient_list" */ './components/PatientList'),
                     name: 'Patient List',
                     beforeEnter: authenticated,
+                    meta: { access: 'patient' }
                 },
                 {
                     path: 'vaccine',
                     component: () => import(/* webpackChunkName: "vaccine_list" */ './components/VaccineList'),
                     name: 'Vaccine List',
                     beforeEnter: authenticated,
+                    meta: { access: 'vaccine' }
                 },
                 {
                     path: 'personnel',
                     component: () => import(/* webpackChunkName: "personnel_list" */ './components/PersonnelList'),
                     name: 'Personnel List',
                     beforeEnter: authenticated,
+                    meta: { access: 'personnel' }
                 },
                 {
                     path: 'role_and_permission',
                     component: () => import(/* webpackChunkName: "role_and_permission_list" */ './components/RoleAndPermissionList'),
                     name: 'Role & Permission List',
                     beforeEnter: authenticated,
+                    meta: { access: 'role' }
                 },
                 {
                     path: 'user_management',
                     component: () => import(/* webpackChunkName: "user_list" */ './components/UserList'),
                     name: 'User List',
                     beforeEnter: authenticated,
+                    meta: { access: 'user' }
                 },
                 {
                     path: 'app_instance',
                     component: () => import(/* webpackChunkName: "user_list" */ './components/AppInstance'),
                     name: 'App Instance',
                     beforeEnter: authenticated,
+                    meta: { access: 'app_instance' }
                 },
             ]
         }
@@ -79,14 +85,18 @@ function authenticated (to, from, next) {
         location.assign(location.origin.concat('/login'))
         next(false)
     } else {
-        axios.get('check_auth').then((response) => {
-            next()
-        }).catch(async(error) => {
-            await store.commit("UNSET_AUTH")
-            alert(`${document.title.toUpperCase()}\n• Session expired please re-login your credential to avoid any error!`)
-            location.assign(location.origin.concat('/login'))
-            next(false)
-        });
+        if (to?.meta?.access && !Vue.prototype.$can(to?.meta?.access)) {
+            location.assign(location.origin.concat('/home'))
+        } else {
+            axios.get('check_auth').then((response) => {
+                next()
+            }).catch(async(error) => {
+                await store.commit("UNSET_AUTH")
+                alert(`${document.title.toUpperCase()}\n• Session expired please re-login your credential to avoid any error!`)
+                location.assign(location.origin.concat('/login'))
+                next(false)
+            });
+        }
     }
 }
 
