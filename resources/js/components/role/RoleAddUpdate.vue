@@ -89,7 +89,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['request'])
+        ...mapGetters(['request', 'auth'])
     },
     methods: {
         ...mapActions(['manageRole']),
@@ -113,6 +113,10 @@ export default {
 
                                 this.$refs.name.$el.getElementsByTagName('input')[0].focus();
                             })
+                            if (this.auth?.roles.map(r=>r.name).includes(this.selectedData?.name)) {
+                                alert('The page will automatically reload because you are editing role information that is currently associated with your account.')
+                                location.reload()
+                            }
                         } else {
                             this.$notify({
                                 title: 'Error',
