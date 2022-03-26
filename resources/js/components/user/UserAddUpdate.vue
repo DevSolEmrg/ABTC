@@ -183,7 +183,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['request', 'personnels', 'roles', 'all_user'])
+        ...mapGetters(['request', 'personnels', 'roles', 'all_user', 'auth'])
     },
     methods: {
         ...mapActions(['getPersonnels', 'getRoles', 'getUsers', 'manageUser']),
@@ -210,6 +210,10 @@ export default {
                             if (!this.isEdit) this.resetForm('ruleForm')
                             this.$refs.name.$el.getElementsByTagName('input')[0].focus();
                         })
+                        if (this.auth?.id == this.selectedData?.id) {
+                            alert('Because you are editing your own user information, the page will automatically reload.')
+                            location.reload()
+                        }
                     } else {
                         this.$notify({
                             title: 'Error',
