@@ -32,6 +32,8 @@ export const permission_color =  {
     'patient' : '#32B87C',
     'personnel' : '#3970AA',
     'vaccine' : '#A9AA55',
-    'user' : '#5655AA',
+    'user' : '#5F5EAF',
     'role' : '#F56C6C',
+    'app_instance' : '#767689',
+    'report' : '#1D9DFF'
 }

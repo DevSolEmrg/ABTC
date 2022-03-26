@@ -78,6 +78,8 @@ class DatabaseSeeder extends Seeder
             'read-patient-record',
             'update-patient-record',
             'delete-patient-record',
+            'manage-patient-record',
+            'import-patient-record',
             'print-patient-record',
             'generate-patient-report',
             //personnel
@@ -85,21 +87,33 @@ class DatabaseSeeder extends Seeder
             'read-personnel-info',
             'update-personnel-info',
             'delete-personnel',
+            'manage-personnel-info',
             //vaccine
             'create-vaccine',
             'read-vaccine-info',
             'update-vaccine-info',
             'delete-vaccine-info',
+            'manage-vaccine-info',
             //user management
             'create-user-account',
             'read-user-account-info',
             'update-user-account',
             'delete-user-account',
+            'manage-user-account',
             //role & permission
             'create-role',
             'read-role-info',
-            'update-role',
-            'delete-role'
+            'update-role-info',
+            'delete-role',
+            'manage-role',
+            //app instance
+            'create-app_instance',
+            'read-app_instance',
+            'update-app_instance',
+            'delete-app_instance',
+            'manage-app_instance',
+            //reports
+            'generate-report',
         ];
 
         foreach($permissions as $permit) {
