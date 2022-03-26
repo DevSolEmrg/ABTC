@@ -85,7 +85,7 @@ function authenticated (to, from, next) {
         location.assign(location.origin.concat('/login'))
         next(false)
     } else {
-        if (to?.meta?.access && !Vue.prototype.$can(to?.meta?.access)) {
+        if (to?.meta?.access && !Vue.prototype.$hasAccessTo(to?.meta?.access)) {
             location.assign(location.origin.concat('/home'))
         } else {
             axios.get('check_auth').then((response) => {

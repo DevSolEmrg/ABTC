@@ -2,7 +2,7 @@ import Vue from "vue";
 import store from './../store'
 
 // Vue.prototype.$appName = "nameHere";
-Vue.prototype.$can = function(param='') {
+Vue.prototype.$hasAccessTo = function(param='') {
     if (Object.entries(store?.getters?.auth || [])?.length) {
         var permit = store?.getters?.auth?.roles?.reduce((permits, role)=>{
             role?.permissions?.forEach(p => {
