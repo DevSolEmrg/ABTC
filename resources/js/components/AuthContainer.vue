@@ -71,8 +71,8 @@
                 @open="handleOpen"
                 @close="handleClose"
                 background-color="#272E3F"
-                text-color="#fff"
-                active-text-color="#0B822B"
+                text-color="#909399"
+                active-text-color="#fff"
                 router
                 :default-openeds="navExpandOpen"
             >
@@ -104,8 +104,8 @@
 
                 <el-submenu v-if="$hasAccessTo(['user', 'role'])" index="user_setting" class="vertical-line">
                     <template slot="title">
-                        <i class="el-icon-s-custom"></i>
-                        <span>User Setting</span>
+                        <i class="el-icon-s-custom" :style="`color:${['User List', 'Role & Permission List'].includes($route.name)?'white':'#909399'}`"></i>
+                        <span :style="`color:${['User List', 'Role & Permission List'].includes($route.name)?'white':'#909399'}`">User Setting</span>
                     </template>
                     <el-menu-item index="1-1">My Profile <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
                     <el-menu-item v-if="$hasAccessTo('user')" index="User List" :route="{ name: 'User List' }" @click="handlePageLoading('User List', 'user_setting')">User Management</el-menu-item>
@@ -114,8 +114,8 @@
 
                 <el-submenu v-if="$hasAccessTo(['personnel', 'vaccine', 'app_instance'])" index="general_setting" class="vertical-line">
                     <template slot="title">
-                        <i class="el-icon-s-tools"></i>
-                        <span>General Setting</span>
+                        <i class="el-icon-s-tools" :style="`color:${['Personnel List', 'Vaccine List', 'App Instance'].includes($route.name)?'white':'#909399'}`"></i>
+                        <span :style="`color:${['Personnel List', 'Vaccine List', 'App Instance'].includes($route.name)?'white':'#909399'}`">General Setting</span>
                     </template>
                     <el-menu-item v-if="$hasAccessTo('personnel')" index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')"> Personnel </el-menu-item>
                     <el-menu-item v-if="$hasAccessTo('vaccine')" index="Vaccine List" :route="{ name: 'Vaccine List' }" @click="handlePageLoading('Vaccine List')"> Vaccine </el-menu-item>
