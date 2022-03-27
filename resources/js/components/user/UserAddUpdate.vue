@@ -53,11 +53,25 @@
             </el-form-item>
 
             <el-form-item label="Password" prop="password">
-                <el-input id="real-password" type="password" v-model="ruleForm.password" clearable autocomplete="off"></el-input>
+                <el-input id="real-password" :type="pass_show ? 'text' : 'password'" v-model="ruleForm.password" clearable autocomplete="off">
+                    <i
+                        :class="`mdi mdi-eye${pass_show?'-off':''}`"
+                        slot="suffix"
+                        style="cursor:pointer"
+                        @click="pass_show = !pass_show"
+                    />
+                </el-input>
             </el-form-item>
 
             <el-form-item label="Confirm Pass." prop="password_confirmation">
-                <el-input id="real-password1" type="password" v-model="ruleForm.password_confirmation" clearable autocomplete="off"></el-input>
+                <el-input id="real-password1" :type="retype_pass_show ? 'text' : 'password'" v-model="ruleForm.password_confirmation" clearable autocomplete="off">
+                    <i
+                        :class="`mdi mdi-eye${retype_pass_show?'-off':''}`"
+                        slot="suffix"
+                        style="cursor:pointer"
+                        @click="retype_pass_show = !retype_pass_show"
+                    />
+                </el-input>
             </el-form-item>
 
             <el-form-item v-if="ruleForm.roles_col.length" label="Permissions">
@@ -171,7 +185,9 @@ export default {
             isEdit: false,
             exist_email: [],
             edit_exist_email: '',
-            activeNames: []
+            activeNames: [],
+            pass_show: false,
+            retype_pass_show: false,
         }
     },
     watch: {
