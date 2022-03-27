@@ -102,24 +102,24 @@
                     <span>Reports <span class="mdi mdi-alert-outline" style="color:#FEFF80" /> </span>
                 </el-menu-item>
 
-                <el-submenu v-if="$hasAccessTo(['user', 'role'])" index="user_setting">
+                <el-submenu v-if="$hasAccessTo(['user', 'role'])" index="user_setting" class="vertical-line">
                     <template slot="title">
                         <i class="el-icon-s-custom"></i>
                         <span>User Setting</span>
                     </template>
-                    <el-menu-item index="1-1" style="padding-left:53px">My Profile <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
-                    <el-menu-item v-if="$hasAccessTo('user')" index="User List" :route="{ name: 'User List' }" @click="handlePageLoading('User List', 'user_setting')" style="padding-left:53px">User Management</el-menu-item>
-                    <el-menu-item v-if="$hasAccessTo('role')" index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List', 'user_setting')" style="padding-left:53px">Role & Permission</el-menu-item>
+                    <el-menu-item index="1-1">My Profile <span class="mdi mdi-alert-outline" style="color:#FEFF80" /></el-menu-item>
+                    <el-menu-item v-if="$hasAccessTo('user')" index="User List" :route="{ name: 'User List' }" @click="handlePageLoading('User List', 'user_setting')">User Management</el-menu-item>
+                    <el-menu-item v-if="$hasAccessTo('role')" index="Role & Permission List" :route="{ name: 'Role & Permission List' }" @click="handlePageLoading('Role & Permission List', 'user_setting')">Role & Permission</el-menu-item>
                 </el-submenu>
 
-                <el-submenu v-if="$hasAccessTo(['personnel', 'vaccine', 'app_instance'])" index="general_setting">
+                <el-submenu v-if="$hasAccessTo(['personnel', 'vaccine', 'app_instance'])" index="general_setting" class="vertical-line">
                     <template slot="title">
                         <i class="el-icon-s-tools"></i>
                         <span>General Setting</span>
                     </template>
-                    <el-menu-item v-if="$hasAccessTo('personnel')" index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')" style="padding-left:53px"> Personnel </el-menu-item>
-                    <el-menu-item v-if="$hasAccessTo('vaccine')" index="Vaccine List" :route="{ name: 'Vaccine List' }" @click="handlePageLoading('Vaccine List')" style="padding-left:53px"> Vaccine </el-menu-item>
-                    <el-menu-item v-if="$hasAccessTo('app_instance')" index="App Instance" :route="{ name: 'App Instance' }" @click="handlePageLoading('App Instance')" style="padding-left:53px"> App Instance </el-menu-item>
+                    <el-menu-item v-if="$hasAccessTo('personnel')" index="Personnel List" :route="{ name: 'Personnel List' }" @click="handlePageLoading('Personnel List')"> Personnel </el-menu-item>
+                    <el-menu-item v-if="$hasAccessTo('vaccine')" index="Vaccine List" :route="{ name: 'Vaccine List' }" @click="handlePageLoading('Vaccine List')"> Vaccine </el-menu-item>
+                    <el-menu-item v-if="$hasAccessTo('app_instance')" index="App Instance" :route="{ name: 'App Instance' }" @click="handlePageLoading('App Instance')"> App Instance </el-menu-item>
                 </el-submenu>
 
 
