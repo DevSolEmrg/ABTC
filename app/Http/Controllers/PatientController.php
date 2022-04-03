@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\{Patient, PatientHistory, Treatment};
 //use Carbon\Carbon;
 use App\Http\Requests\PatientPostRequest;
+use App\Jobs\ImportPatient;
 use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
@@ -134,6 +135,13 @@ class PatientController extends Controller
         }
         DB::commit();
         return $data;
+    }
+
+    public function importPatients(Request $request)
+    {
+        // return ImportPatient::dispatch($request);
+        ImportPatient::dispatch();
+        return 'done';
     }
 
 }

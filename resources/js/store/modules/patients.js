@@ -42,6 +42,14 @@ const actions = {
                 commit('SET_REQUEST_RESPONSE', { status: 'failed', message: 'Error has been occur, Failed to save the patient record!' })
             });
     },
+    async importPatients({ commit, dispatch }, form) {
+        await axios.post(`import_patients`, form)
+            .then(response => {
+                console.log(response.data)
+            }).catch(error=>{
+
+            });
+    },
     async manageTreatment({ commit, dispatch }, form) {
         await axios.post(`manage_treatment/${form.id ?? ""}`, form)
             .then(response => {

@@ -31,7 +31,7 @@
                         <el-button size="small" type="info" plain icon="mdi mdi-cog" @click="importConfig=!importConfig"></el-button>
                     <!-- </el-popover> -->
                     <el-popover content="The uploaded record will be placed in a queue; while waiting for the data to upload, you can move to any page. Please wait for the message to see if the data was successfully uploaded." placement="top-start" title="Upload Note" width="350" trigger="hover">
-                        <el-button slot="reference" style="margin-left: 10px;" size="small" type="primary" @click="submitUpload" icon="el-icon-upload" :disabled="!excel_data.length">Upload to Server/Database</el-button>
+                        <el-button slot="reference" style="margin-left: 10px;" size="small" type="primary" @click.stop="submitUpload" icon="el-icon-upload" :disabled="!excel_data.length">Upload to Server/Database</el-button>
                     </el-popover>
                     <div class="el-upload__tip" slot="tip">.xlsx/.csv file</div>
 
@@ -269,6 +269,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import { buildDate } from './../../constants'
 export default {
     props: ['dialogVisible'],
@@ -360,6 +361,7 @@ export default {
         this.dialog_visible = JSON.parse(JSON.stringify(this.dialogVisible))
     },
     methods: {
+        ...mapActions(['importPatients']),
         handleCurrentChange(val) {
 			this.page = val;
 		},
@@ -450,6 +452,8 @@ export default {
         },
         submitUpload() {
             //this.$refs.upload.submit();
+            // alert('confirm submit')
+            this.importPatients(this.excel_data)
         },
         upload(file, fileList) {
             // console.log(file.raw, file.raw.name, file.raw.name.split(".").pop().toLowerCase())

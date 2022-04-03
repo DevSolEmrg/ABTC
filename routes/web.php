@@ -25,6 +25,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('check_auth', 'HomeController@checkAuth');
     Route::post('patients', 'PatientController@getPatients');
     Route::post('manage_patients/{patient?}', 'PatientController@managePatients');
+    Route::post('import_patients', 'PatientController@importPatients');
 
     Route::post('selected_patient', 'PatientController@getSelectedPatient');
 
