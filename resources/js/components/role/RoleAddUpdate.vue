@@ -34,6 +34,7 @@
                             <div
                                 v-for="p in permit.permissions"
                                 :key="p.name"
+                                style="margin-left:20px"
                             >
                                 <el-switch
                                     :active-text="p.name"
