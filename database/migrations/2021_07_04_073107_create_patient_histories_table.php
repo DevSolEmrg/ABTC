@@ -37,8 +37,8 @@ class CreatePatientHistoriesTable extends Migration
             $table->integer('age_of_patient')->nullable();
             $table->dateTime('date_of_incident');
             $table->text('place_of_incident');
-            $table->dateTime('date_of_physical_exam');
-            $table->text('place_of_physical_exam');
+            $table->dateTime('date_of_physical_exam')->nullable();
+            $table->text('place_of_physical_exam')->nullable();
 
             $table->unsignedBigInteger('type_of_animal_id')->nullable();
             $table->foreign('type_of_animal_id')->references('id')->on('references')->cascadeOnDelete();
@@ -48,10 +48,10 @@ class CreatePatientHistoriesTable extends Migration
 
             $table->json('site_of_infection_id')->nullable();
 
-            $table->boolean('is_washed')->default(true);
+            $table->boolean('is_washed')->nullable()->default(true);
 
             $table->dateTime('rig_date_given')->nullable();
-            $table->string('route');
+            $table->string('route')->nullable();
 
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('references')->cascadeOnDelete();

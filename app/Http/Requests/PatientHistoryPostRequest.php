@@ -13,7 +13,7 @@ class PatientHistoryPostRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -30,17 +30,17 @@ class PatientHistoryPostRequest extends FormRequest
             'age_of_patient' => 'nullable',
             'date_of_incident' => 'string',
             'place_of_incident' => 'string',
-            'date_of_physical_exam' => 'string',
-            'place_of_physical_exam' => 'string',
-            'type_of_animal_id' => 'required|exists:App\Models\Reference,id',
-            'type_of_exposure_id' => 'required|exists:App\Models\Reference,id',
-            'site_of_infection_id' => 'required|array',
-            'is_washed' => 'boolean',
+            'date_of_physical_exam' => 'nullable|string',
+            'place_of_physical_exam' => 'nullable|string',
+            'type_of_animal_id' => 'nullable|required|exists:App\Models\Reference,id',
+            'type_of_exposure_id' => 'nullable|required|exists:App\Models\Reference,id',
+            'site_of_infection_id' => 'nullable|required|array',
+            'is_washed' => 'nullable|boolean',
             'rig_date_given' => 'nullable|string',
-            'route' => 'string',
-            'category_id' => 'required|exists:App\Models\Reference,id',
-            'outcome_id' => 'required|exists:App\Models\Reference,id',
-            'biting_animal_status_id' => 'required|exists:App\Models\Reference,id',
+            'route' => 'nullable|string',
+            'category_id' => 'nullable|required|exists:App\Models\Reference,id',
+            'outcome_id' => 'nullable|required|exists:App\Models\Reference,id',
+            'biting_animal_status_id' => 'nullable|required|exists:App\Models\Reference,id',
             'doctors_order' => 'nullable|string',
             'nurses_notes' => 'nullable|string',
             'remarks' => 'nullable|string'
