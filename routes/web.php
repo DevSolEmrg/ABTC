@@ -47,6 +47,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('instances', 'HomeController@getInstances');
     Route::post('manage_instance/{reference?}', 'HomeController@manageInstance');
 
+    Route::get('excel_reader_configs', 'ExcelReaderController@getConfigs');
+
     //Route::get('/home', 'HomeController@index')->name('home');
 
     //Route::get('/home/sample', 'HomeController@index')->name('home');

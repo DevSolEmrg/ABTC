@@ -17,12 +17,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        \App\Models\User::factory(8)->create();
+
         $this->call([
             ReferenceCategorySeeder::class,
-            ReferenceSeeder::class
+            ReferenceSeeder::class,
+            ExcelReaderSeeder::class,
         ]);
 
-        \App\Models\User::factory(8)->create();
         \App\Models\Patient::factory(53)->create();
         \App\Models\PatientHistory::factory(200)->create();
         \App\Models\Vaccine::factory(17)->create();
@@ -58,6 +60,8 @@ class DatabaseSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
+        \App\Models\ExcelReader::factory()->times(1)->create(['user_id' => $default_user->id]);
+
         $default_user2 = \App\Models\User::create([
             'name' => 'Alex Tier',
             'email' => 'alex@gmail.com',
@@ -65,6 +69,8 @@ class DatabaseSeeder extends Seeder
             'password' => 'password',//'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ]);
+
+        \App\Models\ExcelReader::factory()->times(1)->create(['user_id' => $default_user2->id]);
 
         $roles = [
             'super-admin',

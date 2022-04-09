@@ -43,36 +43,189 @@
             </el-col>
             <el-col :span="24" v-if="importConfig">
                 <el-collapse value="1" accordion style="margin-bottom:10px">
-                    <el-collapse-item title="Data Reader Configuration" name="1">
-                        <div>Start reading data on row 7?</div>
+                    <el-collapse-item title="DATA READER CONFIGURATION" name="1">
+                        <div>Start reading data on row? <input v-model="configs.start_row" title="Do not include header" type="number" min="1" style="width:50px; text-align: center;" /> </div>
                         <div>
-                            Column
-                            <br>
-                            <br>
-                            NO. = 2 <br>
-                            DATE = 4 <br>
-                            NAME OF PATIENT = 5 <br>
-                            ADDRESS = 6 <br>
-                            AGE = 7 <br>
-                            SEX = 8 <br>
-                            DATE = 9 <br>
-                            PLACE (WHERE BITING OCCURRED) = 10 <br>
-                            TYPE OF ANIMAL = 11 <br>
-                            TYPE (B/NB) = 12 <br>
-                            SITE (BODY PARTS) = 13 <br>
-                            CATEGORY (1,2 AND 3) = 14 <br>
-                            WASHING OF BITE (Y/N) = 15 <br>
-                            RIG DATE GIVEN = 16 <br>
-                            ROUTE = 17 <br>
-                            D0 = 18 <br>
-                            D3 = 19 <br>
-                            D7 = 20 <br>
-                            D14 = 21 <br>
-                            D28 = 22 <br>
-                            BRAND NAME = 23 <br>
-                            OUTCOME (C/Inc/N/D) = 24 <br>
-                            BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost) = 29 <br>
-                            REMARKS = 35
+                            <!-- <br> -->
+                            EXCEL SHEET COLUMNS
+
+
+                            <!-- <el-divider></el-divider> -->
+                            <el-row>
+                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+
+                                    <table>
+                                        <tr style="background-color:rgb(240,240,240)">
+                                            <th>Column</th>
+                                            <th>Name Box</th>
+                                        </tr>
+                                        <tr>
+                                            <td>NO. </td>
+                                            <td><input v-model="configs.registration_number" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>DATE</td>
+                                            <td><input v-model="configs.registration_date" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>NAME OF PATIENT</td>
+                                            <td><input v-model="configs.name" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ADDRESS</td>
+                                            <td><input v-model="configs.address" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>AGE</td>
+                                            <td><input v-model="configs.age" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>SEX</td>
+                                            <td><input v-model="configs.gender" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>DATE</td>
+                                            <td><input v-model="configs.date_of_incident" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>PLACE (WHERE BITING OCCURRED)</td>
+                                            <td><input v-model="configs.place_of_incident" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>TYPE OF ANIMAL</td>
+                                            <td><input v-model="configs.type_of_animal" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>TYPE (B/NB)</td>
+                                            <td><input v-model="configs.type_of_exposure" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>SITE (BODY PARTS)</td>
+                                            <td><input v-model="configs.site_of_infection" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>CATEGORY (1,2 AND 3)</td>
+                                            <td><input v-model="configs.category" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                    </table>
+
+
+
+
+                                    <!-- NO. = <input v-model="configs.registration_number" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            DATE = <input v-model="configs.registration_date" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            NAME OF PATIENT = <input v-model="configs.name" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            ADDRESS = <input v-model="configs.address" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            AGE = <input v-model="configs.age" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            SEX = <input v-model="configs.gender" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            DATE = <input v-model="configs.date_of_incident" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            PLACE (WHERE BITING OCCURRED) = <input v-model="configs.place_of_incident" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            TYPE OF ANIMAL = <input v-model="configs.type_of_animal" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            TYPE (B/NB) = <input v-model="configs.type_of_exposure" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            SITE (BODY PARTS) = <input v-model="configs.site_of_infection" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            CATEGORY (1,2 AND 3) = <input v-model="configs.category" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br> -->
+                                </el-col>
+                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+
+                                    <table>
+                                        <tr style="background-color:rgb(240,240,240)">
+                                            <th>Column</th>
+                                            <th>Name Box</th>
+                                        </tr>
+                                        <tr>
+                                            <td>WASHING OF BITE (Y/N) </td>
+                                            <td><input v-model="configs.is_washed" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>RIG DATE GIVEN</td>
+                                            <td><input v-model="configs.rig_date_given" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ROUTE</td>
+                                            <td><input v-model="configs.route" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>D0</td>
+                                            <td><input v-model="configs.d_one" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>D3</td>
+                                            <td><input v-model="configs.d_tree" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>D7</td>
+                                            <td><input v-model="configs.d_seven" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>D14</td>
+                                            <td><input v-model="configs.d_fourteen" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>D28</td>
+                                            <td><input v-model="configs.d_twenty_eight" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> </span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>BRAND NAME</td>
+                                            <td><input v-model="configs.brand_name" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>OUTCOME (C/Inc/N/D) </td>
+                                            <td><input v-model="configs.outcome" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost)</td>
+                                            <td><input v-model="configs.animal_status" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>REMARKS</td>
+                                            <td><input v-model="configs.remarks" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- WASHING OF BITE (Y/N) = <input v-model="configs.is_washed" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            RIG DATE GIVEN = <input v-model="configs.rig_date_given" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            ROUTE = <input v-model="configs.route" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            D0 = <input v-model="configs.d_one" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            D3 = <input v-model="configs.d_tree" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            D7 = <input v-model="configs.d_seven" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            D14 = <input v-model="configs.d_fourteen" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            D28 = <input v-model="configs.d_twenty_eight" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            BRAND NAME = <input v-model="configs.brand_name" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            OUTCOME (C/Inc/N/D) = <input v-model="configs.outcome" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost) = <input v-model="configs.animal_status" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> <br>
+                            REMARKS = <input v-model="configs.remarks" class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> -->
+
+                                </el-col>
+                            </el-row>
+<!--
+                            NO. = 2 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            DATE = 4 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            NAME OF PATIENT = 5 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            ADDRESS = 6 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            AGE = 7 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            SEX = 8 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            DATE = 9 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            PLACE (WHERE BITING OCCURRED) = 10 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            TYPE OF ANIMAL = 11 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            TYPE (B/NB) = 12 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            SITE (BODY PARTS) = 13 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            CATEGORY (1,2 AND 3) = 14 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            WASHING OF BITE (Y/N) = 15 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            RIG DATE GIVEN = 16 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            ROUTE = 17 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            D0 = 18 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            D3 = 19 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            D7 = 20 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            D14 = 21 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            D28 = 22 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            BRAND NAME = 23 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            OUTCOME (C/Inc/N/D) = 24 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost) = 29 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+                            REMARKS = 35 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> -->
+                        </div>
+                        <div>
+                            <el-button type="primary" style="float:right; margin:17px"> Save Configuration</el-button>
+                             <el-button style="float:right; margin:17px"> Reload Configuration </el-button>
                         </div>
                     </el-collapse-item>
                 </el-collapse>
@@ -334,7 +487,9 @@ export default {
             }],
             tabIndex: 2,
 
-            importConfig: false
+            importConfig: false,
+            start_on_row: 9,
+            configs: {}
         };
     },
     computed: {
@@ -356,6 +511,91 @@ export default {
                 this.pageSize * this.page
             );
         }
+    },
+    created() {
+        //  NO. = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // DATE = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // NAME OF PATIENT = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // ADDRESS = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // AGE = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // SEX = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // DATE = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // PLACE (WHERE BITING OCCURRED) = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // TYPE OF ANIMAL = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // TYPE (B/NB) = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // SITE (BODY PARTS) = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // CATEGORY (1,2 AND 3) = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // WASHING OF BITE (Y/N) = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // RIG DATE GIVEN = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // ROUTE = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // D0 = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // D3 = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // D7 = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // D14 = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // D28 = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // BRAND NAME = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // OUTCOME (C/Inc/N/D) = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost) = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> <br>
+        // REMARKS = <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span>
+
+        axios.get('excel_reader_configs').then((response)=>{
+            console.log(response.data)
+            const [
+                registration_number,
+                registration_date,
+                name,
+                address,
+                age,
+                gender,
+                date_of_incident,
+                place_of_incident,
+                type_of_animal,
+                type_of_exposure,
+                site_of_infection,
+                category,
+                is_washed,
+                rig_date_given,
+                route,
+                d_one,
+                d_tree,
+                d_seven,
+                d_fourteen,
+                d_twenty_eight,
+                brand_name,
+                outcome,
+                animal_status,
+                remarks,
+            ] = response.data.name_box
+            const start_row = response.data.reader_start_on_row
+            this.configs = {
+                ...this.configs,
+                start_row,
+                registration_number,
+                registration_date,
+                name,
+                address,
+                age,
+                gender,
+                date_of_incident,
+                place_of_incident,
+                type_of_animal,
+                type_of_exposure,
+                site_of_infection,
+                category,
+                is_washed,
+                rig_date_given,
+                route,
+                d_one,
+                d_tree,
+                d_seven,
+                d_fourteen,
+                d_twenty_eight,
+                brand_name,
+                outcome,
+                animal_status,
+                remarks,
+            }
+        })
     },
     mounted() {
         this.dialog_visible = JSON.parse(JSON.stringify(this.dialogVisible))
@@ -570,6 +810,7 @@ export default {
                                         if (rowIndex > 7) {
                                             // var dataCol = row.values;
                                             if (!!dataCol[3] || !!dataCol[4] || !!dataCol[5]) {
+                                                console.log(sheet?.getCell('BH'+rowNumber)?.value)
                                                 this.excel_data[sheetIndex].content.push({
                                                     // Office_Name: dataCol[1] == undefined ? null : dataCol[1],
                                                     // Office_Code: dataCol[2] == undefined ? null : dataCol[2],
@@ -693,6 +934,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+    table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 98%;
+}
 
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+tr:hover {
+    background-color: rgb(245, 245, 245);
+}
 </style>
