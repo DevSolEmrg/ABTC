@@ -61,51 +61,51 @@
                                         </tr>
                                         <tr>
                                             <td>NO. (REGISTRATION) </td>
-                                            <td><input v-model="configs.registration_number" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.registration_number" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.registration_number" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>DATE (REGISTRATION)</td>
-                                            <td><input v-model="configs.registration_date" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.registration_date" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.registration_date" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>NAME OF PATIENT</td>
-                                            <td><input v-model="configs.name" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.name" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.name" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>ADDRESS</td>
-                                            <td><input v-model="configs.address" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.address" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.address" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>AGE</td>
-                                            <td><input v-model="configs.age" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.age" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.age" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>SEX</td>
-                                            <td><input v-model="configs.gender" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.gender" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.gender" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>DATE (HISTORY OF EXPOSURE)</td>
-                                            <td><input v-model="configs.date_of_incident" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.date_of_incident" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.date_of_incident" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>PLACE (WHERE BITING OCCURRED)</td>
-                                            <td><input v-model="configs.place_of_incident" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.place_of_incident" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.place_of_incident" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>TYPE OF ANIMAL</td>
-                                            <td><input v-model="configs.type_of_animal" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.type_of_animal" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.type_of_animal" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>TYPE (B/NB)</td>
-                                            <td><input v-model="configs.type_of_exposure" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.type_of_exposure" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.type_of_exposure" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>SITE (BODY PARTS)</td>
-                                            <td><input v-model="configs.site_of_infection" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.site_of_infection" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.site_of_infection" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>CATEGORY (1,2 AND 3)</td>
-                                            <td><input v-model="configs.category" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.category" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.category" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                     </table>
 
@@ -134,51 +134,51 @@
                                         </tr>
                                         <tr>
                                             <td>WASHING OF BITE (Y/N) </td>
-                                            <td><input v-model="configs.is_washed" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.is_washed" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.is_washed" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>RIG DATE GIVEN</td>
-                                            <td><input v-model="configs.rig_date_given" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.rig_date_given" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.rig_date_given" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>ROUTE</td>
-                                            <td><input v-model="configs.route" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.route" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.route" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>D0</td>
-                                            <td><input v-model="configs.d_one" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.d_one" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.d_one" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>D3</td>
-                                            <td><input v-model="configs.d_tree" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.d_tree" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.d_tree" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>D7</td>
-                                            <td><input v-model="configs.d_seven" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.d_seven" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.d_seven" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>D14</td>
-                                            <td><input v-model="configs.d_fourteen" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.d_fourteen" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.d_fourteen" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>D28</td>
-                                            <td><input v-model="configs.d_twenty_eight" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span> </span></td>
+                                            <td><input v-model="configs.d_twenty_eight" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.d_twenty_eight" /> <span>&nbsp;{{ configs.start_row }}</span> </span></td>
                                         </tr>
                                         <tr>
                                             <td>BRAND NAME</td>
-                                            <td><input v-model="configs.brand_name" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.brand_name" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.brand_name" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>OUTCOME (C/Inc/N/D) </td>
-                                            <td><input v-model="configs.outcome" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.outcome" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.outcome" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost)</td>
-                                            <td><input v-model="configs.animal_status" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.animal_status" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.animal_status" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                         <tr>
                                             <td>REMARKS</td>
-                                            <td><input v-model="configs.remarks" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" title="Name Box" /> <span>&nbsp;{{ configs.start_row }}</span></td>
+                                            <td><input v-model="configs.remarks" class="name-box" onkeydown="return /[a-z]/i.test(event.key)" type="text" :title="configs.remarks" /> <span>&nbsp;{{ configs.start_row }}</span></td>
                                         </tr>
                                     </table>
 
@@ -224,7 +224,7 @@
                             REMARKS = 35 <input class="name-box" type="text" title="Name Box" /> <span>&nbsp;{{ start_on_row }}</span> -->
                         </div>
                         <div>
-                            <el-button type="primary" style="float:right; margin-top:17px; margin-bottom:17px; margin-left:8px"> Save Configuration</el-button>
+                            <el-button type="primary" style="float:right; margin-top:17px; margin-bottom:17px; margin-left:8px" @click="saveConfigs()"> Save Configuration</el-button>
                              <el-button style="float:right; margin-top:17px; margin-bottom:17px; margin-left:8px" @click="getConfigs()"> Reload/Reset Configuration </el-button>
                         </div>
                     </el-collapse-item>
@@ -911,6 +911,29 @@ export default {
                     remarks,
                 }
             })
+        },
+        async saveConfigs() {
+            if (Object.values(this.configs).every((v) => !!v)) {
+                if (confirm("Confirm to save config changes!")) {
+                    await axios.post('manage_excel_reader_config', this.configs).then(async(res)=>{
+                        this.$notify({
+                            title: 'Success',
+                            message: 'Config changes has been saved',
+                            type: 'success',
+                            duration: 6000,
+                        });
+                        await this.getConfigs()
+                    })
+                }
+            } else {
+                this.$notify({
+                    title: 'Error',
+                    message: 'Invalid input, all field required!',
+                    type: 'error',
+                    duration: 0,
+                });
+                await this.getConfigs()
+            }
         }
     }
 }

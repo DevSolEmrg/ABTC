@@ -18,4 +18,10 @@ class ExcelReader extends Model
     protected $casts = [
         'name_box' => 'array',
     ];
+
+    public function setNameBoxAttribute($name_box)
+    {
+        $this->attributes['name_box'] = strtoupper($name_box);
+    }
+
 }
