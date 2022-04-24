@@ -24,7 +24,7 @@ class ExcelReaderFactory extends Factory
         return [
             //'user_id'
             'reader_start_on_row' => 9,
-            'name_box' => ['B', 'C', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'AC', 'AI']
+            'name_box' => json_encode(['B', 'C', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'AC', 'AI'])
         ];
 
         // number: dataCol[2],

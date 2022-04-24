@@ -32,8 +32,28 @@ class ReferenceSeeder extends Seeder
 
     public $site_of_infection = [
         [
+            'code' => 'FACE',
+            'desc' => 'Face'
+        ],
+        [
+            'code' => 'R EYE',
+            'desc' => 'Right Eye'
+        ],
+        [
+            'code' => 'L EYE',
+            'desc' => 'Left Eye'
+        ],
+        [
             'code' => 'R FOOT',
             'desc' => 'Right Foot'
+        ],
+        [
+            'code' => 'L FOOT',
+            'desc' => 'Left Foot'
+        ],
+        [
+            'code' => 'R LEG',
+            'desc' => 'Right Leg'
         ],
         [
             'code' => 'L LEG',
@@ -44,21 +64,53 @@ class ReferenceSeeder extends Seeder
             'desc' => 'Left Arm'
         ],
         [
+            'code' => 'R ARM',
+            'desc' => 'Right Arm'
+        ],
+        [
             'code' => 'L HAND',
             'desc' => 'Left Hand'
         ],
         [
-            'code' => 'R LEG',
-            'desc' => 'Right Leg'
+            'code' => 'R HAND',
+            'desc' => 'Right Hand'
         ],
         [
             'code' => 'BUTTOCKS',
             'desc' => 'Buttocks'
         ],
         [
-            'code' => 'R HAND',
-            'desc' => 'Right Hand'
-        ]
+            'code' => 'L BUTTOCKS',
+            'desc' => 'Left Buttocks'
+        ],
+        [
+            'code' => 'R BUTTOCKS',
+            'desc' => 'Right Buttocks'
+        ],
+        [
+            'code' => 'L SHOULDER',
+            'desc' => 'Left Shoulder'
+        ],
+        [
+            'code' => 'R SHOULDER',
+            'desc' => 'Right Shoulder'
+        ],
+        [
+            'code' => 'L WAIST',
+            'desc' => 'Left Waist'
+        ],
+        [
+            'code' => 'R WAIST',
+            'desc' => 'Right Waist'
+        ],
+        [
+            'code' => 'L THUMB',
+            'desc' => 'Left Thumb'
+        ],
+        [
+            'code' => 'R THUMB',
+            'desc' => 'Right Thumb'
+        ],
     ];
 
     public $category = [
