@@ -10,7 +10,14 @@ const routes = new VueRouter({
         {
             path: '*',
             component: () => import(/* webpackChunkName: "not_found" */ './components/NotFound'),
-            name: 'NotFound'
+            name: 'NotFound',
+            beforeEnter:  (to, from, next) => {
+                if (to.fullPath.split('.').at(-1) == 'map') {
+                    next({ name: 'Dashboard' })
+                } else {
+                    next()
+                }
+            }
         },
         {
             path: '/home',
@@ -66,7 +73,7 @@ const routes = new VueRouter({
                 },
                 {
                     path: 'app_instance',
-                    component: () => import(/* webpackChunkName: "user_list" */ './components/AppInstance'),
+                    component: () => import(/* webpackChunkName: "app_instance" */ './components/AppInstance'),
                     name: 'App Instance',
                     beforeEnter: authenticated,
                     meta: { access: 'app_instance' }

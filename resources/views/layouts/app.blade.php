@@ -12,14 +12,14 @@
         location.assign('http://127.0.0.1:8000/home')
     </script>-->
 
-    <script>
+    {{-- <script>
         if (
             (location.origin.concat('/js/popper.js.map') == location.href) ||
             (location.origin.concat('/js/vuex-persistedstate.es.js.map') == location.href)
         ) {
             location.assign(location.origin.concat('/home'))
         }
-    </script>
+    </script> --}}
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
