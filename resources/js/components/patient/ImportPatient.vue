@@ -704,36 +704,36 @@ export default {
                                         var rowIndex = rowNumber - 1;
                                         // console.log('row', row)
                                         var dataCol = row.values;
-                                        if (rowIndex == 7) {
-                                            this.excel_table_headers[0].text = dataCol[2]
-                                            this.excel_table_headers[1].text = dataCol[4]
-                                            this.excel_table_headers[2].text = dataCol[5]
-                                            this.excel_table_headers[3].text = dataCol[6]
-                                            this.excel_table_headers[4].text = dataCol[7]
-                                            this.excel_table_headers[5].text = dataCol[8]
-                                            this.excel_table_headers[6].text = dataCol[9]
-                                            this.excel_table_headers[7].text = dataCol[10]
-                                            this.excel_table_headers[8].text = dataCol[11]
-                                            this.excel_table_headers[9].text = dataCol[12]
-                                            this.excel_table_headers[10].text = dataCol[13]
-                                            this.excel_table_headers[11].text = dataCol[14]
-                                            this.excel_table_headers[12].text = dataCol[15]
-                                            this.excel_table_headers[13].text = dataCol[16]
-                                            this.excel_table_headers[14].text = dataCol[17]
-                                            this.excel_table_headers[15].text = dataCol[18]
-                                            this.excel_table_headers[16].text = dataCol[19]
-                                            this.excel_table_headers[17].text = dataCol[20]
-                                            this.excel_table_headers[18].text = dataCol[21]
-                                            this.excel_table_headers[19].text = dataCol[22]
-                                            this.excel_table_headers[20].text = dataCol[23]
-                                            this.excel_table_headers[21].text = dataCol[24]
-                                            this.excel_table_headers[22].text = dataCol[29]
-                                            this.excel_table_headers[23].text = dataCol[35]
+                                        if (rowIndex == (this.configs.start_row - 2)) {
+                                            // this.excel_table_headers[0].text = dataCol[2]
+                                            // this.excel_table_headers[1].text = dataCol[4]
+                                            // this.excel_table_headers[2].text = dataCol[5]
+                                            // this.excel_table_headers[3].text = dataCol[6]
+                                            // this.excel_table_headers[4].text = dataCol[7]
+                                            // this.excel_table_headers[5].text = dataCol[8]
+                                            // this.excel_table_headers[6].text = dataCol[9]
+                                            // this.excel_table_headers[7].text = dataCol[10]
+                                            // this.excel_table_headers[8].text = dataCol[11]
+                                            // this.excel_table_headers[9].text = dataCol[12]
+                                            // this.excel_table_headers[10].text = dataCol[13]
+                                            // this.excel_table_headers[11].text = dataCol[14]
+                                            // this.excel_table_headers[12].text = dataCol[15]
+                                            // this.excel_table_headers[13].text = dataCol[16]
+                                            // this.excel_table_headers[14].text = dataCol[17]
+                                            // this.excel_table_headers[15].text = dataCol[18]
+                                            // this.excel_table_headers[16].text = dataCol[19]
+                                            // this.excel_table_headers[17].text = dataCol[20]
+                                            // this.excel_table_headers[18].text = dataCol[21]
+                                            // this.excel_table_headers[19].text = dataCol[22]
+                                            // this.excel_table_headers[20].text = dataCol[23]
+                                            // this.excel_table_headers[21].text = dataCol[24]
+                                            // this.excel_table_headers[22].text = dataCol[29]
+                                            // this.excel_table_headers[23].text = dataCol[35]
                                         }
-                                        if (rowIndex > 7) {
+                                        if (rowIndex >= (this.configs.start_row - 1)) {
                                             // var dataCol = row.values;
                                             if (!!dataCol[3] || !!dataCol[4] || !!dataCol[5]) {
-                                                console.log(sheet?.getCell('BH'+rowNumber)?.value)
+                                                console.log(sheet?.getCell('B'+rowNumber)?.value)
                                                 this.excel_data[sheetIndex].content.push({
                                                     // Office_Name: dataCol[1] == undefined ? null : dataCol[1],
                                                     // Office_Code: dataCol[2] == undefined ? null : dataCol[2],
@@ -741,31 +741,55 @@ export default {
                                                     // Contact_Number: dataCol[4] == undefined ? null : dataCol[4],
                                                     // Email_Address: dataCol[5] instanceof Object ? dataCol[5] == undefined ? null : dataCol[5].text : dataCol[5] == undefined ? null : dataCol[5],
 
-                                                    number: dataCol[2],
-                                                    date: this.falsableDate(dataCol[4]),
-                                                    name: dataCol[5],
-                                                    address: dataCol[6],
-                                                    age: dataCol[7],
-                                                    gender: dataCol[8],
-                                                    date_of_inci: this.falsableDate(dataCol[9]),
-                                                    place_of_inci: dataCol[10],
-                                                    type_of_animal: dataCol[11],
-                                                    type_of_exposure: dataCol[12],
-                                                    site_of_infection: dataCol[13],
-                                                    category: dataCol[14],
-                                                    is_washing: dataCol[15],
-                                                    rig_date: this.falsableDate(dataCol[16]),
-                                                    route: dataCol[17],
-                                                    d_one: this.falsableDate(dataCol[18]),
-                                                    d_tree: this.falsableDate(dataCol[19]),
-                                                    d_seven: this.falsableDate(dataCol[20]),
-                                                    d_fourteen: this.falsableDate(dataCol[21]),
-                                                    d_twenty_eight: this.falsableDate(dataCol[22]),
-                                                    brand_name: dataCol[23],
-                                                    outcome: dataCol[24],
-                                                    animal_status: dataCol[29],
-                                                    remarks: dataCol[35],
+                                                    // number: dataCol[2],
+                                                    // date: this.falsableDate(dataCol[4]),
+                                                    // name: dataCol[5],
+                                                    // address: dataCol[6],
+                                                    // age: dataCol[7],
+                                                    // gender: dataCol[8],
+                                                    // date_of_inci: this.falsableDate(dataCol[9]),
+                                                    // place_of_inci: dataCol[10],
+                                                    // type_of_animal: dataCol[11],
+                                                    // type_of_exposure: dataCol[12],
+                                                    // site_of_infection: dataCol[13],
+                                                    // category: dataCol[14],
+                                                    // is_washing: dataCol[15],
+                                                    // rig_date: this.falsableDate(dataCol[16]),
+                                                    // route: dataCol[17],
+                                                    // d_one: this.falsableDate(dataCol[18]),
+                                                    // d_tree: this.falsableDate(dataCol[19]),
+                                                    // d_seven: this.falsableDate(dataCol[20]),
+                                                    // d_fourteen: this.falsableDate(dataCol[21]),
+                                                    // d_twenty_eight: this.falsableDate(dataCol[22]),
+                                                    // brand_name: dataCol[23],
+                                                    // outcome: dataCol[24],
+                                                    // animal_status: dataCol[29],
+                                                    // remarks: dataCol[35],
 
+                                                    number: sheet?.getCell(this.configs.registration_number + rowNumber)?.value,
+                                                    date: this.falsableDate(sheet?.getCell(this.configs.registration_date + rowNumber)?.value),
+                                                    name: sheet?.getCell(this.configs.name + rowNumber)?.value,
+                                                    address: sheet?.getCell(this.configs.address + rowNumber)?.value,
+                                                    age: sheet?.getCell(this.configs.age + rowNumber)?.value,
+                                                    gender: sheet?.getCell(this.configs.gender + rowNumber)?.value,
+                                                    date_of_inci: this.falsableDate(sheet?.getCell(this.configs.date_of_incident + rowNumber)?.value),
+                                                    place_of_inci: sheet?.getCell(this.configs.place_of_incident + rowNumber)?.value,
+                                                    type_of_animal: sheet?.getCell(this.configs.type_of_animal + rowNumber)?.value,
+                                                    type_of_exposure: sheet?.getCell(this.configs.type_of_exposure + rowNumber)?.value,
+                                                    site_of_infection: sheet?.getCell(this.configs.site_of_infection + rowNumber)?.value,
+                                                    category: sheet?.getCell(this.configs.category + rowNumber)?.value,
+                                                    is_washing: sheet?.getCell(this.configs.is_washed + rowNumber)?.value,
+                                                    rig_date: this.falsableDate(sheet?.getCell(this.configs.rig_date_given + rowNumber)?.value),
+                                                    route: sheet?.getCell(this.configs.route + rowNumber)?.value,
+                                                    d_one: this.falsableDate(sheet?.getCell(this.configs.d_one + rowNumber)?.value),
+                                                    d_tree: this.falsableDate(sheet?.getCell(this.configs.d_tree + rowNumber)?.value),
+                                                    d_seven: this.falsableDate(sheet?.getCell(this.configs.d_seven + rowNumber)?.value),
+                                                    d_fourteen: this.falsableDate(sheet?.getCell(this.configs.d_fourteen + rowNumber)?.value),
+                                                    d_twenty_eight: this.falsableDate(sheet?.getCell(this.configs.d_twenty_eight + rowNumber)?.value),
+                                                    brand_name: sheet?.getCell(this.configs.brand_name + rowNumber)?.value,
+                                                    outcome: sheet?.getCell(this.configs.outcome + rowNumber)?.value,
+                                                    animal_status: sheet?.getCell(this.configs.animal_status + rowNumber)?.value,
+                                                    remarks: sheet?.getCell(this.configs.remarks + rowNumber)?.value,
                                                 });
                                             }
                                         }
@@ -846,10 +870,14 @@ export default {
             return ("ws#" + (sheet_index + 1) + " " + (column_index + 1 + 9).toString(36).toUpperCase() + (row_index + 1));
         },
         falsableDate(date) {
-            try {
-                //return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? new Date(date)?.toLocaleString().split(',')[0] : null
-                return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? buildDate(new Date(date)?.toLocaleString().split(',')[0]) : null
-            } catch (error) {
+            if (!!date) {
+                try {
+                    //return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? new Date(date)?.toLocaleString().split(',')[0] : null
+                    return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? buildDate(new Date(date)?.toLocaleString().split(',')[0]) : null
+                } catch (error) {
+                    return null
+                }
+            } else {
                 return null
             }
         },
