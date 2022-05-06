@@ -230,6 +230,13 @@
                     </el-collapse-item>
                 </el-collapse>
             </el-col>
+            <el-col :span="24" style="">
+                <el-collapse accordion style="margin-bottom:10px; border:3px solid #FFCCCC; border-radius: 5px">
+                    <el-collapse-item title="ERROR FOUND, EDIT RECORD TO IMPORT" name="1" style="padding-left:8px">
+                        error
+                    </el-collapse-item>
+                </el-collapse>
+            </el-col>
             <!-- <el-col
                 :span="24"
                 v-show="
@@ -422,7 +429,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { buildDate } from './../../constants'
 export default {
     props: ['dialogVisible'],
@@ -493,6 +500,7 @@ export default {
         };
     },
     computed: {
+        ...mapGetters(['enum', 'vaccines']),
         searching() {
             var tabIndex = this.excel_data.findIndex(s=>s.tab==this.tab)
             var data = this.excel_data[tabIndex].content
@@ -733,8 +741,202 @@ export default {
                                         if (rowIndex >= (this.configs.start_row - 1)) {
                                             // var dataCol = row.values;
                                             if (!!dataCol[3] || !!dataCol[4] || !!dataCol[5]) {
-                                                console.log(sheet?.getCell('B'+rowNumber)?.value)
-                                                this.excel_data[sheetIndex].content.push({
+                                                // console.log(sheet?.getCell('B'+rowNumber)?.value)
+                                                var row_data = {
+                                                    number: this.nullable(sheet?.getCell(this.configs.registration_number + rowNumber)?.value),
+                                                    date: this.falsableDate(sheet?.getCell(this.configs.registration_date + rowNumber)?.value),
+                                                    name: sheet?.getCell(this.configs.name + rowNumber)?.value,
+                                                    address: sheet?.getCell(this.configs.address + rowNumber)?.value,
+                                                    age: this.nullable(sheet?.getCell(this.configs.age + rowNumber)?.value),
+                                                    gender: sheet?.getCell(this.configs.gender + rowNumber)?.value,
+                                                    date_of_inci: this.falsableDate(sheet?.getCell(this.configs.date_of_incident + rowNumber)?.value),
+                                                    place_of_inci: this.nullable(sheet?.getCell(this.configs.place_of_incident + rowNumber)?.value),
+                                                    type_of_animal: this.nullable(sheet?.getCell(this.configs.type_of_animal + rowNumber)?.value),
+                                                    type_of_exposure: this.nullable(sheet?.getCell(this.configs.type_of_exposure + rowNumber)?.value),
+                                                    site_of_infection: this.nullable(sheet?.getCell(this.configs.site_of_infection + rowNumber)?.value),
+                                                    category: this.nullable(sheet?.getCell(this.configs.category + rowNumber)?.value),
+                                                    is_washing: this.nullable(sheet?.getCell(this.configs.is_washed + rowNumber)?.value),
+                                                    rig_date: this.falsableDate(sheet?.getCell(this.configs.rig_date_given + rowNumber)?.value),
+                                                    route: this.nullable(sheet?.getCell(this.configs.route + rowNumber)?.value),
+                                                    d_one: this.falsableDate(sheet?.getCell(this.configs.d_one + rowNumber)?.value),
+                                                    d_tree: this.falsableDate(sheet?.getCell(this.configs.d_tree + rowNumber)?.value),
+                                                    d_seven: this.falsableDate(sheet?.getCell(this.configs.d_seven + rowNumber)?.value),
+                                                    d_fourteen: this.falsableDate(sheet?.getCell(this.configs.d_fourteen + rowNumber)?.value),
+                                                    d_twenty_eight: this.falsableDate(sheet?.getCell(this.configs.d_twenty_eight + rowNumber)?.value),
+                                                    brand_name: this.nullable(sheet?.getCell(this.configs.brand_name + rowNumber)?.value),
+                                                    outcome: this.nullable(sheet?.getCell(this.configs.outcome + rowNumber)?.value),
+                                                    animal_status: this.nullable(sheet?.getCell(this.configs.animal_status + rowNumber)?.value),
+                                                    remarks: this.nullable(sheet?.getCell(this.configs.remarks + rowNumber)?.value),
+                                                }
+
+                                                var err_id = {
+                                                    id: this.randomKey(),
+                                                    tab: workbook.worksheets[sheetIndex].name.toUpperCase()
+                                                }
+
+                                                if (!!row_data.number && !(Number(row_data.number) > 0)) {
+                                                    //must be integer
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.number,
+                                                        message: "Must be integer",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.registration_number + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!row_data.name || !!row_data.name) {
+                                                    //invalid name format
+                                                    var name_err = []
+                                                    if (!row_data.name?.toString()?.trim()) {
+                                                        //'Please input patient name'
+                                                        name_err.push('required')
+                                                    } else if (!(/^[a-z0-9,. ]+$/i.test(row_data.name))) {
+                                                        //'Name can contain only " [a-z,A-Z,0-9,. ] " characters.'
+                                                        name_err.push('can only contain alpha numeric')
+                                                    } else if (!row_data.name?.match(/[^,]+,[^,]+/g)) {
+                                                        //'Must be a correct name format "LastName, FirstName MiddleName"'
+                                                        name_err.push('invalid format')
+                                                    } else {
+                                                        if (row_data.name?.split(',')[1][0] != " " || row_data.name?.split(',')[1][1] == " ") {
+                                                            //'Must contain 1 space after the comma on LastName'
+                                                            name_err.push('has 1 space after comma on last name')
+                                                        }
+                                                    }
+
+                                                    if (name_err.length) {
+                                                        this.excel_error.push({...err_id,
+                                                            value: row_data.name,
+                                                            message: `Patient name ${name_err.join(', ')}`,
+                                                            cell_position: `ws#${sheetIndex + 1} ${this.configs.name + rowNumber}`
+                                                        })
+                                                    }
+                                                }
+
+                                                if (!row_data.address) {
+                                                    //patient address required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.address,
+                                                        message: "Patient address required",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.address + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!!row_data.age && !(Number(row_data.age) > 0)) {
+                                                    //must be integer
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.age,
+                                                        message: "Must be integer",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.age + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!row_data.gender || !(['M', 'F', 'MALE', 'FEMALE'].includes(row_data.gender?.toString()?.toUpperCase()?.trim()))) {
+                                                    //invalid gender
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.gender,
+                                                        message: "Invalid gender",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.gender + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!row_data.date_of_inci) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.date_of_inci,
+                                                        message: "Required",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.date_of_incident + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!row_data.place_of_inci) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.place_of_inci,
+                                                        message: "Required",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.place_of_incident + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!!row_data.type_of_animal && !this.enum.type_of_animal?.map(i=>i.code)?.includes(row_data.type_of_animal?.toString()?.trim()?.toUpperCase()?.trim())) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.type_of_animal,
+                                                        message: "Invalid, not exist on app instance",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.type_of_animal + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!!row_data.type_of_exposure && !this.enum.type_of_exposure?.map(i=>i.code)?.includes(row_data.type_of_exposure?.toString()?.trim()?.toUpperCase()?.trim())) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.type_of_exposure,
+                                                        message: "Invalid, not exist on app instance",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.type_of_exposure + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!!row_data.site_of_infection && !this.enum.site_of_infection?.map(i=>i.code)?.includes(row_data.site_of_infection?.toString()?.trim()?.toUpperCase()?.trim())) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.site_of_infection,
+                                                        message: "Invalid, not exist on app instance",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.site_of_infection + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!!row_data.category && !this.enum.category?.map(i=>i.code)?.includes(row_data.category?.toString()?.trim()?.toUpperCase()?.trim())) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.category,
+                                                        message: "Invalid, not exist on app instance",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.category + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!!row_data.is_washing && !(['Y', 'N', 'YES', 'NO'].includes(row_data.is_washing?.toString()?.toUpperCase()?.trim()))) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.is_washing,
+                                                        message: "Invalid format",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.is_washed + rowNumber}`
+                                                    })
+                                                }
+                                                //else {
+                                                //row_data.is_washing = !!row_data.is_washing && ['Y', 'YES'].includes(row_data.is_washing?.toString()?.toUpperCase()?.trim()) ? 1 : 0
+                                                //}
+
+                                                if (!!row_data.brand_name && !this.vaccines?.map(i=>i.name)?.includes(row_data.brand_name?.toString()?.trim()?.toUpperCase()?.trim())) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.brand_name,
+                                                        message: "Vaccine not exist",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.brand_name + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!!row_data.outcome && !this.enum.outcome?.map(i=>i.code)?.includes(row_data.outcome?.toString()?.trim()?.toUpperCase()?.trim())) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.outcome,
+                                                        message: "Invalid, not exist on app instance",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.outcome + rowNumber}`
+                                                    })
+                                                }
+
+                                                if (!!row_data.animal_status && !this.enum.biting_animal_status?.map(i=>i.code)?.includes(row_data.animal_status?.toString()?.trim()?.toUpperCase()?.trim())) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.animal_status,
+                                                        message: "Invalid, not exist on app instance",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.animal_status + rowNumber}`
+                                                    })
+                                                }
+
+                                                // if (!row_data.site_of_infection) {
+                                                //     //required
+                                                // } validate if exist in enum/instance
+
+                                                this.excel_data[sheetIndex].content.push(row_data)
+                                                //this.excel_data[sheetIndex].content.push({
                                                     // Office_Name: dataCol[1] == undefined ? null : dataCol[1],
                                                     // Office_Code: dataCol[2] == undefined ? null : dataCol[2],
                                                     // Address: dataCol[3] == undefined ? null : dataCol[3],
@@ -765,62 +967,37 @@ export default {
                                                     // outcome: dataCol[24],
                                                     // animal_status: dataCol[29],
                                                     // remarks: dataCol[35],
-
-                                                    number: sheet?.getCell(this.configs.registration_number + rowNumber)?.value,
-                                                    date: this.falsableDate(sheet?.getCell(this.configs.registration_date + rowNumber)?.value),
-                                                    name: sheet?.getCell(this.configs.name + rowNumber)?.value,
-                                                    address: sheet?.getCell(this.configs.address + rowNumber)?.value,
-                                                    age: sheet?.getCell(this.configs.age + rowNumber)?.value,
-                                                    gender: sheet?.getCell(this.configs.gender + rowNumber)?.value,
-                                                    date_of_inci: this.falsableDate(sheet?.getCell(this.configs.date_of_incident + rowNumber)?.value),
-                                                    place_of_inci: sheet?.getCell(this.configs.place_of_incident + rowNumber)?.value,
-                                                    type_of_animal: sheet?.getCell(this.configs.type_of_animal + rowNumber)?.value,
-                                                    type_of_exposure: sheet?.getCell(this.configs.type_of_exposure + rowNumber)?.value,
-                                                    site_of_infection: sheet?.getCell(this.configs.site_of_infection + rowNumber)?.value,
-                                                    category: sheet?.getCell(this.configs.category + rowNumber)?.value,
-                                                    is_washing: sheet?.getCell(this.configs.is_washed + rowNumber)?.value,
-                                                    rig_date: this.falsableDate(sheet?.getCell(this.configs.rig_date_given + rowNumber)?.value),
-                                                    route: sheet?.getCell(this.configs.route + rowNumber)?.value,
-                                                    d_one: this.falsableDate(sheet?.getCell(this.configs.d_one + rowNumber)?.value),
-                                                    d_tree: this.falsableDate(sheet?.getCell(this.configs.d_tree + rowNumber)?.value),
-                                                    d_seven: this.falsableDate(sheet?.getCell(this.configs.d_seven + rowNumber)?.value),
-                                                    d_fourteen: this.falsableDate(sheet?.getCell(this.configs.d_fourteen + rowNumber)?.value),
-                                                    d_twenty_eight: this.falsableDate(sheet?.getCell(this.configs.d_twenty_eight + rowNumber)?.value),
-                                                    brand_name: sheet?.getCell(this.configs.brand_name + rowNumber)?.value,
-                                                    outcome: sheet?.getCell(this.configs.outcome + rowNumber)?.value,
-                                                    animal_status: sheet?.getCell(this.configs.animal_status + rowNumber)?.value,
-                                                    remarks: sheet?.getCell(this.configs.remarks + rowNumber)?.value,
-                                                });
+                                                //});
                                             }
                                         }
-                                        row.eachCell({ includeEmpty: true },
-                                            function(cell, colNumber) {
-                                                var colIndex = colNumber - 1;
-                                                if (rowIndex > 0 && colIndex < 25) {
-                                                    if (cell.value != null && cell.value.toString().trim() !== "") {
-                                                        if (colIndex == 0 && offices.includes(cell.value.trim().toLowerCase().replace(/\s/g,""))) {
-                                                            this.excel_error[0].push({
-                                                                id: this.randomKey(),
-                                                                value: cell.value,
-                                                                message: "already exist in the database",
-                                                                cell_position: this.cellPosition(sheetIndex, colIndex, rowIndex),
-                                                                tab: workbook.worksheets[sheetIndex].name.toUpperCase()
-                                                            });
-                                                        }
-                                                    } else {
-                                                        if (cell.value == null || cell.value.trim == "") {
-                                                            this.excel_error[0].push({
-                                                                id: this.randomKey(),
-                                                                value: "",
-                                                                message: "This cell is required ",
-                                                                cell_position: this.cellPosition(sheetIndex, colIndex, rowIndex),
-                                                                tab: workbook.worksheets[sheetIndex].name.toUpperCase()
-                                                            });
-                                                        }
-                                                    }
-                                                }
-                                            }.bind(this)
-                                        );
+                                        // row.eachCell({ includeEmpty: true },
+                                        //     function(cell, colNumber) {
+                                        //         var colIndex = colNumber - 1;
+                                        //         if (rowIndex > 0 && colIndex < 25) {
+                                        //             if (cell.value != null && cell.value.toString().trim() !== "") {
+                                        //                 if (colIndex == 0 && offices.includes(cell.value.trim().toLowerCase().replace(/\s/g,""))) {
+                                        //                     this.excel_error[0].push({
+                                        //                         id: this.randomKey(),
+                                        //                         value: cell.value,
+                                        //                         message: "already exist in the database",
+                                        //                         cell_position: this.cellPosition(sheetIndex, colIndex, rowIndex),
+                                        //                         tab: workbook.worksheets[sheetIndex].name.toUpperCase()
+                                        //                     });
+                                        //                 }
+                                        //             } else {
+                                        //                 if (cell.value == null || cell.value.trim == "") {
+                                        //                     this.excel_error[0].push({
+                                        //                         id: this.randomKey(),
+                                        //                         value: "",
+                                        //                         message: "This cell is required ",
+                                        //                         cell_position: this.cellPosition(sheetIndex, colIndex, rowIndex),
+                                        //                         tab: workbook.worksheets[sheetIndex].name.toUpperCase()
+                                        //                     });
+                                        //                 }
+                                        //             }
+                                        //         }
+                                        //     }.bind(this)
+                                        // );
                                         // row.eachCell({ includeEmpty: true },
                                         //     function(cell, colNumber) {
                                         //         var colIndex = colNumber - 1;
@@ -881,6 +1058,9 @@ export default {
                 return null
             }
         },
+        nullable(val) {
+            return !!val ? val : null
+        },
         async getConfigs() {
             await axios.get('excel_reader_configs').then((response)=>{
                 const [
@@ -939,6 +1119,8 @@ export default {
                     remarks,
                 }
             })
+
+            await this.$store.dispatch("getVaccines")
         },
         async saveConfigs() {
             if (Object.values(this.configs).every((v) => !!v)) {
