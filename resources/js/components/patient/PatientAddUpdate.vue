@@ -13,18 +13,18 @@
             <el-form-item label="Name" required>
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="9" :lg="9" :xl="9">
-                        <el-input ref="name" v-model="name.last" placeholder="Dela Cruz" clearable title="Last Name"></el-input>
+                        <el-input ref="name" v-model="name.last" @input="(v)=>(name.last=name.last.toUpperCase())" placeholder="DELA CRUZ" clearable title="Last Name"></el-input>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="9" :lg="9" :xl="9">
-                        <el-input v-model="name.first" placeholder="Juan" clearable title="First Name"></el-input>
+                        <el-input v-model="name.first" @input="(v)=>(name.first=name.first.toUpperCase())" placeholder="JUAN" clearable title="First Name"></el-input>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
-                        <el-input v-model="name.middle" placeholder="M." clearable title="Middle Name"></el-input>
+                        <el-input v-model="name.middle" @input="(v)=>(name.middle=name.middle.toUpperCase())" placeholder="M." clearable title="Middle Initial/Name"></el-input>
                     </el-col>
                 </el-row>
             </el-form-item>
             <el-form-item label="Full Name" prop="name">
-                <el-input v-model="ruleForm.name" placeholder="Dela Cruz, Juan M." clearable disabled></el-input>
+                <el-input v-model="ruleForm.name" placeholder="DELA CRUZ, JUAN M." clearable disabled></el-input>
             </el-form-item>
             <el-form-item label="Gender" prop="gender">
                 <el-select v-model="ruleForm.gender" placeholder="Select" clearable>
