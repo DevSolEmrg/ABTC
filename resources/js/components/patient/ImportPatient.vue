@@ -23,15 +23,17 @@
                     :on-remove="handleRemove"
                     :before-remove="beforeRemove"
                 >
-                    <el-button slot="trigger" size="small" icon="el-icon-paperclip" title="Note: You can upload one excel file with several worksheets; to cancel/delete the current chosen file, hover over the filename and click the 'X' button on the right side of the filename.">Browse excel file to import data...</el-button>
+                    <el-button slot="trigger" size="small" icon="el-icon-paperclip" title="Note: You can upload one excel file with several worksheets; to cancel/delete the current chosen file, click reset button or hover over the filename and click the 'X' button on the right side of the filename.">Browse excel file to import data...</el-button>
                     <el-popover content="Make sure you select correct excel format .xlsx/.csv, click here to download excel template." placement="top-start" title="Required Excel Format" width="350" trigger="hover">
                         <el-button slot="reference" size="small" type="info" plain icon="mdi mdi-file-excel-outline"></el-button>
                     </el-popover>
                     <!-- <el-popover content="Make sure you select correct excel format .xlsx/.csv, click here to download excel template." placement="top-start" title="Data reader config." width="350" trigger="hover"> -->
                         <el-button size="small" type="info" :plain="!importConfig" :icon="`mdi mdi-cog${importConfig?'-off':''}`" @click="importConfig=!importConfig"></el-button>
                     <!-- </el-popover> -->
+                    <el-button v-if="excel_data.length" size="small" type="danger" icon="el-icon-delete" @click="$refs.upload.clearFiles(); handleRemove(null, null)">Reset</el-button>
                     <el-popover content="The uploaded record will be placed in a queue; while waiting for the data to upload, you can move to any page. Please wait for the message to see if the data was successfully uploaded." placement="top-start" title="Upload Note" width="350" trigger="hover">
-                        <el-button slot="reference" style="margin-left: 10px;" size="small" type="primary" @click.stop="submitUpload" icon="el-icon-upload" :disabled="!excel_data.length">Upload to Server/Database</el-button>
+                        <el-button v-if="!excel_error.length && excel_data.length" slot="reference" style="margin-left: 10px;" size="small" type="primary" @click.stop="submitUpload" icon="el-icon-upload">Upload to Server/Database</el-button>
+                        <el-button v-else slot="reference" style="margin-left: 10px;" size="small" type="primary" icon="el-icon-upload" disabled>Upload to Server/Database</el-button>
                     </el-popover>
                     <div class="el-upload__tip" slot="tip">.xlsx/.csv file</div>
 
@@ -230,10 +232,27 @@
                     </el-collapse-item>
                 </el-collapse>
             </el-col>
-            <el-col :span="24" style="">
-                <el-collapse accordion style="margin-bottom:10px; border:3px solid #FFCCCC; border-radius: 5px">
-                    <el-collapse-item title="ERROR FOUND, EDIT RECORD TO IMPORT" name="1" style="padding-left:8px">
-                        error
+            <el-col :span="24" v-if="excel_error.length">
+                <el-collapse accordion style="border:3px solid #F56C6C; border-radius: 5px">
+                    <el-collapse-item :title="`ERROR FOUND (${excel_error.length}), EDIT RECORD TO IMPORT`" name="1" style="padding-left:8px; padding-right:8px">
+                        <table>
+                            <tr style="background-color:rgb(240,240,240)">
+                                <th style="width:10px">#</th>
+                                <th>Worksheet Name</th>
+                                <th>Cell Position</th>
+                                <th>Description</th>
+                                <th>Value</th>
+                                <th>Valid Input</th>
+                            </tr>
+                            <tr v-for="(error, i) in excel_error" :key="i">
+                                <td> {{ i + 1 }} </td>
+                                <td> {{ error.tab }} </td>
+                                <td> {{ error.cell_position }} </td>
+                                <td> {{ error.message }} </td>
+                                <td> {{ error.value }} </td>
+                                <td> {{ error.valid_input }} </td>
+                            </tr>
+                        </table>
                     </el-collapse-item>
                 </el-collapse>
             </el-col>
@@ -444,7 +463,7 @@ export default {
             valid: false,
             btnloading: false,
             excel_data: [],
-            excel_error: [[]],
+            excel_error: [],
             // tab: null,
             tab: '',
             excel_table_headers: [],
@@ -561,7 +580,7 @@ export default {
       },
        handleRemove(file, fileList) {
         this.excel_data = []
-         this.excel_error = [[]];
+         this.excel_error = [];
       },
       beforeRemove(file, fileList) {
         return this.$confirm(`Remove ${ file.name }/Reselect other file ? this action will not effect on the database only in the interface.`);
@@ -588,7 +607,7 @@ export default {
                 this.tab = activeName;
                 this.excel_data = tabs.filter(tab => tab.tab !== targetName);
 
-                this.excel_error[0] = this.excel_error[0].filter(err=>err.tab!=targetName)
+                this.excel_error = this.excel_error.filter(err=>err.tab!=targetName)
 
           }
 
@@ -642,7 +661,7 @@ export default {
                 }
             } catch (error) {
                 this.excel_data = [];
-                this.excel_error = [[]];
+                this.excel_error = [];
                 this.valid = false;
             }
         },
@@ -689,7 +708,7 @@ export default {
             // });
             var offices = []
             this.excel_data = [];
-            this.excel_error = [[]];
+            this.excel_error = [];
             const wb = new Excel.Workbook();
             const reader = new FileReader();
             reader.readAsArrayBuffer(file);
@@ -779,7 +798,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.number,
                                                         message: "Must be integer",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.registration_number + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.registration_number + rowNumber}`,
+                                                        valid_input: 'Number',
                                                     })
                                                 }
 
@@ -789,7 +809,7 @@ export default {
                                                     if (!row_data.name?.toString()?.trim()) {
                                                         //'Please input patient name'
                                                         name_err.push('required')
-                                                    } else if (!(/^[a-z0-9,. ]+$/i.test(row_data.name))) {
+                                                    } else if (!(/^[a-z0-9,. Ññ]+$/i.test(row_data.name))) {
                                                         //'Name can contain only " [a-z,A-Z,0-9,. ] " characters.'
                                                         name_err.push('can only contain alpha numeric')
                                                     } else if (!row_data.name?.match(/[^,]+,[^,]+/g)) {
@@ -806,7 +826,8 @@ export default {
                                                         this.excel_error.push({...err_id,
                                                             value: row_data.name,
                                                             message: `Patient name ${name_err.join(', ')}`,
-                                                            cell_position: `ws#${sheetIndex + 1} ${this.configs.name + rowNumber}`
+                                                            cell_position: `ws#${sheetIndex + 1} ${this.configs.name + rowNumber}`,
+                                                            valid_input: '*Lastname, *Firstname Middlename',
                                                         })
                                                     }
                                                 }
@@ -816,7 +837,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.address,
                                                         message: "Patient address required",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.address + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.address + rowNumber}`,
+                                                        valid_input: 'String',
                                                     })
                                                 }
 
@@ -825,7 +847,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.age,
                                                         message: "Must be integer",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.age + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.age + rowNumber}`,
+                                                        valid_input: 'Number',
                                                     })
                                                 }
 
@@ -834,7 +857,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.gender,
                                                         message: "Invalid gender",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.gender + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.gender + rowNumber}`,
+                                                        valid_input: 'M or F',
                                                     })
                                                 }
 
@@ -843,7 +867,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.date_of_inci,
                                                         message: "Required",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.date_of_incident + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.date_of_incident + rowNumber}`,
+                                                        valid_input: 'Date',
                                                     })
                                                 }
 
@@ -852,7 +877,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.place_of_inci,
                                                         message: "Required",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.place_of_incident + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.place_of_incident + rowNumber}`,
+                                                        valid_input: 'String',
                                                     })
                                                 }
 
@@ -861,7 +887,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.type_of_animal,
                                                         message: "Invalid, not exist on app instance",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.type_of_animal + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.type_of_animal + rowNumber}`,
+                                                        valid_input: 'App Instance',
                                                     })
                                                 }
 
@@ -870,7 +897,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.type_of_exposure,
                                                         message: "Invalid, not exist on app instance",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.type_of_exposure + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.type_of_exposure + rowNumber}`,
+                                                        valid_input: 'App Instance',
                                                     })
                                                 }
 
@@ -879,7 +907,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.site_of_infection,
                                                         message: "Invalid, not exist on app instance",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.site_of_infection + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.site_of_infection + rowNumber}`,
+                                                        valid_input: 'App Instance',
                                                     })
                                                 }
 
@@ -888,7 +917,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.category,
                                                         message: "Invalid, not exist on app instance",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.category + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.category + rowNumber}`,
+                                                        valid_input: 'App Instance',
                                                     })
                                                 }
 
@@ -897,7 +927,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.is_washing,
                                                         message: "Invalid format",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.is_washed + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.is_washed + rowNumber}`,
+                                                        valid_input: 'Y or N',
                                                     })
                                                 }
                                                 //else {
@@ -909,7 +940,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.brand_name,
                                                         message: "Vaccine not exist",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.brand_name + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.brand_name + rowNumber}`,
+                                                        valid_input: 'Vaccine',
                                                     })
                                                 }
 
@@ -918,7 +950,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.outcome,
                                                         message: "Invalid, not exist on app instance",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.outcome + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.outcome + rowNumber}`,
+                                                        valid_input: 'App Instance',
                                                     })
                                                 }
 
@@ -927,7 +960,8 @@ export default {
                                                     this.excel_error.push({...err_id,
                                                         value: row_data.animal_status,
                                                         message: "Invalid, not exist on app instance",
-                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.animal_status + rowNumber}`
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.animal_status + rowNumber}`,
+                                                        valid_input: 'App Instance',
                                                     })
                                                 }
 
@@ -1028,7 +1062,8 @@ export default {
                                 );
                             }.bind(this)
                         );
-                        if (this.excel_error[0].length < 1) {
+                        // if (this.excel_error[0].length < 1) {
+                        if (this.excel_error.length < 1) {
                             this.is_preview = true;
                             this.valid = true;
                         } else {
