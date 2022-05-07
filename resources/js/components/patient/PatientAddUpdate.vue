@@ -76,7 +76,7 @@ export default {
         var validateName = (rule, value, callback) => {
             if (!value.toString().trim()) {
                 callback(new Error('Please input patient name'));
-            } else if (!(/^[a-z0-9,. ]+$/i.test(value))) {
+            } else if (!(/^[a-z0-9,. Ññ]+$/i.test(value))) {
                 callback(new Error('Name can contain only " [a-z,A-Z,0-9,. ] " characters.'));
             } else if (!value.match(/[^,]+,[^,]+/g)) {
                 callback(new Error('Must be a correct name format "LastName, FirstName MiddleName"'));
