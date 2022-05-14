@@ -17,3 +17,8 @@ mix.js('resources/js/app.js', 'public/js')
     //.sourceMaps()
     .vue()
     .sass('resources/sass/app.scss', 'public/css');
+
+// devDependencies
+// "browser-sync": "^2.27.9",
+// "browser-sync-webpack-plugin": "^2.3.0",
+// mix.browserSync('http://127.0.0.1:8000');

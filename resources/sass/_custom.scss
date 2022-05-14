@@ -98,6 +98,11 @@
     background: #F5F7FA;
 }
 
+.el-table .table-row-error-highlight {
+    color: red;
+    font-weight: bold;
+}
+
 .el-table .expanded-table-row.expanded {
     background: #F5F7FA !important;
 }

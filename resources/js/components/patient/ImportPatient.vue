@@ -352,7 +352,7 @@
                         <!-- <el-input v-model="search" size="mini" prefix-icon="el-icon-search" placeholder="Type to search" clearable style="width:400px;margin-bottom:15px">
                             <template slot="append"> {{ search?`${ListData.length}/${item.content.length}`:item.content.length }} Record</template>
                         </el-input> -->
-                        <el-table :data="ListData" border :header-cell-style="{ background: 'rgba(0,0,0,0.04)' }">
+                        <el-table :data="ListData" border :header-cell-style="{ background: 'rgba(0,0,0,0.04)' }" :row-class-name="tableRowClassName">
                             <!-- <el-table-column prop="number" label="No." width="50" />
                             <el-table-column prop="date" label="Date" width="100" />
                             <el-table-column prop="name" label="Name" width="200" />
@@ -788,8 +788,10 @@ export default {
                                                     remarks: this.nullable(sheet?.getCell(this.configs.remarks + rowNumber)?.value),
                                                 }
 
+                                                var temp_record_id = this.randomKey()
+
                                                 var err_id = {
-                                                    id: this.randomKey(),
+                                                    id: temp_record_id,
                                                     tab: workbook.worksheets[sheetIndex].name.toUpperCase()
                                                 }
 
@@ -968,6 +970,8 @@ export default {
                                                 // if (!row_data.site_of_infection) {
                                                 //     //required
                                                 // } validate if exist in enum/instance
+
+                                                row_data.has_error = this.excel_error.some(r => r.id == temp_record_id)
 
                                                 this.excel_data[sheetIndex].content.push(row_data)
                                                 //this.excel_data[sheetIndex].content.push({
@@ -1179,6 +1183,9 @@ export default {
                 });
                 await this.getConfigs()
             }
+        },
+        tableRowClassName({row, rowIndex}) {
+            return row.has_error ? 'table-row-error-highlight' : '';
         }
     }
 }
