@@ -353,20 +353,20 @@
                             <template slot="append"> {{ search?`${ListData.length}/${item.content.length}`:item.content.length }} Record</template>
                         </el-input> -->
                         <el-table :data="ListData" border :header-cell-style="{ background: 'rgba(0,0,0,0.04)' }" :row-class-name="tableRowClassName">
-                            <!-- <el-table-column prop="number" label="No." width="50" />
-                            <el-table-column prop="date" label="Date" width="100" />
+                            <!-- <el-table-column prop="registration_number" label="No." width="50" />
+                            <el-table-column prop="registration_date" label="Date" width="100" />
                             <el-table-column prop="name" label="Name" width="200" />
                             <el-table-column prop="address" label="Address" width="300" />
                             <el-table-column prop="age" label="Age" width="48" />
                             <el-table-column prop="gender" label="Gender" width="75" />
-                            <el-table-column prop="date_of_inci" label="Date of Inci" width="100" />
-                            <el-table-column prop="place_of_inci" label="Place of Inci" width="300" />
+                            <el-table-column prop="date_of_incident" label="Date of Inci" width="100" />
+                            <el-table-column prop="place_of_incident" label="Place of Inci" width="300" />
                             <el-table-column prop="type_of_animal" label="Type of animal" />
                             <el-table-column prop="type_of_exposure" label="Type of Exposure" />
                             <el-table-column prop="site_of_infection" label="Site of Infection" />
                             <el-table-column prop="category" label="Category" />
-                            <el-table-column prop="is_washing" label="Washed?" />
-                            <el-table-column prop="rig_date" label="Rig Date" width="100" />
+                            <el-table-column prop="is_washed" label="Washed?" />
+                            <el-table-column prop="rig_date_given" label="Rig Date" width="100" />
                             <el-table-column prop="route" label="Route" />
                             <el-table-column prop="d_one" label="D0" width="100" />
                             <el-table-column prop="d_tree" label="D3" width="100" />
@@ -378,20 +378,20 @@
                             <el-table-column prop="animal_status" label="Animal Status" />
                             <el-table-column prop="remarks" label="Remarks" /> -->
 
-                            <el-table-column prop="number" label="NO." width="50" fixed="left" />
-                            <el-table-column prop="date" label="DATE" width="100" fixed="left" />
+                            <el-table-column prop="registration_number" label="NO." width="50" fixed="left" />
+                            <el-table-column prop="registration_date" label="DATE" width="100" fixed="left" />
                             <el-table-column prop="name" label="NAME OF PATIENT" width="200" fixed="left" />
                             <el-table-column prop="address" label="ADDRESS" width="275" />
                             <el-table-column prop="age" label="AGE" width="55" />
                             <el-table-column prop="gender" label="SEX" width="75" />
-                            <el-table-column prop="date_of_inci" label="DATE" width="100" />
-                            <el-table-column prop="place_of_inci" label="PLACE (WHERE BITING OCCURRED)" width="275" />
+                            <el-table-column prop="date_of_incident" label="DATE" width="100" />
+                            <el-table-column prop="place_of_incident" label="PLACE (WHERE BITING OCCURRED)" width="275" />
                             <el-table-column prop="type_of_animal" label="TYPE OF ANIMAL" />
                             <el-table-column prop="type_of_exposure" label="TYPE (B/NB)" />
                             <el-table-column prop="site_of_infection" label="SITE (BODY PARTS)" />
                             <el-table-column prop="category" label="CATEGORY (1,2 AND 3)" />
-                            <el-table-column prop="is_washing" label="WASHING OF BITE (Y/N)" />
-                            <el-table-column prop="rig_date" label="RIG DATE GIVEN" width="100" />
+                            <el-table-column prop="is_washed" label="WASHING OF BITE (Y/N)" />
+                            <el-table-column prop="rig_date_given" label="RIG DATE GIVEN" width="100" />
                             <el-table-column prop="route" label="ROUTE" />
                             <el-table-column prop="d_one" label="D0" width="100" />
                             <el-table-column prop="d_tree" label="D3" width="100" />
@@ -403,20 +403,20 @@
                             <el-table-column prop="animal_status" label="BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost)" width="150" />
                             <el-table-column prop="remarks" label="REMARKS" width="200" />
 
-                            <!-- number: dataCol[2],
-                                                    date: dataCol[4],
+                            <!-- registration_number: dataCol[2],
+                                                    registration_date: dataCol[4],
                                                     name: dataCol[5],
                                                     address: dataCol[6],
                                                     age: dataCol[7],
                                                     gender: dataCol[8],
-                                                    date_of_inci: dataCol[9],
-                                                    place_of_inci: dataCol[10],
+                                                    date_of_incident: dataCol[9],
+                                                    place_of_incident: dataCol[10],
                                                     type_of_animal: dataCol[11],
                                                     type_of_exposure: dataCol[12],
                                                     site_of_infection: dataCol[13],
                                                     category: dataCol[14],
-                                                    is_washing: dataCol[15],
-                                                    rig_date: dataCol[16],
+                                                    is_washed: dataCol[15],
+                                                    rig_date_given: dataCol[16],
                                                     route: dataCol[17],
                                                     d_one: dataCol[18],
                                                     d_tree: dataCol[19],
@@ -643,7 +643,96 @@ export default {
         submitUpload() {
             //this.$refs.upload.submit();
             // alert('confirm submit')
-            this.importPatients(this.excel_data)
+            // this.importPatients(this.excel_data)
+            let data = this.excel_data.reduce((data, tab)=>{
+
+                tab.content.forEach((item, index)=>{
+                    let patient = {
+                        'name': item.name,
+                        'gender': ['f', 'female'].includes(item.gender.toLowerCase()) ? 'Female' : false || ['m', 'male'].includes(item.gender.toLowerCase()) ? 'Male' : false || 'NA.',
+                        'civil_status': null,
+                        'birth_date': null,
+                        'address': item.address,
+                        'contact_number': null,
+                    }
+                    let patient_history = {
+                        'patient_id': null,
+                        'registration_number': item.registration_number,
+                        'registration_date': item.registration_date,
+                        'age_of_patient': item.age,
+                        'date_of_incident': item.date_of_incident,
+                        'place_of_incident': item.place_of_incident,
+                        'date_of_physical_exam': null,
+                        'place_of_physical_exam': null,
+                        'type_of_animal_id': this.enum?.type_of_animal?.find(t=>t?.code?.toLowerCase() == item?.type_of_animal?.toString()?.toLowerCase())?.id || null,
+                        'type_of_exposure_id': this.enum?.type_of_exposure?.find(t=>t?.code?.toLowerCase() == item?.type_of_exposure?.toString()?.toLowerCase())?.id || null,
+                        'site_of_infection_id': this.enum?.site_of_infection?.find(t=>t?.code?.toLowerCase() == item?.site_of_infection?.toString()?.toLowerCase())?.id || null,
+                        'is_washed': !!item.is_washed && ['Y', 'YES'].includes(item.is_washed?.toString()?.toUpperCase()?.trim()) ? 1 : 0,
+                        'rig_date_given': item.rig_date_given,
+                        'route': item.route,
+                        'category_id': this.enum?.category?.find(t=>t?.code?.toLowerCase() == item?.category?.toString()?.toLowerCase())?.id || null,
+                        'outcome_id': this.enum?.outcome?.find(t=>t?.code?.toLowerCase() == item?.outcome?.toString()?.toLowerCase())?.id || null,
+                        'biting_animal_status_id': this.enum?.biting_animal_status?.find(t=>t?.code?.toString()?.toLowerCase() == item?.animal_status?.toLowerCase())?.id || null,
+                        'doctors_order': '',
+                        'nurses_notes': '',
+                        'remarks': item.remarks
+                    }
+                    let patient_treament = []
+                    let vaccine_given = this.vaccines.find(v=>v?.name?.toLowerCase() == item?.brand_name?.toString()?.toLowerCase())?.id
+
+                    if (!!item.d_one) {
+                        patient_treament.push({ 'patient_history_id': null,
+                            'designated_day': 'D0',
+                            'date': item.d_one,
+                            'time:': '12:00',
+                            'vaccine_id' : vaccine_given,
+                        })
+                    }
+
+                    if (!!item.d_tree) {
+                        patient_treament.push({ 'patient_history_id': null,
+                            'designated_day': 'D3',
+                            'date': item.d_tree,
+                            'time:': '12:00',
+                            'vaccine_id' : vaccine_given,
+                        })
+                    }
+
+                    if (!!item.d_seven) {
+                        patient_treament.push({ 'patient_history_id': null,
+                            'designated_day': 'D7',
+                            'date': item.d_seven,
+                            'time:': '12:00',
+                            'vaccine_id' : vaccine_given,
+                        })
+                    }
+
+                    if (!!item.d_fourteen) {
+                        patient_treament.push({ 'patient_history_id': null,
+                            'designated_day': 'D14',
+                            'date': item.d_fourteen,
+                            'time:': '12:00',
+                            'vaccine_id' : vaccine_given,
+                        })
+                    }
+
+                    if (!!item.d_twenty_eight) {
+                        patient_treament.push({ 'patient_history_id': null,
+                            'designated_day': 'D28',
+                            'date': item.d_twenty_eight,
+                            'time:': '12:00',
+                            'vaccine_id' : vaccine_given,
+                        })
+                    }
+
+                    data.push({ patient, patient_history, patient_treament })
+                })
+
+                return data
+
+            }, [])
+
+            console.log("patient list", data, "enum", this.enum, "vaccines", this.vaccines)
         },
         upload(file, fileList) {
             // console.log(file.raw, file.raw.name, file.raw.name.split(".").pop().toLowerCase())
@@ -676,20 +765,20 @@ export default {
                 // { text: "Contact Number", value: "Contact_Number" },
                 // { text: "Email Address", value: "Email_Address" },
 
-                { text: "No.", align: "start", value: "number" },
-                { text: "Date", value: "date" },
+                { text: "No.", align: "start", value: "registration_number" },
+                { text: "Date", value: "registration_date" },
                 { text: "Name", value: "name" },
                 { text: "Address", value: "address" },
                 { text: "Age", value: "age" },
                 { text: "Gender", value: "gender" },
-                { text: "Date of Inci", value: "date_of_inci" },
-                { text: "Place of Inci", value: "place_of_inci" },
+                { text: "Date of Inci", value: "date_of_incident" },
+                { text: "Place of Inci", value: "place_of_incident" },
                 { text: "Type of Animal", value: "type_of_animal" },
                 { text: "Type of Exposure", value: "type_of_exposure" },
                 { text: "Site of Infection", value: "site_of_infection" },
                 { text: "Category", value: "category" },
-                { text: "Washed?", value: "is_washing" },
-                { text: "Rig. Date", value: "rig_date" },
+                { text: "Washed?", value: "is_washed" },
+                { text: "Rig. Date", value: "rig_date_given" },
                 { text: "Route", value: "route" },
                 { text: "D0", value: "d_one" },
                 { text: "D3", value: "d_tree" },
@@ -762,20 +851,20 @@ export default {
                                             if (!!dataCol[3] || !!dataCol[4] || !!dataCol[5]) {
                                                 // console.log(sheet?.getCell('B'+rowNumber)?.value)
                                                 var row_data = {
-                                                    number: this.nullable(sheet?.getCell(this.configs.registration_number + rowNumber)?.value),
-                                                    date: this.falsableDate(sheet?.getCell(this.configs.registration_date + rowNumber)?.value),
+                                                    registration_number: this.nullable(sheet?.getCell(this.configs.registration_number + rowNumber)?.value),
+                                                    registration_date: this.falsableDate(sheet?.getCell(this.configs.registration_date + rowNumber)?.value),
                                                     name: sheet?.getCell(this.configs.name + rowNumber)?.value,
                                                     address: sheet?.getCell(this.configs.address + rowNumber)?.value,
                                                     age: this.nullable(sheet?.getCell(this.configs.age + rowNumber)?.value),
                                                     gender: sheet?.getCell(this.configs.gender + rowNumber)?.value,
-                                                    date_of_inci: this.falsableDate(sheet?.getCell(this.configs.date_of_incident + rowNumber)?.value),
-                                                    place_of_inci: this.nullable(sheet?.getCell(this.configs.place_of_incident + rowNumber)?.value),
+                                                    date_of_incident: this.falsableDate(sheet?.getCell(this.configs.date_of_incident + rowNumber)?.value),
+                                                    place_of_incident: this.nullable(sheet?.getCell(this.configs.place_of_incident + rowNumber)?.value),
                                                     type_of_animal: this.nullable(sheet?.getCell(this.configs.type_of_animal + rowNumber)?.value),
                                                     type_of_exposure: this.nullable(sheet?.getCell(this.configs.type_of_exposure + rowNumber)?.value),
                                                     site_of_infection: this.nullable(sheet?.getCell(this.configs.site_of_infection + rowNumber)?.value),
                                                     category: this.nullable(sheet?.getCell(this.configs.category + rowNumber)?.value),
-                                                    is_washing: this.nullable(sheet?.getCell(this.configs.is_washed + rowNumber)?.value),
-                                                    rig_date: this.falsableDate(sheet?.getCell(this.configs.rig_date_given + rowNumber)?.value),
+                                                    is_washed: this.nullable(sheet?.getCell(this.configs.is_washed + rowNumber)?.value),
+                                                    rig_date_given: this.falsableDate(sheet?.getCell(this.configs.rig_date_given + rowNumber)?.value),
                                                     route: this.nullable(sheet?.getCell(this.configs.route + rowNumber)?.value),
                                                     d_one: this.falsableDate(sheet?.getCell(this.configs.d_one + rowNumber)?.value),
                                                     d_tree: this.falsableDate(sheet?.getCell(this.configs.d_tree + rowNumber)?.value),
@@ -795,10 +884,10 @@ export default {
                                                     tab: workbook.worksheets[sheetIndex].name.toUpperCase()
                                                 }
 
-                                                if (!!row_data.number && !(Number(row_data.number) > 0)) {
+                                                if (!!row_data.registration_number && !(Number(row_data.registration_number) > 0)) {
                                                     //must be integer
                                                     this.excel_error.push({...err_id,
-                                                        value: row_data.number,
+                                                        value: row_data.registration_number,
                                                         message: "Must be integer",
                                                         cell_position: `ws#${sheetIndex + 1} ${this.configs.registration_number + rowNumber}`,
                                                         valid_input: 'Number',
@@ -864,20 +953,20 @@ export default {
                                                     })
                                                 }
 
-                                                if (!row_data.date_of_inci) {
+                                                if (!row_data.date_of_incident) {
                                                     //required
                                                     this.excel_error.push({...err_id,
-                                                        value: row_data.date_of_inci,
+                                                        value: row_data.date_of_incident,
                                                         message: "Required",
                                                         cell_position: `ws#${sheetIndex + 1} ${this.configs.date_of_incident + rowNumber}`,
                                                         valid_input: 'Date',
                                                     })
                                                 }
 
-                                                if (!row_data.place_of_inci) {
+                                                if (!row_data.place_of_incident) {
                                                     //required
                                                     this.excel_error.push({...err_id,
-                                                        value: row_data.place_of_inci,
+                                                        value: row_data.place_of_incident,
                                                         message: "Required",
                                                         cell_position: `ws#${sheetIndex + 1} ${this.configs.place_of_incident + rowNumber}`,
                                                         valid_input: 'String',
@@ -924,17 +1013,17 @@ export default {
                                                     })
                                                 }
 
-                                                if (!!row_data.is_washing && !(['Y', 'N', 'YES', 'NO'].includes(row_data.is_washing?.toString()?.toUpperCase()?.trim()))) {
+                                                if (!!row_data.is_washed && !(['Y', 'N', 'YES', 'NO'].includes(row_data.is_washed?.toString()?.toUpperCase()?.trim()))) {
                                                     //required
                                                     this.excel_error.push({...err_id,
-                                                        value: row_data.is_washing,
+                                                        value: row_data.is_washed,
                                                         message: "Invalid format",
                                                         cell_position: `ws#${sheetIndex + 1} ${this.configs.is_washed + rowNumber}`,
                                                         valid_input: 'Y or N',
                                                     })
                                                 }
                                                 //else {
-                                                //row_data.is_washing = !!row_data.is_washing && ['Y', 'YES'].includes(row_data.is_washing?.toString()?.toUpperCase()?.trim()) ? 1 : 0
+                                                //row_data.is_washed = !!row_data.is_washed && ['Y', 'YES'].includes(row_data.is_washed?.toString()?.toUpperCase()?.trim()) ? 1 : 0
                                                 //}
 
                                                 if (!!row_data.brand_name && !this.vaccines?.map(i=>i.name)?.includes(row_data.brand_name?.toString()?.trim()?.toUpperCase()?.trim())) {
@@ -981,20 +1070,20 @@ export default {
                                                     // Contact_Number: dataCol[4] == undefined ? null : dataCol[4],
                                                     // Email_Address: dataCol[5] instanceof Object ? dataCol[5] == undefined ? null : dataCol[5].text : dataCol[5] == undefined ? null : dataCol[5],
 
-                                                    // number: dataCol[2],
-                                                    // date: this.falsableDate(dataCol[4]),
+                                                    // place_of_incident: dataCol[2],
+                                                    // registration_date: this.falsableDate(dataCol[4]),
                                                     // name: dataCol[5],
                                                     // address: dataCol[6],
                                                     // age: dataCol[7],
                                                     // gender: dataCol[8],
-                                                    // date_of_inci: this.falsableDate(dataCol[9]),
-                                                    // place_of_inci: dataCol[10],
+                                                    // date_of_incident: this.falsableDate(dataCol[9]),
+                                                    // place_of_incident: dataCol[10],
                                                     // type_of_animal: dataCol[11],
                                                     // type_of_exposure: dataCol[12],
                                                     // site_of_infection: dataCol[13],
                                                     // category: dataCol[14],
-                                                    // is_washing: dataCol[15],
-                                                    // rig_date: this.falsableDate(dataCol[16]),
+                                                    // is_washed: dataCol[15],
+                                                    // rig_date_given: this.falsableDate(dataCol[16]),
                                                     // route: dataCol[17],
                                                     // d_one: this.falsableDate(dataCol[18]),
                                                     // d_tree: this.falsableDate(dataCol[19]),
