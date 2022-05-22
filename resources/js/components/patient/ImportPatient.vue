@@ -650,77 +650,78 @@ export default {
                     let patient = {
                         'name': item.name,
                         'gender': ['f', 'female'].includes(item.gender.toLowerCase()) ? 'Female' : false || ['m', 'male'].includes(item.gender.toLowerCase()) ? 'Male' : false || 'NA.',
-                        'civil_status': null,
-                        'birth_date': null,
+                        'civil_status': '',
+                        'birth_date': '',
                         'address': item.address,
-                        'contact_number': null,
+                        'contact_number': '',
                     }
                     let patient_history = {
-                        'patient_id': null,
+                        'patient_id': "",
                         'registration_number': item.registration_number,
                         'registration_date': item.registration_date,
                         'age_of_patient': item.age,
                         'date_of_incident': item.date_of_incident,
                         'place_of_incident': item.place_of_incident,
-                        'date_of_physical_exam': null,
-                        'place_of_physical_exam': null,
-                        'type_of_animal_id': this.enum?.type_of_animal?.find(t=>t?.code?.toLowerCase() == item?.type_of_animal?.toString()?.toLowerCase())?.id || null,
-                        'type_of_exposure_id': this.enum?.type_of_exposure?.find(t=>t?.code?.toLowerCase() == item?.type_of_exposure?.toString()?.toLowerCase())?.id || null,
-                        'site_of_infection_id': this.enum?.site_of_infection?.find(t=>t?.code?.toLowerCase() == item?.site_of_infection?.toString()?.toLowerCase())?.id || null,
+                        'date_of_physical_exam': '',
+                        'place_of_physical_exam': '',
+                        'type_of_animal_id': this.enum?.type_of_animal?.find(t=>t?.code?.toLowerCase() == item?.type_of_animal?.toString()?.toLowerCase())?.id || '',
+                        'type_of_exposure_id': this.enum?.type_of_exposure?.find(t=>t?.code?.toLowerCase() == item?.type_of_exposure?.toString()?.toLowerCase())?.id || '',
+                        'site_of_infection_id': this.enum?.site_of_infection?.find(t=>t?.code?.toLowerCase() == item?.site_of_infection?.toString()?.toLowerCase())?.id || '',
                         'is_washed': !!item.is_washed && ['Y', 'YES'].includes(item.is_washed?.toString()?.toUpperCase()?.trim()) ? 1 : 0,
                         'rig_date_given': item.rig_date_given,
                         'route': item.route,
-                        'category_id': this.enum?.category?.find(t=>t?.code?.toLowerCase() == item?.category?.toString()?.toLowerCase())?.id || null,
-                        'outcome_id': this.enum?.outcome?.find(t=>t?.code?.toLowerCase() == item?.outcome?.toString()?.toLowerCase())?.id || null,
-                        'biting_animal_status_id': this.enum?.biting_animal_status?.find(t=>t?.code?.toString()?.toLowerCase() == item?.animal_status?.toLowerCase())?.id || null,
+                        'category_id': this.enum?.category?.find(t=>t?.code?.toLowerCase() == item?.category?.toString()?.toLowerCase())?.id || '',
+                        'outcome_id': this.enum?.outcome?.find(t=>t?.code?.toLowerCase() == item?.outcome?.toString()?.toLowerCase())?.id || '',
+                        'biting_animal_status_id': this.enum?.biting_animal_status?.find(t=>t?.code?.toString()?.toLowerCase() == item?.animal_status?.toLowerCase())?.id || '',
                         'doctors_order': '',
                         'nurses_notes': '',
                         'remarks': item.remarks
                     }
+                    patient_history.site_of_infection_id = !!patient_history.site_of_infection_id ? [patient_history.site_of_infection_id] : ""
                     let patient_treament = []
                     let vaccine_given = this.vaccines.find(v=>v?.name?.toLowerCase() == item?.brand_name?.toString()?.toLowerCase())?.id
 
                     if (!!item.d_one) {
-                        patient_treament.push({ 'patient_history_id': null,
+                        patient_treament.push({ 'patient_history_id': '',
                             'designated_day': 'D0',
                             'date': item.d_one,
-                            'time:': '12:00',
+                            'time': '12:00',
                             'vaccine_id' : vaccine_given,
                         })
                     }
 
                     if (!!item.d_tree) {
-                        patient_treament.push({ 'patient_history_id': null,
+                        patient_treament.push({ 'patient_history_id': '',
                             'designated_day': 'D3',
                             'date': item.d_tree,
-                            'time:': '12:00',
+                            'time': '12:00',
                             'vaccine_id' : vaccine_given,
                         })
                     }
 
                     if (!!item.d_seven) {
-                        patient_treament.push({ 'patient_history_id': null,
+                        patient_treament.push({ 'patient_history_id': '',
                             'designated_day': 'D7',
                             'date': item.d_seven,
-                            'time:': '12:00',
+                            'time': '12:00',
                             'vaccine_id' : vaccine_given,
                         })
                     }
 
                     if (!!item.d_fourteen) {
-                        patient_treament.push({ 'patient_history_id': null,
+                        patient_treament.push({ 'patient_history_id': '',
                             'designated_day': 'D14',
                             'date': item.d_fourteen,
-                            'time:': '12:00',
+                            'time': '12:00',
                             'vaccine_id' : vaccine_given,
                         })
                     }
 
                     if (!!item.d_twenty_eight) {
-                        patient_treament.push({ 'patient_history_id': null,
+                        patient_treament.push({ 'patient_history_id': '',
                             'designated_day': 'D28',
                             'date': item.d_twenty_eight,
-                            'time:': '12:00',
+                            'time': '12:00',
                             'vaccine_id' : vaccine_given,
                         })
                     }
@@ -731,6 +732,8 @@ export default {
                 return data
 
             }, [])
+
+            this.importPatients(data)
 
             console.log("patient list", data, "enum", this.enum, "vaccines", this.vaccines)
         },
@@ -1178,16 +1181,16 @@ export default {
             if (!!date) {
                 try {
                     //return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? new Date(date)?.toLocaleString().split(',')[0] : null
-                    return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? buildDate(new Date(date)?.toLocaleString().split(',')[0]) : null
+                    return new Date(date)?.toLocaleString().split(',')[0] != 'Invalid Date' ? buildDate(new Date(date)?.toLocaleString().split(',')[0]) : ""
                 } catch (error) {
-                    return null
+                    return ""
                 }
             } else {
-                return null
+                return ""
             }
         },
         nullable(val) {
-            return !!val ? val : null
+            return !!val ? val : ""
         },
         async getConfigs() {
             await axios.get('excel_reader_configs').then((response)=>{
