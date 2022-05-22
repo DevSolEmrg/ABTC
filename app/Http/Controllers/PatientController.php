@@ -8,6 +8,8 @@ use App\Models\{Patient, PatientHistory, Treatment};
 //use Carbon\Carbon;
 use App\Http\Requests\PatientPostRequest;
 use App\Jobs\ImportPatient;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
@@ -140,8 +142,43 @@ class PatientController extends Controller
     public function importPatients(Request $request)
     {
         // return ImportPatient::dispatch($request);
-        ImportPatient::dispatch();
-        return 'done';
+        //ImportPatient::dispatch();
+        //return 'done';
+        // dd(collect($request)->chunk(10));
+
+        $batch = Bus::batch([])->then(function (Batch $batch) {
+                // info('Batch then section ran...'.$batch->id);
+            })->catch(function (Batch $batch, Throwable $e) {
+                // info(print_r($e->getMessage(), true));
+            })->finally(function (Batch $batch) {
+                // DB::table('job_batches')->where('id', $batch->id)->delete();
+            })->name('Import Patient')->dispatch();
+
+        try {
+            // return ['status' => 'success', 'batch' => $batch];
+            $total_item = count($request->toArray());
+            foreach (collect($request)->chunk(30) as $key=>$patients_chunk) {
+                foreach ($patients_chunk as $i=>$patient) {
+                    if ($key == 0 && $i == 0) {
+                        $batch->add(new ImportPatient(
+                            $patient,
+                            auth()->user(),
+                            [
+                                'current_item_number' => $i + 1,
+                                'total_item' => $total_item
+                            ]
+                        ));
+                        break;
+                    }
+                }
+            }
+            return ['status' => 'success', 'batch' => $batch];
+
+        } catch (\Throwable $th) {
+            $batch->cancel();
+            return ['status' => 'failed', 'batch' => $batch];
+        }
+
     }
 
 }
