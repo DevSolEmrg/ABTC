@@ -32,8 +32,8 @@
                     <!-- </el-popover> -->
                     <el-button v-if="excel_data.length" size="small" type="danger" icon="el-icon-delete" @click="$refs.upload.clearFiles(); handleRemove(null, null)">Reset</el-button>
                     <el-popover content="The uploaded record will be placed in a queue; while waiting for the data to upload, you can move to any page. Please wait for the message to see if the data was successfully uploaded." placement="top-start" title="Upload Note" width="350" trigger="hover">
-                        <el-button v-if="!excel_error.length && excel_data.length" slot="reference" style="margin-left: 10px;" size="small" type="primary" @click.stop="submitUpload" icon="el-icon-upload">Upload to Server/Database</el-button>
-                        <el-button v-else slot="reference" style="margin-left: 10px;" size="small" type="primary" icon="el-icon-upload" disabled>Upload to Server/Database</el-button>
+                        <el-button v-if="!excel_error.length && excel_data.length" slot="reference" style="margin-left: 10px;" size="small" type="primary" @click.stop="submitUpload" icon="el-icon-upload">Upload / Import</el-button>
+                        <el-button v-else slot="reference" style="margin-left: 10px;" size="small" type="primary" icon="el-icon-upload" disabled>Upload / Import</el-button>
                     </el-popover>
                     <div class="el-upload__tip" slot="tip">.xlsx/.csv file</div>
 
@@ -403,6 +403,14 @@
                             <el-table-column prop="animal_status" label="BITING ANIMAL STATUS (after 14 days) (Alive/dead/lost)" width="150" />
                             <el-table-column prop="remarks" label="REMARKS" width="200" />
 
+                            <el-table-column width="49" align="center" label="Action" fixed="right">
+                                <template slot-scope="scope">
+                                    <el-tooltip class="item" effect="light" content="Remove" placement="top" :enterable="false">
+                                        <el-button type="danger" size="mini" icon="mdi mdi-minus-circle" circle plain @click="handleRemovePatientOnList(scope.$index, scope.row, index)"></el-button>
+                                    </el-tooltip>
+                                </template>
+                            </el-table-column>
+
                             <!-- registration_number: dataCol[2],
                                                     registration_date: dataCol[4],
                                                     name: dataCol[5],
@@ -648,6 +656,7 @@ export default {
 
                 tab.content.forEach((item, index)=>{
                     let patient = {
+                        'temp_id': Math.random().toString().split('.').at(-1),
                         'name': item.name,
                         'gender': ['f', 'female'].includes(item.gender.toLowerCase()) ? 'Female' : false || ['m', 'male'].includes(item.gender.toLowerCase()) ? 'Male' : false || 'NA.',
                         'civil_status': '',
@@ -733,9 +742,13 @@ export default {
 
             }, [])
 
-            this.importPatients(data)
+            if (data?.length) {
+                this.importPatients(data)
+            } else {
+                alert('No Data')
+            }
 
-            console.log("patient list", data, "enum", this.enum, "vaccines", this.vaccines)
+            // console.log("patient list", data, "enum", this.enum, "vaccines", this.vaccines)
         },
         upload(file, fileList) {
             // console.log(file.raw, file.raw.name, file.raw.name.split(".").pop().toLowerCase())
@@ -1278,6 +1291,9 @@ export default {
         },
         tableRowClassName({row, rowIndex}) {
             return row.has_error ? 'table-row-error-highlight' : '';
+        },
+        handleRemovePatientOnList(table_index, table_row, tab_index) {
+            this.excel_data[tab_index]?.content?.splice(this.excel_data[tab_index]?.content?.findIndex(tb=>(tb?.name == table_row?.name && tb?.address == table_row?.address)), 1)
         }
     }
 }
