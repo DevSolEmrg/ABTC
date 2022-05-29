@@ -14,11 +14,16 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
-    ];
+    // protected $listen = [
+    //     Registered::class => [
+    //         SendEmailVerificationNotification::class,
+    //     ],
+    // ];
+
+    public function shouldDiscoverEvents()
+    {
+        return true;
+    }
 
     /**
      * Register any events for your application.
