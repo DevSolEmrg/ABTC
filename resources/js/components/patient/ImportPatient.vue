@@ -30,10 +30,10 @@
                     <!-- <el-popover content="Make sure you select correct excel format .xlsx/.csv, click here to download excel template." placement="top-start" title="Data reader config." width="350" trigger="hover"> -->
                         <el-button size="small" type="info" :plain="!importConfig" :icon="`mdi mdi-cog${importConfig?'-off':''}`" @click="importConfig=!importConfig"></el-button>
                     <!-- </el-popover> -->
-                    <el-button v-if="excel_data.length" size="small" type="danger" icon="el-icon-delete" @click="$refs.upload.clearFiles(); handleRemove(null, null)">Reset</el-button>
+                    <el-button v-if="!!selectedFile" size="small" type="danger" icon="el-icon-delete" @click="$refs.upload.clearFiles(); handleRemove(null, null)">Reset</el-button>
                     <el-popover content="The uploaded record will be placed in a queue; while waiting for the data to upload, you can move to any page. Please wait for the message to see if the data was successfully uploaded." placement="top-start" title="Upload Note" width="350" trigger="hover">
-                        <el-button v-if="!excel_error.length && excel_data.length" slot="reference" style="margin-left: 10px;" size="small" type="primary" @click.stop="submitUpload" icon="el-icon-upload">Upload / Import</el-button>
-                        <el-button v-else slot="reference" style="margin-left: 10px;" size="small" type="primary" icon="el-icon-upload" disabled>Upload / Import</el-button>
+                        <el-button v-if="!excel_error.length && excel_data.length && !submit_loading && allRecordCount" slot="reference" style="margin-left: 10px;" size="small" type="primary" @click.stop="submitUpload" icon="el-icon-upload">Upload / Import({{allRecordCount}} Record)</el-button>
+                        <el-button v-else slot="reference" style="margin-left: 10px;" size="small" type="primary" :icon="`${submit_loading ? 'mdi mdi-loading mdi-spin' : 'el-icon-upload'}`" @click.stop="submitUploadEmpty()" disabled>Upload / Import</el-button>
                     </el-popover>
                     <div class="el-upload__tip" slot="tip">.xlsx/.csv file</div>
 
@@ -523,7 +523,9 @@ export default {
 
             importConfig: false,
             start_on_row: 9,
-            configs: {}
+            configs: {},
+
+            submit_loading: false,
         };
     },
     computed: {
@@ -545,6 +547,12 @@ export default {
                 this.pageSize * this.page - this.pageSize,
                 this.pageSize * this.page
             );
+        },
+        allRecordCount() {
+            return this.excel_data?.reduce((sum, item)=> sum+=item?.content?.length, 0) || 0
+        },
+        selectedFile() {
+            return this.excel_data?.length || this.$refs?.upload?.uploadFiles?.length || 0
         }
     },
     async created() {
@@ -589,6 +597,7 @@ export default {
        handleRemove(file, fileList) {
         this.excel_data = []
          this.excel_error = [];
+         this.submit_loading = false
       },
       beforeRemove(file, fileList) {
         return this.$confirm(`Remove ${ file.name }/Reselect other file ? this action will not effect on the database only in the interface.`);
@@ -648,11 +657,16 @@ export default {
                 this.$emit('close')
             }
         },
-        submitUpload() {
+        submitUploadEmpty() {
+            alert('No Data!, Please browse excel file again')
+            this.submit_loading = false
+        },
+        async submitUpload() {
             //this.$refs.upload.submit();
             // alert('confirm submit')
             // this.importPatients(this.excel_data)
-            let data = this.excel_data.reduce((data, tab)=>{
+            this.submit_loading = true
+            let data = await this.excel_data.reduce((data, tab)=>{
 
                 tab.content.forEach((item, index)=>{
                     let patient = {
@@ -743,9 +757,32 @@ export default {
             }, [])
 
             if (data?.length) {
-                this.importPatients(data)
+                this.$notify.closeAll()
+                await this.importPatients(data).then(res=>{
+                    console.log("5555:", res)
+                    this.$notify({
+                        title: `Success Queued(${data?.length} Record)`,
+                        message: 'Record has already been sent to the queue',
+                        type: 'success',
+                        duration: 60000,
+                        closeOnPressEscape: false,
+                    });
+                    this.submit_loading = false
+                    this.$refs.upload.clearFiles();
+                    this.handleRemove(null, null)
+                }).catch(error=>{
+                    console.log("6666:", error)
+                    this.$notify({
+                        title: `Error (Cancelled ${data?.length} Record)`,
+                        message: 'Problem with dispatching to queue',
+                        type: 'error',
+                        duration: 0,
+                    });
+                    this.submit_loading = false
+                })
             } else {
-                alert('No Data')
+                alert('No Data!, Please browse excel file again')
+                this.submit_loading = false
             }
 
             // console.log("patient list", data, "enum", this.enum, "vaccines", this.vaccines)

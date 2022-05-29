@@ -157,26 +157,31 @@ class PatientController extends Controller
         try {
             // return ['status' => 'success', 'batch' => $batch];
             $total_item = count($request->toArray());
-            foreach (collect($request)->chunk(30) as $key=>$patients_chunk) {
+            $item_per_chunk = 30;
+            $counter = 0;
+            foreach (collect($request)->chunk($item_per_chunk) as $key=>$patients_chunk) {
+                // dd($key * $item_per_chunk, collect($request)->chunk($item_per_chunk));
+                $counter = ((($key - 1) < 0 ? 0 : $key - 1) * $item_per_chunk);
+
                 foreach ($patients_chunk as $i=>$patient) {
-                    if ($key == 0 && $i == 0) {
+                    // if ($key == 0 && $i == 0) {
                         $batch->add(new ImportPatient(
                             $patient,
                             auth()->user(),
                             [
-                                'current_item_number' => $i + 1,
+                                'current_item_number' => $counter + ($i + 1),
                                 'total_item' => $total_item
                             ]
                         ));
-                        break;
-                    }
+                        // break;
+                    // }
                 }
             }
-            return ['status' => 'success', 'batch' => $batch];
+            return ['status' => 'success', 'batch_id' => $batch->id];
 
         } catch (\Throwable $th) {
             $batch->cancel();
-            return ['status' => 'failed', 'batch' => $batch];
+            return abort(response()->json(['status' => 'failed', 'batch_id' => $batch->id], 500));
         }
 
     }

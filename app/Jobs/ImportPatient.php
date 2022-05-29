@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\{ImportPatientEvent};
 use App\Http\Requests\{PatientHistoryPostRequest, PatientPostRequest};
 use App\Models\{Patient, PatientHistory, Treatment};
 use Illuminate\Bus\{Batchable, Queueable};
@@ -82,9 +83,15 @@ class ImportPatient implements ShouldQueue
             }
 
             DB::commit();
+
+            event(new ImportPatientEvent($this->batchInfo()));
+
             return 'success';
         } catch (\Throwable $th) {
             DB::rollback();
+
+            event(new ImportPatientEvent($this->batchInfo('failed')));
+
             return $this->fail($th->getMessage());
         }
     }
@@ -111,7 +118,9 @@ class ImportPatient implements ShouldQueue
             'proccessed_jobs' => $this->batch()->processedJobs() + 1,
             'progress' => max($progress, 0),
             'finished' => $current_item_number == $total_item,
-            'cancelled' => $this->batch()->cancelled()
+            'cancelled' => $this->batch()->cancelled(),
+            'proccessed_data' => $this->patient,
+            'current_item_number' => $current_item_number,
         ];
 
         // return [
