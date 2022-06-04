@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Events\{ImportPatientEvent};
 use App\Http\Requests\{PatientHistoryPostRequest, PatientPostRequest};
-use App\Models\{Patient, PatientHistory, Treatment};
+use App\Models\{Patient, PatientHistory, ProcessedJob, Treatment};
 use Illuminate\Bus\{Batchable, Queueable};
 use Illuminate\Contracts\Queue\{ShouldBeUnique, ShouldQueue};
 use Illuminate\Foundation\Bus\{Dispatchable};
@@ -53,8 +53,27 @@ class ImportPatient implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->batch()->cancelled()) { return $this->fail('cancelled'); }
         if (!auth()->user()) { Auth::login($this->user, $remember = true); }
+
+        $processed_job = ProcessedJob::whereUserId(auth()->user()->id)
+            ->whereTempId($this->patient['patient']['temp_id'])
+            ->first();
+
+        if ($this->batch()->cancelled()) {
+            // ProcessedJob::create([
+            //     'batch_id' => $this->batch()->id,
+            //     'payload' => json_encode($this->patient),
+            //     'status' => 'Batch Cancelled',
+            //     'remarks' => 'Cancelled',
+            // ]);
+            if (!!$processed_job) {
+                $processed_job->update([
+                    'status' => 'Batch Cancelled',
+                    'remarks' => 'Cancelled',
+                ]);
+            }
+            return $this->fail('cancelled');
+        }
 
         $patient_form_request = new PatientPostRequest;
         $patient_history_form_request = new PatientHistoryPostRequest;
@@ -86,11 +105,39 @@ class ImportPatient implements ShouldQueue
 
             event(new ImportPatientEvent($this->batchInfo()));
 
+            //on dispatch this save/insert list of job and update on success or failed
+
+            // ProcessedJob::create([
+            //     'batch_id' => $this->batch()->id,
+            //     'payload' => json_encode($this->patient),
+            //     'status' => 'Processed',
+            //     'remarks' => 'Done',
+            // ]);
+            if (!!$processed_job) {
+                $processed_job->update([
+                    'status' => 'Processed',
+                    'remarks' => 'Done',
+                ]);
+            }
+
             return 'success';
         } catch (\Throwable $th) {
             DB::rollback();
 
             event(new ImportPatientEvent($this->batchInfo('failed')));
+
+            // ProcessedJob::create([
+            //     'batch_id' => $this->batch()->id,
+            //     'payload' => json_encode($this->patient),
+            //     'status' => 'Failed',
+            //     'remarks' => 'Error',
+            // ]);
+            if (!!$processed_job) {
+                $processed_job->update([
+                    'status' => 'Failed',
+                    'remarks' => 'Error',
+                ]);
+            }
 
             return $this->fail($th->getMessage());
         }

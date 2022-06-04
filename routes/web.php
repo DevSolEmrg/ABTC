@@ -26,6 +26,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::post('patients', 'PatientController@getPatients');
     Route::post('manage_patients/{patient?}', 'PatientController@managePatients');
     Route::post('import_patients', 'PatientController@importPatients');
+    Route::get('processed_jobs', 'PatientController@ProcessedJob');
 
     Route::post('selected_patient', 'PatientController@getSelectedPatient');
 

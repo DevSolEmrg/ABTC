@@ -30,6 +30,8 @@
                     <!-- <el-popover content="Make sure you select correct excel format .xlsx/.csv, click here to download excel template." placement="top-start" title="Data reader config." width="350" trigger="hover"> -->
                         <el-button size="small" type="info" :plain="!importConfig" :icon="`mdi mdi-cog${importConfig?'-off':''}`" @click="importConfig=!importConfig"></el-button>
                     <!-- </el-popover> -->
+
+
                     <el-button v-if="!!selectedFile" size="small" type="danger" icon="el-icon-delete" @click="$refs.upload.clearFiles(); handleRemove(null, null)">Reset</el-button>
                     <el-popover content="The uploaded record will be placed in a queue; while waiting for the data to upload, you can move to any page. Please wait for the message to see if the data was successfully uploaded." placement="top-start" title="Upload Note" width="350" trigger="hover">
                         <el-button v-if="!excel_error.length && excel_data.length && !submit_loading && allRecordCount" slot="reference" style="margin-left: 10px;" size="small" type="primary" @click.stop="submitUpload" icon="el-icon-upload">Upload / Import({{allRecordCount}} Record)</el-button>
@@ -37,9 +39,13 @@
                     </el-popover>
                     <div class="el-upload__tip" slot="tip">.xlsx/.csv file</div>
 
+                    <OnQueue align="right" style="float:right; margin-left:4px"/>
+
                     <el-input align="right" v-model="search" :disabled="!excel_data.length" size="small" prefix-icon="el-icon-search" :placeholder="`Search on worksheet name: ${excel_data.length ? tab : 'N.A.'}`" clearable style="width:400px;margin-bottom:15px; float:right">
                             <!-- <template slot="append"> {{ search?`${ListData.length}/${item.content.length}`:item.content.length }} Record</template> -->
                         </el-input>
+
+
 
                 </el-upload>
             </el-col>
@@ -458,8 +464,10 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { buildDate } from './../../constants'
+import OnQueue from './../OnQueue'
 export default {
     props: ['dialogVisible'],
+    components: { OnQueue },
     data() {
         return {
             page: 1,

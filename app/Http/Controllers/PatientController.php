@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PatientHistoryPostRequest;
 use Illuminate\Http\Request;
-use App\Models\{Patient, PatientHistory, Treatment};
+use App\Models\{Patient, PatientHistory, ProcessedJob, Treatment};
 //use Carbon\Carbon;
 use App\Http\Requests\PatientPostRequest;
 use App\Jobs\ImportPatient;
@@ -164,7 +164,7 @@ class PatientController extends Controller
                 $counter = ((($key - 1) < 0 ? 0 : $key - 1) * $item_per_chunk);
 
                 foreach ($patients_chunk as $i=>$patient) {
-                    // if ($key == 0 && $i == 0) {
+                    if ($key == 0 && $i <= 1) {
                         $batch->add(new ImportPatient(
                             $patient,
                             auth()->user(),
@@ -173,8 +173,19 @@ class PatientController extends Controller
                                 'total_item' => $total_item
                             ]
                         ));
-                        // break;
-                    // }
+
+                        ProcessedJob::create([
+                            'user_id' => auth()->user()->id,
+                            'temp_id' => $patient['patient']['temp_id'],
+                            'batch_id' => $batch->id,
+                            'payload' => json_encode($patient),
+                            'status' => '',
+                            'remarks' => '',
+                        ]);
+
+                    } else {
+                        break;
+                    }
                 }
             }
             return ['status' => 'success', 'batch_id' => $batch->id];
@@ -184,6 +195,24 @@ class PatientController extends Controller
             return abort(response()->json(['status' => 'failed', 'batch_id' => $batch->id], 500));
         }
 
+    }
+
+    public function ProcessedJob()
+    {
+        // $by_batch = [];
+        // //  ProcessedJob::select('batch_id')->distinct()->get()->pluck('batch_id')->toArray();
+
+        // foreach (ProcessedJob::select('batch_id')->distinct()->get()->pluck('batch_id')->toArray() as $batch_id) {
+        //     // DB::table('job_batches')
+        // }
+
+        $processed_job = ProcessedJob::query();
+
+        if (request()->has('user_id')) {
+            $processed_job->whereUserId(auth()->user()->id);
+        }
+
+        return $processed_job->get();
     }
 
 }
