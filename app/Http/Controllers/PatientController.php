@@ -220,4 +220,19 @@ class PatientController extends Controller
         // return $processed_job->get();
     }
 
+    public function deleteProcessedJob($batch_id)
+    {
+        DB::beginTransaction();
+        $response = 'success';
+        try {
+            ProcessedJob::whereBatchId($batch_id)->whereUserId(auth()->user()->id)->delete();
+            DB::table('job_batches')->whereId($batch_id)->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(response()->json('Failed', 500));
+        }
+        return $response;
+    }
+
 }

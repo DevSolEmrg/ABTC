@@ -46,7 +46,7 @@
                     <template slot-scope="scope">
                         <el-tooltip class="item" effect="light" :content="`${scope.row.pending_jobs > 0 ? 'Cancel' : 'Remove'} Batch`" placement="top" :enterable="false">
                             <el-button v-if="scope.row.pending_jobs > 0" type="danger" size="mini" icon="mdi mdi-cancel" circle plain @click="handleDelete(scope.row)"></el-button>
-                            <el-button v-else type="primary" size="mini" icon="mdi mdi-minus-thick" circle plain @click="handleDelete(scope.row)"></el-button>
+                            <el-button v-else type="primary" size="mini" icon="mdi mdi-minus-thick" circle plain @click="deleteBatch(scope.row.id)"></el-button>
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -157,6 +157,14 @@ export default {
                     }, 500);
 
                 });
+            }
+        },
+        async deleteBatch(batch_id) {
+            if (confirm('Are you sure you want to delete selected batch ?')) {
+                await axios.post(`delete_processed_jobs/${batch_id}`).then((result) => {
+                    alert('Sucsess on deleting selected batch')
+                    this.getData()
+                })
             }
         }
     },
