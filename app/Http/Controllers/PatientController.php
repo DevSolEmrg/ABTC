@@ -164,7 +164,7 @@ class PatientController extends Controller
                 $counter = ((($key - 1) < 0 ? 0 : $key - 1) * $item_per_chunk);
 
                 foreach ($patients_chunk as $i=>$patient) {
-                    if ($key == 0 && $i <= 1) {
+                    // if ($key == 0 && $i <= 1) {
                         $batch->add(new ImportPatient(
                             $patient,
                             auth()->user(),
@@ -183,9 +183,9 @@ class PatientController extends Controller
                             'remarks' => '',
                         ]);
 
-                    } else {
-                        break;
-                    }
+                    // } else {
+                    //     break;
+                    // }
                 }
             }
             return ['status' => 'success', 'batch_id' => $batch->id];
@@ -199,20 +199,25 @@ class PatientController extends Controller
 
     public function ProcessedJob()
     {
-        // $by_batch = [];
-        // //  ProcessedJob::select('batch_id')->distinct()->get()->pluck('batch_id')->toArray();
+        $by_batch = array();
+        //  ProcessedJob::select('batch_id')->distinct()->get()->pluck('batch_id')->toArray();
 
-        // foreach (ProcessedJob::select('batch_id')->distinct()->get()->pluck('batch_id')->toArray() as $batch_id) {
-        //     // DB::table('job_batches')
-        // }
-
-        $processed_job = ProcessedJob::query();
-
-        if (request()->has('user_id')) {
-            $processed_job->whereUserId(auth()->user()->id);
+        foreach (ProcessedJob::select('batch_id')->distinct()->get()->pluck('batch_id')->toArray() as $batch_id) {
+            $b = DB::table('job_batches')->whereId($batch_id)->first();
+            $b->dispatch_on = date('y/m/Y H:i', $b->created_at);
+            $b->jobs = ProcessedJob::whereBatchId($batch_id)->whereUserId(auth()->user()->id)->get()->toArray();
+            array_push($by_batch, $b);
         }
 
-        return $processed_job->get();
+        return $by_batch;
+
+        // $processed_job = ProcessedJob::query();
+
+        // if (request()->has('user_id')) {
+        //     $processed_job->whereUserId(auth()->user()->id);
+        // }
+
+        // return $processed_job->get();
     }
 
 }
