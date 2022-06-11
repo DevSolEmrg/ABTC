@@ -74,7 +74,7 @@
                 </el-input>
             </el-form-item>
 
-            <el-form-item v-if="ruleForm.roles_col.length" label="Permissions">
+            <el-form-item v-if="ruleForm.roles_col.length" label="Roles">
                 <el-collapse v-model="activeNames">
                     <el-collapse-item v-for="role in ruleForm.roles_col" :key="role.id" :title="role.name" :name="role.id">
                         <template slot="title">

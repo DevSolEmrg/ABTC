@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PatientHistoryPostRequest;
 use Illuminate\Http\Request;
-use App\Models\{Patient, PatientHistory, Treatment};
+use App\Models\{Patient, PatientHistory, ProcessedJob, Treatment};
 //use Carbon\Carbon;
 use App\Http\Requests\PatientPostRequest;
 use App\Jobs\ImportPatient;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
@@ -140,8 +142,97 @@ class PatientController extends Controller
     public function importPatients(Request $request)
     {
         // return ImportPatient::dispatch($request);
-        ImportPatient::dispatch();
-        return 'done';
+        //ImportPatient::dispatch();
+        //return 'done';
+        // dd(collect($request)->chunk(10));
+
+        $batch = Bus::batch([])->then(function (Batch $batch) {
+                // info('Batch then section ran...'.$batch->id);
+            })->catch(function (Batch $batch, Throwable $e) {
+                // info(print_r($e->getMessage(), true));
+            })->finally(function (Batch $batch) {
+                // DB::table('job_batches')->where('id', $batch->id)->delete();
+            })->name('Import Patient')->dispatch();
+
+        try {
+            // return ['status' => 'success', 'batch' => $batch];
+            $total_item = count($request->toArray());
+            $item_per_chunk = 30;
+            $counter = 0;
+            foreach (collect($request)->chunk($item_per_chunk) as $key=>$patients_chunk) {
+                // dd($key * $item_per_chunk, collect($request)->chunk($item_per_chunk));
+                $counter = ((($key - 1) < 0 ? 0 : $key - 1) * $item_per_chunk);
+
+                foreach ($patients_chunk as $i=>$patient) {
+                    // if ($key == 0 && $i <= 1) {
+                        $batch->add(new ImportPatient(
+                            $patient,
+                            auth()->user(),
+                            [
+                                'current_item_number' => $counter + ($i + 1),
+                                'total_item' => $total_item
+                            ]
+                        ));
+
+                        ProcessedJob::create([
+                            'user_id' => auth()->user()->id,
+                            'temp_id' => $patient['patient']['temp_id'],
+                            'batch_id' => $batch->id,
+                            'payload' => json_encode($patient),
+                            'status' => '',
+                            'remarks' => '',
+                        ]);
+
+                    // } else {
+                    //     break;
+                    // }
+                }
+            }
+            return ['status' => 'success', 'batch_id' => $batch->id];
+
+        } catch (\Throwable $th) {
+            $batch->cancel();
+            return abort(response()->json(['status' => 'failed', 'batch_id' => $batch->id], 500));
+        }
+
+    }
+
+    public function ProcessedJob()
+    {
+        $by_batch = array();
+        //  ProcessedJob::select('batch_id')->distinct()->get()->pluck('batch_id')->toArray();
+
+        foreach (ProcessedJob::select('batch_id')->distinct()->get()->pluck('batch_id')->toArray() as $batch_id) {
+            $b = DB::table('job_batches')->whereId($batch_id)->first();
+            $b->dispatch_on = date('y/m/Y H:i', $b->created_at);
+            $b->jobs = ProcessedJob::whereBatchId($batch_id)->whereUserId(auth()->user()->id)->get()->toArray();
+            array_push($by_batch, $b);
+        }
+
+        return $by_batch;
+
+        // $processed_job = ProcessedJob::query();
+
+        // if (request()->has('user_id')) {
+        //     $processed_job->whereUserId(auth()->user()->id);
+        // }
+
+        // return $processed_job->get();
+    }
+
+    public function deleteProcessedJob($batch_id)
+    {
+        DB::beginTransaction();
+        $response = 'success';
+        try {
+            ProcessedJob::whereBatchId($batch_id)->whereUserId(auth()->user()->id)->delete();
+            DB::table('job_batches')->whereId($batch_id)->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            abort(response()->json('Failed', 500));
+        }
+        return $response;
     }
 
 }

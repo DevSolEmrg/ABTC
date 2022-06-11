@@ -56,7 +56,7 @@
                             <p><strong>Outcome:</strong> {{ props.row.outcome }}</p>
                             <p><strong>Biting Animal Status:</strong> {{ props.row.biting_animal_status }}</p> -->
                             <el-row :gutter="10">
-                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" style="padding: 0px 12px 0px 12px;">
                                     <!-- first -->
                                     <p>Registration Date: <strong>{{ props.row.registration_date }}</strong></p>
                                     <p>Registration Number: <strong>{{ props.row.registration_number }}</strong></p>
@@ -75,7 +75,7 @@
                                     <p>Outcome: <strong>{{ getValues('outcome', props.row.outcome_id) }}</strong></p>
                                     <p>Biting Animal Status: <strong>{{ getValues('biting_animal_status', props.row.biting_animal_status_id) }}</strong></p>
                                 </el-col>
-                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" style="padding: 0px 12px 0px 12px;">
                                     <!-- second -->
                                     <el-table :data="props.row.treatment" size="mini" border style="width: 100%">
                                          <el-table-column label="Treatment Session List" align="center">
@@ -252,10 +252,10 @@ export default {
         },
         getValues(columnKey, id) {
             if (typeof id == "number") {
-                return this.enum[columnKey].find(c=>c.id == id)?.code || 'N/A'
+                return this.enum[columnKey]?.find(c=>c.id == id)?.code || 'N/A'
             } else {
-                return this.enum[columnKey].reduce((items, row) => {
-                    if (id.includes(row.id)) {
+                return this.enum[columnKey]?.reduce((items, row) => {
+                    if (id?.includes(row.id)) {
                         items.push(row.code)
                     }
                     return items

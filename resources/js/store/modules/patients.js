@@ -43,12 +43,15 @@ const actions = {
             });
     },
     async importPatients({ commit, dispatch }, form) {
-        await axios.post(`import_patients`, form)
-            .then(response => {
-                console.log(response.data)
-            }).catch(error=>{
-
-            });
+        return await new Promise((resolve, reject) => {
+            axios.post(`import_patients`, form)
+                .then(response => {
+                    // console.log(response.data)
+                    resolve(response)
+                }).catch(error=>{
+                    reject(error?.response)
+                });
+        })
     },
     async manageTreatment({ commit, dispatch }, form) {
         await axios.post(`manage_treatment/${form.id ?? ""}`, form)

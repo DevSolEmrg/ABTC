@@ -169,6 +169,7 @@
                             </el-dropdown-menu>
                         </el-dropdown>
 
+                        <OnQueue />
 
 <!-- <i class="el-icon-bell" style="margin-left: 5px; margin-top:0px;font-size:16px;"> <span v-if="side_nav" style="position:relative; top:-12px; right:3px; background-color:#E40D0D; color:white; border-radius:50%; font-size:10px;padding:3px; font-weight:normal; font-style:normal">12</span> </i> -->
 
@@ -231,7 +232,9 @@
 
 <script>
 import { mapGetters } from "vuex";
+import OnQueue from './OnQueue'
 export default {
+    components: { OnQueue },
     data() {
         const item = {
             date: '2016-05-02',
@@ -328,7 +331,7 @@ export default {
             return this.auth?.roles?.map(i=>i.name).join(', ') || this.auth_info.userRole
         }
     },
-    created() {
+    async created() {
         this.checkIfHasExpandedNav()
         this.$store.commit('SET_RECENT_ROUTE', this.$route.name)
         if (this.$attrs.auth) {
@@ -337,6 +340,13 @@ export default {
             this.auth_info.usernameFromEmail = this.auth?.email?.split('@')[0] || 'none'
             this.auth_info.username = this.auth?.name || 'none'
             this.auth_info.userRole = this.auth?.roles?.map(i=>i.name).join(', ') || 'none'
+
+            console.log("auth", this.auth)
+
+            await Echo.channel(`userId${this.auth?.id}`)
+                .listen('ImportPatientEvent', (e)=>{
+                    console.log(`batch record #${e?.batch?.current_item_number}`, e.batch)
+                })
         }
     },
     mounted() {
