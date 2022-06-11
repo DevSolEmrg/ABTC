@@ -16,6 +16,10 @@ class ReferenceSeeder extends Seeder
         [
             'code' => 'PC',
             'desc' => 'Pet Cat'
+        ],
+        [
+            'code' => 'SD',
+            'desc' => 'Stray Dog'
         ]
     ];
 
@@ -116,34 +120,34 @@ class ReferenceSeeder extends Seeder
     public $category = [
         [
             'code' => '1',
-            'desc' => '1'
+            'desc' => 'No exposure'
         ],
         [
             'code' => '2',
-            'desc' => '2'
+            'desc' => 'Minor exposure'
         ],
         [
             'code' => '3',
-            'desc' => '3'
+            'desc' => 'Severe exposure'
         ]
     ];
 
     public $outcome = [
         [
             'code' => 'C',
-            'desc' => 'C'
+            'desc' => 'Completed'
         ],
         [
             'code' => 'INC',
-            'desc' => 'INC'
+            'desc' => 'Incomplete'
         ],
         [
             'code' => 'N',
-            'desc' => 'N'
+            'desc' => 'Died'
         ],
         [
             'code' => 'D',
-            'desc' => 'D'
+            'desc' => 'None'
         ]
     ];
 
@@ -173,6 +177,17 @@ class ReferenceSeeder extends Seeder
     //     ]
     // ];
 
+    public $route = [
+        [
+            'code' => 'ID',
+            'desc' => 'Intramuscular'
+        ],
+        [
+            'code' => 'IM',
+            'desc' => 'Intradermal'
+        ]
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -188,6 +203,7 @@ class ReferenceSeeder extends Seeder
         $biting_animal_status = $this->biting_animal_status;
         $site_of_infection = $this->site_of_infection;
         // $is_washed = $this->is_washed;
+        $route = $this->route;
 
         foreach(
             [
@@ -197,7 +213,8 @@ class ReferenceSeeder extends Seeder
                 'outcome',
                 'biting_animal_status',
                 'site_of_infection',
-                // 'is_washed'
+                // 'is_washed',
+                'route'
             ] as $variable_name
         ) {
             foreach(${$variable_name} as $key=>$value) {

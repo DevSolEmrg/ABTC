@@ -135,7 +135,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                        <el-form-item label="Type of Expos." prop="type_of_exposure_id">
+                        <el-form-item label="Type of Bite" prop="type_of_exposure_id">
                             <el-select v-model="ruleForm.type_of_exposure_id" placeholder="Select" style="width:100%" size="small" clearable>
                                 <el-option v-for="type in enumValues.type_of_exposure" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
                             </el-select>
@@ -155,7 +155,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                        <el-form-item label="Washed ?" prop="is_washed">
+                        <el-form-item label="Washing of Bite" prop="is_washed">
                             <el-select v-model="ruleForm.is_washed" placeholder="Select" style="width:100%" size="small" clearable>
                                 <el-option v-for="type in enumValues.is_washed" :key="type.code" :label="type.desc" :value="type.code" :title="type.desc" />
                             </el-select>
@@ -170,7 +170,7 @@
 
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                        <el-form-item label="Rig Date Given" prop="rig_date_given">
+                        <el-form-item label="RIG Date Given" prop="rig_date_given">
                             <el-date-picker
                                 style="width:100%"
                                 size="small"
@@ -184,9 +184,15 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                        <el-form-item label="Route" prop="route">
+                        <!-- <el-form-item label="Route" prop="route">
                             <el-input v-model="ruleForm.route" style="width:100%" size="small" clearable></el-input>
+                        </el-form-item> -->
+                        <el-form-item label="Route" prop="route">
+                            <el-select v-model="ruleForm.route" placeholder="Select" style="width:100%" size="small" clearable>
+                                <el-option v-for="type in enumValues.route" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
+                            </el-select>
                         </el-form-item>
+
                     </el-col>
                 </el-row>
 

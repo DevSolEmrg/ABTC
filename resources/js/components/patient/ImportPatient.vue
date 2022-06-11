@@ -700,7 +700,8 @@ export default {
                         'site_of_infection_id': this.enum?.site_of_infection?.find(t=>t?.code?.toLowerCase() == item?.site_of_infection?.toString()?.toLowerCase())?.id || '',
                         'is_washed': !!item.is_washed && ['Y', 'YES'].includes(item.is_washed?.toString()?.toUpperCase()?.trim()) ? 1 : 0,
                         'rig_date_given': item.rig_date_given,
-                        'route': item.route,
+                        // 'route': item.route,
+                        'route': this.enum?.route?.find(t=>t?.code?.toLowerCase() == item?.route?.toString()?.toLowerCase())?.id || '',
                         'category_id': this.enum?.category?.find(t=>t?.code?.toLowerCase() == item?.category?.toString()?.toLowerCase())?.id || '',
                         'outcome_id': this.enum?.outcome?.find(t=>t?.code?.toLowerCase() == item?.outcome?.toString()?.toLowerCase())?.id || '',
                         'biting_animal_status_id': this.enum?.biting_animal_status?.find(t=>t?.code?.toString()?.toLowerCase() == item?.animal_status?.toLowerCase())?.id || '',
@@ -1060,6 +1061,16 @@ export default {
                                                         value: row_data.site_of_infection,
                                                         message: "Invalid, not exist on app instance",
                                                         cell_position: `ws#${sheetIndex + 1} ${this.configs.site_of_infection + rowNumber}`,
+                                                        valid_input: 'App Instance',
+                                                    })
+                                                }
+
+                                                if (!!row_data.route && !this.enum.route?.map(i=>i.code)?.includes(row_data.route?.toString()?.trim()?.toUpperCase()?.trim())) {
+                                                    //required
+                                                    this.excel_error.push({...err_id,
+                                                        value: row_data.route,
+                                                        message: "Invalid, not exist on app instance",
+                                                        cell_position: `ws#${sheetIndex + 1} ${this.configs.route + rowNumber}`,
                                                         valid_input: 'App Instance',
                                                     })
                                                 }

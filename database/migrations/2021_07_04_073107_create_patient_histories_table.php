@@ -51,7 +51,10 @@ class CreatePatientHistoriesTable extends Migration
             $table->boolean('is_washed')->nullable()->default(true);
 
             $table->dateTime('rig_date_given')->nullable();
-            $table->string('route')->nullable();
+            // $table->string('route')->nullable();
+
+            $table->unsignedBigInteger('route')->nullable();
+            $table->foreign('route')->references('id')->on('references')->cascadeOnDelete();
 
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('references')->cascadeOnDelete();

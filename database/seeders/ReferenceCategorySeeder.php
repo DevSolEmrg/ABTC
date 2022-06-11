@@ -22,7 +22,8 @@ class ReferenceCategorySeeder extends Seeder
             [ 'name' => 'Category' ],
             [ 'name' => 'Outcome' ],
             [ 'name' => 'Biting Animal Status' ],
-            [ 'name' => 'Is Washed' ]
+            [ 'name' => 'Is Washed' ],
+            [ 'name' => 'Route' ]
         ];
 
         foreach($category as $key=>$ctg) {

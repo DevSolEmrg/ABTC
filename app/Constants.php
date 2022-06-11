@@ -123,6 +123,7 @@ class Constants {
     public $outcome;
     public $biting_animal_status;
     // public $is_washed;
+    public $route;
 
     public function __construct()
     {
@@ -133,6 +134,7 @@ class Constants {
         $this->outcome = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Outcome'); })->get()->toArray();
         $this->biting_animal_status = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Biting Animal Status'); })->get()->toArray();
         // $this->is_washed = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Is Washed'); })->get()->toArray();
+        $this->route = \App\Models\Reference::with(['category'])->whereHas('category', function($q){ $q->whereName('Route'); })->get()->toArray();
     }
 
     public function enumValues()
@@ -144,6 +146,7 @@ class Constants {
             'category' => $this->category,
             'outcome' => $this->outcome,
             'biting_animal_status' => $this->biting_animal_status,
+            'route' => $this->route,
             'is_washed' => $this->is_washed
         ];
     }
