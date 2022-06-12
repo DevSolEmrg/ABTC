@@ -1,6 +1,32 @@
 <template>
     <div>
         <el-row :gutter="12">
+            <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" style="margin-bottom:20px">
+                <!-- <el-select multiple placeholder="Select one or more" style="float:right" size="small" filterable clearable>
+                    <el-option v-for="type in enumValues.site_of_infection_history" :key="type.code" :label="type.code" :value="type.id" :title="type.desc" />
+                    <el-option label="2022" value="saf" />
+                    <el-option label="2021" value="saf" />
+                    <el-option label="2020" value="saf" />
+                </el-select> -->
+                <!-- <span style="float:left"> Summary </span> -->
+                <el-button size="small" plain style="float:right; margin-left:5px">FILTER</el-button>
+                <el-date-picker
+                    v-model="value2"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="To"
+                    start-placeholder="Start date"
+                    end-placeholder="End date"
+                    style="float:right;width:380px"
+                    size="small"
+                    timezone="UTC"
+                    value-format="yyyy-MM-dd"
+                    :picker-options="pickerOptions">
+                </el-date-picker>
+            </el-col>
+        </el-row>
+        <el-row :gutter="12">
             <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" style="margin-bottom:20px">
                 <el-card shadow="hover">
                     <h2 style="position: relative; z-index: 99;float:left;">325,325</h2>
@@ -176,11 +202,47 @@ export default {
             address: 'No. 189, Grove St, Los Angeles'
         };
         return {
-            tableData: Array(23).fill(item)
+            tableData: Array(23).fill(item),
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
+                },
+                shortcuts: [{
+                    text: 'Last week',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: 'Last month',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: 'Last 3 months',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }]
+            },
+            value2: ''
         }
     },
     async mounted() {
         this.$store.commit('SET_LOADING_COMPONENT', false)
+
+        const end = new Date();
+        const start = new Date();
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+        this.value2 = [start.toISOString().substr(0,10), end.toISOString().substr(0,10)];
 
         const ctx = await document.getElementById('myChart').getContext('2d');
         const ctx2 = await document.getElementById('myChart2').getContext('2d');
