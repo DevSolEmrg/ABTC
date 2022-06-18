@@ -45,7 +45,7 @@
                     </el-dropdown>
                     <el-row>
                         <el-col>
-                            <br><h6 style="float:left">Male</h6>
+                            <br><h6 style="float:left">Severe exposure</h6>
                         </el-col>
                     </el-row>
 
@@ -73,7 +73,7 @@
                     </el-dropdown>
                     <el-row>
                         <el-col>
-                            <br><h6 style="float:left">Male</h6>
+                            <br><h6 style="float:left">Minor exposure</h6>
                         </el-col>
                     </el-row>
 
@@ -101,7 +101,7 @@
                     </el-dropdown>
                     <el-row>
                         <el-col>
-                            <br><h6 style="float:left">Male</h6>
+                            <br><h6 style="float:left">No exposure</h6>
                         </el-col>
                     </el-row>
 
@@ -116,20 +116,29 @@
         <el-row :gutter="12">
             <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16" style="margin-bottom:20px">
                 <el-card shadow="hover">
-                    <h2 style="position: relative; z-index: 99;float:left;">325,325</h2>
+                    <h5 style="position: relative; z-index: 99;float:left;">Observations</h5>
                     <!-- <span class="mdi mdi-dots-vertical" style="float:right;top:0"></span> -->
+
+
+
                     <el-dropdown trigger="click" style="position: relative;z-index: 99;float: right;">
                         <span class="el-dropdown-link">
-                            <i class="mdi mdi-dots-vertical"></i>
+                            By Age <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item icon="el-icon-plus">Action 1</el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-circle-plus">Action 2</el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-circle-plus-outline">Action 3</el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-check">Action 4</el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-circle-check">Action 5</el-dropdown-item>
+                            <el-dropdown-item style="text-align:right" v-for="(item, i) in options" :key="i" :icon="`${item.label == 'Age' ? 'el-icon-check' : ''}`">{{ item.label }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
+
+                    <!-- <el-select v-model="value" placeholder="Select" style="float: right;z-index: 99;" size="mini">
+                        <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select> -->
+
                     <el-row>
                         <!-- <el-col>
                             <br><h6 style="float:left">Male</h6>
@@ -147,9 +156,9 @@
             </el-col>
             <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" style="margin-bottom:20px">
                 <el-card shadow="hover">
-                    <h2 style="position: relative; z-index: 99;float:left;">325,325</h2>
+                    <h5 style="position: relative; z-index: 99;float:left;">Severity of Rabies Exposure</h5>
                     <!-- <span class="mdi mdi-dots-vertical" style="float:right;top:0"></span> -->
-                    <el-dropdown trigger="click" style="position: relative;z-index: 99;float: right;">
+                    <!-- <el-dropdown trigger="click" style="position: relative;z-index: 99;float: right;">
                         <span class="el-dropdown-link">
                             <i class="mdi mdi-dots-vertical"></i>
                         </span>
@@ -160,7 +169,18 @@
                             <el-dropdown-item icon="el-icon-check">Action 4</el-dropdown-item>
                             <el-dropdown-item icon="el-icon-circle-check">Action 5</el-dropdown-item>
                         </el-dropdown-menu>
+                    </el-dropdown> -->
+
+                    <el-dropdown trigger="click" style="position: relative;z-index: 99;float: right;">
+                        <span class="el-dropdown-link">
+                            By Severity <i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item style="text-align:right" v-for="(item, i) in options1" :key="i" :icon="`${item.label == 'Severity' ? 'el-icon-check' : ''}`">{{ item.label }}</el-dropdown-item>
+                        </el-dropdown-menu>
                     </el-dropdown>
+
+
                     <el-row>
                         <!-- <el-col>
                             <br><h6 style="float:left">Male</h6>
@@ -233,7 +253,51 @@ export default {
                     }
                 }]
             },
-            value2: ''
+            value2: '',
+
+            options: [
+                {
+                    value: 'Option1',
+                    label: 'Age'
+                },
+                {
+                    value: 'Option2',
+                    label: 'Gender'
+                },
+                {
+                    value: 'Option3',
+                    label: 'Bitten Location'
+                },
+                {
+                    value: 'Option4',
+                    label: 'Ownership of the Dog'
+                },
+                {
+                    value: 'Option5',
+                    label: 'Barangay'
+                },
+                {
+                    value: 'Option6',
+                    label: 'Year'
+                }
+            ],
+
+            options1: [
+                {
+                    value: 'Option1',
+                    label: 'Severity'
+                },
+                {
+                    value: 'Option2',
+                    label: 'Most Popular Animal'
+                },
+                {
+                    value: 'Option3',
+                    label: 'Outcome'
+                },
+            ],
+
+            value: ''
         }
     },
     async mounted() {
@@ -249,36 +313,83 @@ export default {
 
         await new Chart(ctx, {
             type: 'bar',
+            // data: {
+            //     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            //     datasets: [{
+            //         label: '# of Votes',
+            //         data: [12, 19, 3, 5, 2, 3],
+            //         backgroundColor: [
+            //             'rgba(255, 99, 132, 0.2)',
+            //             'rgba(54, 162, 235, 0.2)',
+            //             'rgba(255, 206, 86, 0.2)',
+            //             'rgba(75, 192, 192, 0.2)',
+            //             'rgba(153, 102, 255, 0.2)',
+            //             'rgba(255, 159, 64, 0.2)'
+            //         ],
+            //         borderColor: [
+            //             'rgba(255, 99, 132, 1)',
+            //             'rgba(54, 162, 235, 1)',
+            //             'rgba(255, 206, 86, 1)',
+            //             'rgba(75, 192, 192, 1)',
+            //             'rgba(153, 102, 255, 1)',
+            //             'rgba(255, 159, 64, 1)'
+            //         ],
+            //         borderWidth: 1
+            //     }]
+            // },
+            // options: {
+            //     scales: {
+            //         y: {
+            //             beginAtZero: true
+            //         }
+            //     }
+            // }
+
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: ["<  1","1 - 2","3 - 4","5 - 9","10 - 14","15 - 19","20 - 24","25 - 29","> - 29"],
                 datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                        label: 'Employee',
+                        backgroundColor: "#caf270",
+                        data: [12, 59, 5, 56, 58,12, 59, 87, 45],
+                    }, {
+                        label: 'Engineer',
+                        backgroundColor: "#45c490",
+                        data: [12, 59, 5, 56, 58,12, 59, 85, 23],
+                    }, {
+                        label: 'Government',
+                        backgroundColor: "#008d93",
+                        data: [12, 59, 5, 56, 58,12, 59, 65, 51],
+                    }, {
+                        label: 'Political parties',
+                        backgroundColor: "#2e5468",
+                        data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
+                }],
             },
             options: {
+                tooltips: {
+                displayColors: true,
+                callbacks:{
+                    mode: 'x',
+                },
+                },
                 scales: {
-                    y: {
-                        beginAtZero: true
+                xAxes: [{
+                    stacked: true,
+                    gridLines: {
+                        display: false,
                     }
-                }
+                }],
+                yAxes: [{
+                    stacked: true,
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                    type: 'linear',
+                }]
+                },
+                // responsive: true,
+                // maintainAspectRatio: false,
+                legend: { position: 'bottom' },
             }
         });
 
