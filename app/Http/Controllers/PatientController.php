@@ -235,4 +235,22 @@ class PatientController extends Controller
         return $response;
     }
 
+    public function dashboardData()
+    {
+        return response()->json([
+            'count_severe' => Patient::with(['history' => function ($q){
+                    return $q->severeExposure();
+                }])
+                ->whereHas('history', function ($q){
+                    return $q->severeExposure();
+                })->get(),
+            'count_minor' => Patient::with(['history' => function ($q){
+                return $q->minorExposure();
+            }])
+            ->whereHas('history', function ($q){
+                return $q->minorExposure();
+            })->get(),
+        ]);
+    }
+
 }

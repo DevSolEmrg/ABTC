@@ -7,6 +7,7 @@ import enums from "./modules/enum";
 import createPersistedState from "vuex-persistedstate";
 import request from "./modules/request";
 import loader from "./modules/loader";
+import dashboard from "./modules/dashboard";
 
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -23,7 +24,8 @@ const store =  new Vuex.Store({
         vaccines,
         personnels,
         roles,
-        enums
+        enums,
+        dashboard
     },
     plugins: [
         createPersistedState({

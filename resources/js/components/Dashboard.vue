@@ -11,7 +11,7 @@
                 <!-- <span style="float:left"> Summary </span> -->
                 <el-button size="small" plain style="float:right; margin-left:5px">FILTER</el-button>
                 <el-date-picker
-                    v-model="value2"
+                    v-model="date_range"
                     type="daterange"
                     align="right"
                     unlink-panels
@@ -212,6 +212,7 @@
 <script>
 
 import { Chart, registerables } from 'chart.js'
+import { mapGetters } from 'vuex';
 Chart.register(...registerables);
 
 export default {
@@ -253,7 +254,7 @@ export default {
                     }
                 }]
             },
-            value2: '',
+            date_range: '',
 
             options: [
                 {
@@ -297,16 +298,28 @@ export default {
                 },
             ],
 
-            value: ''
+            value: '',
+            chart1_categ: '',
+            chart2_categ: ''
         }
     },
+    computed: {
+        ...mapGetters(['date_filter', 'chart_category'])
+    },
     async mounted() {
+        this.date_range = Object.values(this.date_filter)
+        await axios.get('dashboard_data').then((res)=>{
+            console.log("res", res.data, this.date_filter, this.chart_category)
+
+            this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
+            this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
+        })
         this.$store.commit('SET_LOADING_COMPONENT', false)
 
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        this.value2 = [start.toISOString().substr(0,10), end.toISOString().substr(0,10)];
+        // const end = new Date();
+        // const start = new Date();
+        // start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+        // this.date_range = [start.toISOString().substr(0,10), end.toISOString().substr(0,10)];
 
         const ctx = await document.getElementById('myChart').getContext('2d');
         const ctx2 = await document.getElementById('myChart2').getContext('2d');
@@ -346,24 +359,30 @@ export default {
             // }
 
             data: {
-                labels: ["<  1","1 - 2","3 - 4","5 - 9","10 - 14","15 - 19","20 - 24","25 - 29","> - 29"],
-                datasets: [{
-                        label: 'Employee',
-                        backgroundColor: "#caf270",
-                        data: [12, 59, 5, 56, 58,12, 59, 87, 45],
-                    }, {
-                        label: 'Engineer',
-                        backgroundColor: "#45c490",
-                        data: [12, 59, 5, 56, 58,12, 59, 85, 23],
-                    }, {
-                        label: 'Government',
+                labels: ["<  5","5 - 14","15 - 24","25 - 34","35 - 44","45 - 54","55 - 64","65 - >"],
+                datasets: [
+                    // {
+                    //     label: 'Employee',
+                    //     backgroundColor: "#caf270",
+                    //     data: [12, 59, 5, 56, 58,12, 59, 87],
+                    // },
+                    {
+                        label: 'Severe Exposure',
                         backgroundColor: "#008d93",
-                        data: [12, 59, 5, 56, 58,12, 59, 65, 51],
-                    }, {
-                        label: 'Political parties',
-                        backgroundColor: "#2e5468",
-                        data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
-                }],
+                        data: [12, 59, 5, 56, 58,12, 59, 65],
+                    },
+                    {
+                        label: 'Minor Exposure',
+                        backgroundColor: "#45c490",
+                        data: [17, 69, 8, 59, 68,22, 79, 85],
+                    }
+
+                //     , {
+                //         label: 'Political parties',
+                //         backgroundColor: "#2e5468",
+                //         data: [12, 59, 5, 56, 58, 12, 59, 12],
+                // }
+                ],
             },
             options: {
                 tooltips: {
@@ -373,19 +392,19 @@ export default {
                 },
                 },
                 scales: {
-                xAxes: [{
+                xAxes: {
                     stacked: true,
                     gridLines: {
                         display: false,
                     }
-                }],
-                yAxes: [{
+                },
+                yAxes: {
                     stacked: true,
                     ticks: {
                         beginAtZero: true,
                     },
                     type: 'linear',
-                }]
+                }
                 },
                 // responsive: true,
                 // maintainAspectRatio: false,
