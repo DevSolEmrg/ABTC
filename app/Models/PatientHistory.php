@@ -77,6 +77,20 @@ class PatientHistory extends Model
         $this->attributes['rig_date_given'] =  !!$date ? Carbon::parse($date)->timezone('Asia/Manila')->format('Y-m-d H:i:s') : null;
     }
 
+    public function scopeSevereExposure($query)
+    {
+        $categ = ReferenceCategory::where('name', 'Category')->first();
+        $severe_id = Reference::where('reference_category_id', $categ->id)->where('code', 3)->first()->id;
+        return $query->where('category_id', $severe_id);
+    }
+
+    public function scopeMinorExposure($query)
+    {
+        $categ = ReferenceCategory::where('name', 'Category')->first();
+        $severe_id = Reference::where('reference_category_id', $categ->id)->where('code', 2)->first()->id;
+        return $query->where('category_id', $severe_id);
+    }
+
     // public function setRegistrationNumberAttribute($value)
     // {
     //     $this->attributes['registration_number'] =  !!$value ? $value : null;
