@@ -308,11 +308,19 @@ export default {
     },
     async mounted() {
         this.date_range = Object.values(this.date_filter)
-        await axios.get('dashboard_data').then((res)=>{
+        this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
+        this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
+        await axios.get(
+            `dashboard_data` +
+            `?from=${this.date_filter.from}` +
+            `&to=${this.date_filter.to}` +
+            `&chart1_categ=${this.chart1_categ}` +
+            `&chart2_categ=${this.chart2_categ}`
+        ).then((res)=>{
             console.log("res", res.data, this.date_filter, this.chart_category)
 
-            this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
-            this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
+            // this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
+            // this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
         })
         this.$store.commit('SET_LOADING_COMPONENT', false)
 

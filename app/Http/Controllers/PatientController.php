@@ -237,18 +237,24 @@ class PatientController extends Controller
 
     public function dashboardData()
     {
+        // if (request()->has('from') && request()->has('to')) {
+        //     ->whereBetween('created_at', [$selected[0].' 00:00:00', $selected[1].' 23:59:59'])
+        // }
+
+        // $date_range = [request('from'), request('to')];
+
         return response()->json([
             'count_severe' => Patient::with(['history' => function ($q){
-                    return $q->severeExposure();
+                    return $q->whereBetween('created_at', [request('from'), request('to')])->severeExposure();
                 }])
                 ->whereHas('history', function ($q){
-                    return $q->severeExposure();
+                    return $q->whereBetween('created_at', [request('from'), request('to')])->severeExposure();
                 })->get(),
             'count_minor' => Patient::with(['history' => function ($q){
-                return $q->minorExposure();
+                return $q->whereBetween('created_at', [request('from'), request('to')])->minorExposure();
             }])
             ->whereHas('history', function ($q){
-                return $q->minorExposure();
+                return $q->whereBetween('created_at', [request('from'), request('to')])->minorExposure();
             })->get(),
         ]);
     }
