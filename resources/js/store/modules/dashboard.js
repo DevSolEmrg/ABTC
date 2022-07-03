@@ -24,7 +24,8 @@ const mutations = {
     //     state.loading_component = status
     // }
     SET_DATE_FILTER: (state, dates) => {
-        state.date_filter = dates
+        state.date_filter.from = dates[0]
+        state.date_filter.to = dates[1]
     },
     SET_CHART_CATEGORY: (state, categ) => {
         state.chart_category = categ

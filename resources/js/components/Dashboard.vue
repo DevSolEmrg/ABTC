@@ -9,7 +9,8 @@
                     <el-option label="2020" value="saf" />
                 </el-select> -->
                 <!-- <span style="float:left"> Summary </span> -->
-                <el-button size="small" plain style="float:right; margin-left:5px">FILTER</el-button>
+                <el-button size="small" plain style="float:right; margin-left:5px" @click="filterData()">FILTER</el-button>
+                <el-button size="small" plain style="float:right; margin-left:5px" @click="filterData()">RESET</el-button>
                 <el-date-picker
                     v-model="date_range"
                     type="daterange"
@@ -144,7 +145,8 @@
                             <br><h6 style="float:left">Male</h6>
                         </el-col> -->
                         <el-col>
-                            <canvas id="myChart" width="150" height="71"></canvas>
+                            <!-- <canvas id="myChart" width="150" height="71"></canvas> -->
+                            <GenerateChart v-if="Object.entries(chartData).length" width="150" height="71" :chartAttributes="{ Chart, registerables }" :chartData="chartData"/>
                         </el-col>
                     </el-row>
 
@@ -186,7 +188,8 @@
                             <br><h6 style="float:left">Male</h6>
                         </el-col> -->
                         <el-col>
-                            <canvas id="myChart2" width="10" height="10"></canvas>
+                            <!-- <canvas id="myChart2" width="10" height="10"></canvas> -->
+                            <GenerateChart v-if="Object.entries(chartData2).length" width="10" height="10" :chartAttributes="{ Chart, registerables }" :chartData="chartData2"/>
                         </el-col>
                     </el-row>
 
@@ -214,15 +217,21 @@
 import { Chart, registerables } from 'chart.js'
 import { mapGetters } from 'vuex';
 Chart.register(...registerables);
+import GenerateChart from './dashboard/GenerateChart'
 
 export default {
+    components: {
+        GenerateChart
+    },
     data() {
+
         const item = {
             date: '2016-05-02',
             name: 'Tom',
             address: 'No. 189, Grove St, Los Angeles'
         };
-        return {
+        return {Chart: null,
+        registerables: null,
             tableData: Array(23).fill(item),
             pickerOptions: {
                 disabledDate(time) {
@@ -300,160 +309,278 @@ export default {
 
             value: '',
             chart1_categ: '',
-            chart2_categ: ''
+            chart2_categ: '',
+            chartData: {
+                type: 'bar',
+                data: {
+                    labels: ["<  5","5 - 14","15 - 24","25 - 34","35 - 44","45 - 54","55 - 64","65 - >"],
+                    datasets: [
+                        {
+                            label: 'Severe Exposure',
+                            backgroundColor: "#008d93",
+                            data: [12, 59, 5, 56, 58,12, 59, 65],
+                        },
+                        {
+                            label: 'Minor Exposure',
+                            backgroundColor: "#45c490",
+                            data: [17, 69, 8, 59, 68,22, 79, 85],
+                        }
+                    ],
+                },
+                options: {
+                    tooltips: {
+                        displayColors: true,
+                        callbacks:{
+                            mode: 'x',
+                        },
+                    },
+                    scales: {
+                        xAxes: {
+                            stacked: true,
+                            gridLines: {
+                                display: false,
+                            }
+                        },
+                        yAxes: {
+                            stacked: true,
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            type: 'linear',
+                        }
+                    },
+                    legend: { position: 'bottom' },
+                }
+            },
+            chartData2 : {
+                type: 'pie',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [12, 19, 3, 5, 2, 3],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
         }
     },
     computed: {
         ...mapGetters(['date_filter', 'chart_category'])
     },
+    methods: {
+        filterData() {
+            this.$store.commit('SET_DATE_FILTER', this.date_range)
+            this.getData()
+        },
+        async getData() {
+            this.date_range = Object.values(this.date_filter)
+            this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
+            this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
+            await axios.get(
+                `dashboard_data` +
+                `?from=${this.date_filter.from}` +
+                `&to=${this.date_filter.to}` +
+                `&chart1_categ=${this.chart1_categ}` +
+                `&chart2_categ=${this.chart2_categ}`
+            ).then((res)=>{
+                console.log("res", res.data, this.date_filter, this.chart_category)
+
+                let new_data = JSON.parse(JSON.stringify(this.chartData))
+                this.chartData = []
+                this.$nextTick(()=>{
+
+                    new_data.data.datasets[1].label = "updated label"
+                    new_data.data.datasets[1].data = [77, 69, 89, 59, 68,92, 79, 50]
+
+                    this.chartData = new_data
+                })
+
+                // this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
+                // this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
+            })
+            this.$store.commit('SET_LOADING_COMPONENT', false)
+        }
+    },
+    created() {
+
+    },
     async mounted() {
-        this.date_range = Object.values(this.date_filter)
-        this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
-        this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
-        await axios.get(
-            `dashboard_data` +
-            `?from=${this.date_filter.from}` +
-            `&to=${this.date_filter.to}` +
-            `&chart1_categ=${this.chart1_categ}` +
-            `&chart2_categ=${this.chart2_categ}`
-        ).then((res)=>{
-            console.log("res", res.data, this.date_filter, this.chart_category)
+        this.Chart = Chart
+        this.registerables = registerables
 
-            // this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
-            // this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
-        })
-        this.$store.commit('SET_LOADING_COMPONENT', false)
+        await this.getData()
 
-        // const end = new Date();
-        // const start = new Date();
-        // start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        // this.date_range = [start.toISOString().substr(0,10), end.toISOString().substr(0,10)];
+        // this.date_range = Object.values(this.date_filter)
+        // this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
+        // this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
+        // await axios.get(
+        //     `dashboard_data` +
+        //     `?from=${this.date_filter.from}` +
+        //     `&to=${this.date_filter.to}` +
+        //     `&chart1_categ=${this.chart1_categ}` +
+        //     `&chart2_categ=${this.chart2_categ}`
+        // ).then((res)=>{
+        //     console.log("res", res.data, this.date_filter, this.chart_category)
 
-        const ctx = await document.getElementById('myChart').getContext('2d');
-        const ctx2 = await document.getElementById('myChart2').getContext('2d');
+        //     // this.chart1_categ = JSON.parse(JSON.stringify(this.chart_category.chart1))
+        //     // this.chart2_categ = JSON.parse(JSON.stringify(this.chart_category.chart2))
+        // })
+        // this.$store.commit('SET_LOADING_COMPONENT', false)
 
-        await new Chart(ctx, {
-            type: 'bar',
-            // data: {
-            //     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            //     datasets: [{
-            //         label: '# of Votes',
-            //         data: [12, 19, 3, 5, 2, 3],
-            //         backgroundColor: [
-            //             'rgba(255, 99, 132, 0.2)',
-            //             'rgba(54, 162, 235, 0.2)',
-            //             'rgba(255, 206, 86, 0.2)',
-            //             'rgba(75, 192, 192, 0.2)',
-            //             'rgba(153, 102, 255, 0.2)',
-            //             'rgba(255, 159, 64, 0.2)'
-            //         ],
-            //         borderColor: [
-            //             'rgba(255, 99, 132, 1)',
-            //             'rgba(54, 162, 235, 1)',
-            //             'rgba(255, 206, 86, 1)',
-            //             'rgba(75, 192, 192, 1)',
-            //             'rgba(153, 102, 255, 1)',
-            //             'rgba(255, 159, 64, 1)'
-            //         ],
-            //         borderWidth: 1
-            //     }]
-            // },
-            // options: {
-            //     scales: {
-            //         y: {
-            //             beginAtZero: true
-            //         }
-            //     }
-            // }
+        // // const end = new Date();
+        // // const start = new Date();
+        // // start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+        // // this.date_range = [start.toISOString().substr(0,10), end.toISOString().substr(0,10)];
 
-            data: {
-                labels: ["<  5","5 - 14","15 - 24","25 - 34","35 - 44","45 - 54","55 - 64","65 - >"],
-                datasets: [
-                    // {
-                    //     label: 'Employee',
-                    //     backgroundColor: "#caf270",
-                    //     data: [12, 59, 5, 56, 58,12, 59, 87],
-                    // },
-                    {
-                        label: 'Severe Exposure',
-                        backgroundColor: "#008d93",
-                        data: [12, 59, 5, 56, 58,12, 59, 65],
-                    },
-                    {
-                        label: 'Minor Exposure',
-                        backgroundColor: "#45c490",
-                        data: [17, 69, 8, 59, 68,22, 79, 85],
-                    }
+        // const ctx = await document.getElementById('myChart').getContext('2d');
+        // const ctx2 = await document.getElementById('myChart2').getContext('2d');
 
-                //     , {
-                //         label: 'Political parties',
-                //         backgroundColor: "#2e5468",
-                //         data: [12, 59, 5, 56, 58, 12, 59, 12],
-                // }
-                ],
-            },
-            options: {
-                tooltips: {
-                displayColors: true,
-                callbacks:{
-                    mode: 'x',
-                },
-                },
-                scales: {
-                xAxes: {
-                    stacked: true,
-                    gridLines: {
-                        display: false,
-                    }
-                },
-                yAxes: {
-                    stacked: true,
-                    ticks: {
-                        beginAtZero: true,
-                    },
-                    type: 'linear',
-                }
-                },
-                // responsive: true,
-                // maintainAspectRatio: false,
-                legend: { position: 'bottom' },
-            }
-        });
+        // await new Chart(ctx, {
+        //     type: 'bar',
+        //     // data: {
+        //     //     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        //     //     datasets: [{
+        //     //         label: '# of Votes',
+        //     //         data: [12, 19, 3, 5, 2, 3],
+        //     //         backgroundColor: [
+        //     //             'rgba(255, 99, 132, 0.2)',
+        //     //             'rgba(54, 162, 235, 0.2)',
+        //     //             'rgba(255, 206, 86, 0.2)',
+        //     //             'rgba(75, 192, 192, 0.2)',
+        //     //             'rgba(153, 102, 255, 0.2)',
+        //     //             'rgba(255, 159, 64, 0.2)'
+        //     //         ],
+        //     //         borderColor: [
+        //     //             'rgba(255, 99, 132, 1)',
+        //     //             'rgba(54, 162, 235, 1)',
+        //     //             'rgba(255, 206, 86, 1)',
+        //     //             'rgba(75, 192, 192, 1)',
+        //     //             'rgba(153, 102, 255, 1)',
+        //     //             'rgba(255, 159, 64, 1)'
+        //     //         ],
+        //     //         borderWidth: 1
+        //     //     }]
+        //     // },
+        //     // options: {
+        //     //     scales: {
+        //     //         y: {
+        //     //             beginAtZero: true
+        //     //         }
+        //     //     }
+        //     // }
 
-        await new Chart(ctx2, {
-            type: 'pie',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        //     data: {
+        //         labels: ["<  5","5 - 14","15 - 24","25 - 34","35 - 44","45 - 54","55 - 64","65 - >"],
+        //         datasets: [
+        //             // {
+        //             //     label: 'Employee',
+        //             //     backgroundColor: "#caf270",
+        //             //     data: [12, 59, 5, 56, 58,12, 59, 87],
+        //             // },
+        //             {
+        //                 label: 'Severe Exposure',
+        //                 backgroundColor: "#008d93",
+        //                 data: [12, 59, 5, 56, 58,12, 59, 65],
+        //             },
+        //             {
+        //                 label: 'Minor Exposure',
+        //                 backgroundColor: "#45c490",
+        //                 data: [17, 69, 8, 59, 68,22, 79, 85],
+        //             }
+
+        //         //     , {
+        //         //         label: 'Political parties',
+        //         //         backgroundColor: "#2e5468",
+        //         //         data: [12, 59, 5, 56, 58, 12, 59, 12],
+        //         // }
+        //         ],
+        //     },
+        //     options: {
+        //         tooltips: {
+        //         displayColors: true,
+        //         callbacks:{
+        //             mode: 'x',
+        //         },
+        //         },
+        //         scales: {
+        //         xAxes: {
+        //             stacked: true,
+        //             gridLines: {
+        //                 display: false,
+        //             }
+        //         },
+        //         yAxes: {
+        //             stacked: true,
+        //             ticks: {
+        //                 beginAtZero: true,
+        //             },
+        //             type: 'linear',
+        //         }
+        //         },
+        //         // responsive: true,
+        //         // maintainAspectRatio: false,
+        //         legend: { position: 'bottom' },
+        //     }
+        // });
+
+        // await new Chart(ctx2, {
+        //     type: 'pie',
+        //     data: {
+        //         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        //         datasets: [{
+        //             label: '# of Votes',
+        //             data: [12, 19, 3, 5, 2, 3],
+        //             backgroundColor: [
+        //                 'rgba(255, 99, 132, 0.2)',
+        //                 'rgba(54, 162, 235, 0.2)',
+        //                 'rgba(255, 206, 86, 0.2)',
+        //                 'rgba(75, 192, 192, 0.2)',
+        //                 'rgba(153, 102, 255, 0.2)',
+        //                 'rgba(255, 159, 64, 0.2)'
+        //             ],
+        //             borderColor: [
+        //                 'rgba(255, 99, 132, 1)',
+        //                 'rgba(54, 162, 235, 1)',
+        //                 'rgba(255, 206, 86, 1)',
+        //                 'rgba(75, 192, 192, 1)',
+        //                 'rgba(153, 102, 255, 1)',
+        //                 'rgba(255, 159, 64, 1)'
+        //             ],
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true
+        //             }
+        //         }
+        //     }
+        // });
 
     },
     created() {
