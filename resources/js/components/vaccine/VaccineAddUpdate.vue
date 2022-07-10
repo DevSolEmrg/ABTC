@@ -17,7 +17,15 @@
                 <el-input type="textarea" rows="6" v-model="ruleForm.description" :clearable="true"></el-input>
             </el-form-item>
             <el-form-item align="right">
-                <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
+                <!-- <el-button @click="resetForm('ruleForm')">Reset Field</el-button> -->
+                <el-popconfirm
+                    cancel-button-text='No, Thanks'
+                    title="Are you sure you want to reset this field?"
+                    @confirm="resetForm('ruleForm')"
+                    style="margin-right:10px"
+                >
+                    <el-button slot="reference">Reset Field</el-button>
+                </el-popconfirm>
                 <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
             </el-form-item>
         </el-form>
