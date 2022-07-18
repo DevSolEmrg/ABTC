@@ -238,7 +238,14 @@
                 </el-form-item>
 
                 <el-form-item align="right">
-                    <el-button @click="resetForm('ruleForm')">Reset Field</el-button>
+                    <el-popconfirm
+                        cancel-button-text='No, Thanks'
+                        title="Are you sure you want to reset this field?"
+                        @confirm="resetForm('ruleForm')"
+                        style="margin-right:10px"
+                    >
+                        <el-button slot="reference">Reset Field</el-button>
+                    </el-popconfirm>
                     <el-button type="primary" @click="submitForm('ruleForm')">Save</el-button>
                 </el-form-item>
             </el-tab-pane>
@@ -816,6 +823,13 @@ export default {
         } else {
             this.ruleForm.patient_id = JSON.parse(JSON.stringify(this.selectedPatient.id))
             this.ruleForm.registration_date = new Date()
+
+            this.ruleForm.date_of_incident = new Date()
+            this.ruleForm.date_of_physical_exam = new Date()
+
+            this.ruleForm.is_washed = "1"
+            this.ruleForm.route = JSON.parse(JSON.stringify(this.enumValues || {}))?.route?.find(r=>r.code == 'ID')?.id
+
         }
         window.onresize = function() { this.rezize() }.bind(this)
     },
