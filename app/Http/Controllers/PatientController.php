@@ -249,19 +249,19 @@ class PatientController extends Controller
                 }])
                 ->whereHas('history', function ($q){
                     return $q->whereBetween('created_at', [request('from')." 00:00:00", request('to')." 23:59:59"])->severeExposure();
-                })->get(),
+                })->count(),
             'count_minor' => Patient::with(['history' => function ($q){
                     return $q->whereBetween('created_at', [request('from')." 00:00:00", request('to')." 23:59:59"])->minorExposure();
                 }])
                 ->whereHas('history', function ($q){
                     return $q->whereBetween('created_at', [request('from')." 00:00:00", request('to')." 23:59:59"])->minorExposure();
-                })->get(),
+                })->count(),
             'count_no_exposure' => Patient::with(['history' => function ($q){
                     return $q->whereBetween('created_at', [request('from')." 00:00:00", request('to')." 23:59:59"])->noExposure();
                 }])
                 ->whereHas('history', function ($q){
                     return $q->whereBetween('created_at', [request('from')." 00:00:00", request('to')." 23:59:59"])->noExposure();
-                })->get(),
+                })->count(),
         ]);
     }
 

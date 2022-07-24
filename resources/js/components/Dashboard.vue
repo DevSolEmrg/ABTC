@@ -10,7 +10,7 @@
                 </el-select> -->
                 <!-- <span style="float:left"> Summary </span> -->
                 <el-button size="small" plain style="float:right; margin-left:5px" @click="filterData()">FILTER</el-button>
-                <el-button size="small" plain style="float:right; margin-left:5px" @click="filterData()">RESET</el-button>
+                <el-button size="small" plain style="float:right; margin-left:5px" @click="filterReset()">RESET</el-button>
                 <el-date-picker
                     v-model="date_range"
                     type="daterange"
@@ -30,7 +30,7 @@
         <el-row :gutter="12">
             <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" style="margin-bottom:20px">
                 <el-card shadow="hover">
-                    <h2 style="position: relative; z-index: 99;float:left;">325,325</h2>
+                    <h2 style="position: relative; z-index: 99;float:left;">{{severe_exposure_count}}</h2>
                     <!-- <span class="mdi mdi-dots-vertical" style="float:right;top:0"></span> -->
                     <el-dropdown trigger="click" style="position: relative;z-index: 99;float: right;">
                         <span class="el-dropdown-link">
@@ -58,7 +58,7 @@
             </el-col>
             <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" style="margin-bottom:20px">
                 <el-card shadow="hover">
-                    <h2 style="position: relative; z-index: 99;float:left;">325,325</h2>
+                    <h2 style="position: relative; z-index: 99;float:left;">{{minor_exposure_count}}</h2>
                     <!-- <span class="mdi mdi-dots-vertical" style="float:right;top:0"></span> -->
                     <el-dropdown trigger="click" style="position: relative;z-index: 99;float: right;">
                         <span class="el-dropdown-link">
@@ -86,7 +86,7 @@
             </el-col>
             <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" style="margin-bottom:20px">
                 <el-card shadow="hover">
-                    <h2 style="position: relative; z-index: 99;float:left;">325,325</h2>
+                    <h2 style="position: relative; z-index: 99;float:left;">{{no_exposure_count}}</h2>
                     <!-- <span class="mdi mdi-dots-vertical" style="float:right;top:0"></span> -->
                     <el-dropdown trigger="click" style="position: relative;z-index: 99;float: right;">
                         <span class="el-dropdown-link">
@@ -385,13 +385,23 @@ export default {
                         }
                     }
                 }
-            }
+            },
+            severe_exposure_count: 0,
+            minor_exposure_count: 0,
+            no_exposure_count: 0,
         }
     },
     computed: {
         ...mapGetters(['date_filter', 'chart_category'])
     },
     methods: {
+        filterReset() {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            this.date_range = [start.toISOString().substr(0,10), end.toISOString().substr(0,10)];
+            this.filterData()
+        },
         filterData() {
             this.$store.commit('SET_DATE_FILTER', this.date_range)
             this.getData()
@@ -408,6 +418,10 @@ export default {
                 `&chart2_categ=${this.chart2_categ}`
             ).then((res)=>{
                 console.log("res", res.data, this.date_filter, this.chart_category)
+
+                this.severe_exposure_count = res.data.count_severe
+                this.minor_exposure_count = res.data.count_minor
+                this.no_exposure_count = res.data.count_no_exposure
 
                 let new_data = JSON.parse(JSON.stringify(this.chartData))
                 this.chartData = []
